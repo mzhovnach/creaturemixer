@@ -73,7 +73,7 @@ public class GameBoard : MonoBehaviour
     public static float             			PipeZ                	= 0.26f;
 	public static float             			PipeZForMatch			= -2.0f;
     public static float             			PipeDragZ             	= -0.3f;
-    public static float             			SlotSize              	= 1.86f;
+    public static float             			SlotSize              	= 1.86f * 0.85f;
 	public static float             			ImpulseSpeed       	  	= 30.0f;                            		// speed of moving pipe when it slide after impulse
     public static EGameType                     GameType                = EGameType.Classic;
     public static EAddingType                   AddingType              = EAddingType.EachXMoves;
@@ -186,8 +186,8 @@ public class GameBoard : MonoBehaviour
     void Awake()
     {
         // limiting FPS
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = Consts.MAX_FPS;
+        //QualitySettings.vSyncCount = 0;
+        //Application.targetFrameRate = Consts.MAX_FPS;
         //
         _camera = Camera.main;
         //Game Board Data

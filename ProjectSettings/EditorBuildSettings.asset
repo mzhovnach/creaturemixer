@@ -9,12 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/screens/StartGameScene.unity
     guid: 5dfe8da3a7793854cb3735933b480629
   - enabled: 1
-    path: Assets/Scenes/screens/LoadingScene.unity
-    guid: 3a94aafd051613e4b98bb8ed5cebcf95
-  - enabled: 1
-    path: Assets/Scenes/screens/SplashScene.unity
-    guid: 42eb3be532e3e484783db2fecfdd2e29
-  - enabled: 1
     path: Assets/Scenes/screens/GameSceneWide.unity
     guid: 42974123aeeb3744fb39f20d85424716
   m_configObjects: {}
