@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using UnityEditor;
 
-//=====================================================================================
-// Zanuda Games - Kozhemyakin Vitaliy, Mykhailo Zhovnach, Taras Lishchuk
-//=====================================================================================
-
 [CustomEditor(typeof(ScriptableLevelData))]
 public class FeedingLevelEditor : Editor
 {

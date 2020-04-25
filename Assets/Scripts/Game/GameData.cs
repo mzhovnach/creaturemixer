@@ -22,7 +22,7 @@ public class GameData
 	public Dictionary<string, TutorialData> XMLtutorialsData;
 	public List<string> XMLhelpPagesData; // what tutors show in HelpWindow
 
-    public LevelData StartLevelData;
+    //public LevelData StartLevelData;
 
     public GameData()
     {
@@ -32,11 +32,11 @@ public class GameData
     //loads all data from various XML sources
     public void Load()
     {
-		LoadTutorialsData();
+		//LoadTutorialsData();
         LoadSplineData();
-		LoadHelpPagesData();
+		//LoadHelpPagesData();
 		//LoadTrophiesData();
-        LoadStartLevelData();
+        //LoadStartLevelData();
     }
 
     private void LoadSplineData()
@@ -75,28 +75,28 @@ public class GameData
         }
     }
 
-	private void LoadTutorialsData()
-	{
-		XMLtutorialsData = new Dictionary<string, TutorialData>();
+	//private void LoadTutorialsData()
+	//{
+	//	XMLtutorialsData = new Dictionary<string, TutorialData>();
 		
-		TextAsset tutorXml = Resources.Load<TextAsset>("Data/Tutorials/tutorialsdata");
+	//	TextAsset tutorXml = Resources.Load<TextAsset>("Data/Tutorials/tutorialsdata");
 		
-		XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
-		xmlDoc.LoadXml(tutorXml.text); // load the file.
-		XmlNodeList itemsList = xmlDoc.GetElementsByTagName("item"); // array of the tutorials nodes.
+	//	XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
+	//	xmlDoc.LoadXml(tutorXml.text); // load the file.
+	//	XmlNodeList itemsList = xmlDoc.GetElementsByTagName("item"); // array of the tutorials nodes.
 		
-		foreach (XmlNode itemInfo in itemsList)
-		{
-			TutorialData tData = new TutorialData();
-			tData.Id = itemInfo.Attributes["id"].Value;
-			tData.Type = itemInfo.Attributes["type"].Value;
-			tData.X = float.Parse(itemInfo.Attributes["x"].Value);
-			tData.Y = float.Parse(itemInfo.Attributes["y"].Value);
-			tData.IsArrow = itemInfo.Attributes["isarrow"].Value == "true";
-			tData.Align = itemInfo.Attributes["align"].Value;
-			XMLtutorialsData[tData.Id] = tData;
-		}
-	}
+	//	foreach (XmlNode itemInfo in itemsList)
+	//	{
+	//		TutorialData tData = new TutorialData();
+	//		tData.Id = itemInfo.Attributes["id"].Value;
+	//		tData.Type = itemInfo.Attributes["type"].Value;
+	//		tData.X = float.Parse(itemInfo.Attributes["x"].Value);
+	//		tData.Y = float.Parse(itemInfo.Attributes["y"].Value);
+	//		tData.IsArrow = itemInfo.Attributes["isarrow"].Value == "true";
+	//		tData.Align = itemInfo.Attributes["align"].Value;
+	//		XMLtutorialsData[tData.Id] = tData;
+	//	}
+	//}
 
 //	private void LoadTrophiesData()
 //	{
@@ -119,69 +119,69 @@ public class GameData
 //		}
 //	}
 
-	private void LoadHelpPagesData()
-	{
-		XMLhelpPagesData = new List<string>();
-		XMLhelpPagesData.Add("1");
-		XMLhelpPagesData.Add("2");
-		XMLhelpPagesData.Add("3");
-		XMLhelpPagesData.Add("4");
-		XMLhelpPagesData.Add("5");
-		XMLhelpPagesData.Add("6");
-		XMLhelpPagesData.Add("7");
-		XMLhelpPagesData.Add("8");
-		XMLhelpPagesData.Add("9");
-		XMLhelpPagesData.Add("10");
-		XMLhelpPagesData.Add("11");
-		XMLhelpPagesData.Add("12");
-		XMLhelpPagesData.Add("13");
-		XMLhelpPagesData.Add("14");
-		XMLhelpPagesData.Add("15");
-		XMLhelpPagesData.Add("16");
-		XMLhelpPagesData.Add("17");
-		XMLhelpPagesData.Add("18");
-		XMLhelpPagesData.Add("19");
-		XMLhelpPagesData.Add("20");
-		XMLhelpPagesData.Add("21");
-		XMLhelpPagesData.Add("22");
-		XMLhelpPagesData.Add("23");
-		XMLhelpPagesData.Add("24");
-		XMLhelpPagesData.Add("25");
-		XMLhelpPagesData.Add("26");
-		XMLhelpPagesData.Add("27");
-		XMLhelpPagesData.Add("28");
-		XMLhelpPagesData.Add("29");
-		XMLhelpPagesData.Add("30");
-		XMLhelpPagesData.Add("31");
-		XMLhelpPagesData.Add("32");
-		XMLhelpPagesData.Add("33");
-	}
+	//private void LoadHelpPagesData()
+	//{
+	//	XMLhelpPagesData = new List<string>();
+	//	XMLhelpPagesData.Add("1");
+	//	XMLhelpPagesData.Add("2");
+	//	XMLhelpPagesData.Add("3");
+	//	XMLhelpPagesData.Add("4");
+	//	XMLhelpPagesData.Add("5");
+	//	XMLhelpPagesData.Add("6");
+	//	XMLhelpPagesData.Add("7");
+	//	XMLhelpPagesData.Add("8");
+	//	XMLhelpPagesData.Add("9");
+	//	XMLhelpPagesData.Add("10");
+	//	XMLhelpPagesData.Add("11");
+	//	XMLhelpPagesData.Add("12");
+	//	XMLhelpPagesData.Add("13");
+	//	XMLhelpPagesData.Add("14");
+	//	XMLhelpPagesData.Add("15");
+	//	XMLhelpPagesData.Add("16");
+	//	XMLhelpPagesData.Add("17");
+	//	XMLhelpPagesData.Add("18");
+	//	XMLhelpPagesData.Add("19");
+	//	XMLhelpPagesData.Add("20");
+	//	XMLhelpPagesData.Add("21");
+	//	XMLhelpPagesData.Add("22");
+	//	XMLhelpPagesData.Add("23");
+	//	XMLhelpPagesData.Add("24");
+	//	XMLhelpPagesData.Add("25");
+	//	XMLhelpPagesData.Add("26");
+	//	XMLhelpPagesData.Add("27");
+	//	XMLhelpPagesData.Add("28");
+	//	XMLhelpPagesData.Add("29");
+	//	XMLhelpPagesData.Add("30");
+	//	XMLhelpPagesData.Add("31");
+	//	XMLhelpPagesData.Add("32");
+	//	XMLhelpPagesData.Add("33");
+	//}
 
-    private void LoadStartLevelData()
-    {
-        StartLevelData = new LevelData();
-        TextAsset levelXml = Resources.Load<TextAsset>("Data/startleveldata");
+    //private void LoadStartLevelData()
+    //{
+    //    StartLevelData = new LevelData();
+    //    TextAsset levelXml = Resources.Load<TextAsset>("Data/startleveldata");
 
-        XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
-        xmlDoc.LoadXml(levelXml.text); // load the file.
-        XmlNodeList slotsList = xmlDoc.GetElementsByTagName("slot"); // array of the slots nodes.
+    //    XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
+    //    xmlDoc.LoadXml(levelXml.text); // load the file.
+    //    XmlNodeList slotsList = xmlDoc.GetElementsByTagName("slot"); // array of the slots nodes.
 
-        foreach (XmlNode slotInfo in slotsList)
-        {
-            SSlotData sData = new SSlotData();
-            sData.x = int.Parse(slotInfo.Attributes["x"].Value);
-            sData.y = int.Parse(slotInfo.Attributes["y"].Value);
-            sData.pt = (EPipeType)System.Enum.Parse(typeof(EPipeType), slotInfo.Attributes["pt"].Value);
-            sData.p = int.Parse(slotInfo.Attributes["p"].Value);
-            sData.c = int.Parse(slotInfo.Attributes["c"].Value);
-            StartLevelData.Slots.Add(sData);
-        }
+    //    foreach (XmlNode slotInfo in slotsList)
+    //    {
+    //        SSlotData sData = new SSlotData();
+    //        sData.x = int.Parse(slotInfo.Attributes["x"].Value);
+    //        sData.y = int.Parse(slotInfo.Attributes["y"].Value);
+    //        sData.pt = (EPipeType)System.Enum.Parse(typeof(EPipeType), slotInfo.Attributes["pt"].Value);
+    //        sData.p = int.Parse(slotInfo.Attributes["p"].Value);
+    //        sData.c = int.Parse(slotInfo.Attributes["c"].Value);
+    //        StartLevelData.Slots.Add(sData);
+    //    }
 
-        StartLevelData.ReshufflePowerups = Consts.POWERUPS_RESHUFFLE_AT_START;
-        StartLevelData.BreakePowerups = Consts.POWERUPS_BREAKE_AT_START;
-        StartLevelData.ChainPowerups = Consts.POWERUPS_CHAIN_AT_START;
-        StartLevelData.DestroyColorsPowerups = Consts.POWERUPS_DESTROY_COLOR_AT_START;
-        StartLevelData.AddsViewed = false; // set true for paid version
-    }
+    //    StartLevelData.ReshufflePowerups = Consts.POWERUPS_RESHUFFLE_AT_START;
+    //    StartLevelData.BreakePowerups = Consts.POWERUPS_BREAKE_AT_START;
+    //    StartLevelData.ChainPowerups = Consts.POWERUPS_CHAIN_AT_START;
+    //    StartLevelData.DestroyColorsPowerups = Consts.POWERUPS_DESTROY_COLOR_AT_START;
+    //    StartLevelData.AddsViewed = false; // set true for paid version
+    //}
 
 }

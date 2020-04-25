@@ -38,6 +38,7 @@ public class LevelData
 {
     public List<long>      	Resources;
 	public List<SSlotData>  Slots;
+    public List<Vector3Int> Aims; // x - chip type, y - level of chip, z - completed or not(0 or 1)
     public int              ReshufflePowerups;
     public int              BreakePowerups;
     public int              ChainPowerups;
@@ -63,11 +64,33 @@ public class LevelData
 		{
 			Resources.Add(0);
 		}
+        Aims = new List<Vector3Int>();
         //for (int i = 0; i <= QueuePanel.SIZE; ++i)
         //{
         //    QueueState.Add(GameManager.Instance.BoardData.GetRandomColor());
         //}
-		timePlayed = 0;
+        timePlayed = 0;
 	}
+
+    public static LevelData ConvertToLevelData(CreatureMixLevelData cmLevelData)
+    {
+        LevelData res = new LevelData();
+        res.Slots = new List<SSlotData>();
+        for (int i = 0; i < cmLevelData.NeededStates.Count; ++i)
+        {
+            res.Slots.Add(cmLevelData.NeededStates[i]);
+        }
+        res.ReshufflePowerups = Consts.POWERUPS_RESHUFFLE_AT_START;
+        res.BreakePowerups = Consts.POWERUPS_BREAKE_AT_START;
+        res.ChainPowerups = Consts.POWERUPS_CHAIN_AT_START;
+        res.DestroyColorsPowerups = Consts.POWERUPS_DESTROY_COLOR_AT_START;
+        res.AddsViewed = true;
+        res.Aims = new List<Vector3Int>();
+        for (int i = 0; i < cmLevelData.Aims.Count; ++i)
+        {
+            res.Aims.Add(new Vector3Int(cmLevelData.Aims[i].x, cmLevelData.Aims[i].y, 0));
+        }
+        return res;
+    }
 
 }

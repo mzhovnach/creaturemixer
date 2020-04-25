@@ -517,60 +517,60 @@ public class GameBoard : MonoBehaviour
         UnsetPause();
     }
 
-	protected IEnumerator CreateLeveledLevel(ScriptableLevelData levelData) 
-	{
-        _currentTouchId = -1;
-        DragSlot = null;
-        HideSelection();
-        //
-        TimePlayed = 0;
-		MovesLeft = levelData.MinMovesCount;
-		StarsGained = 0;
-		AMovesPanel.SetAmountForce(MovesLeft);
-        AStarsPanel.ResetScores();
-        //AStarsPanel.SetAmountForce(StarsGained);
-		ALevelPanel.SetText();
+	//protected IEnumerator CreateLeveledLevel(ScriptableLevelData levelData) 
+	//{
+ //       _currentTouchId = -1;
+ //       DragSlot = null;
+ //       HideSelection();
+ //       //
+ //       TimePlayed = 0;
+	//	MovesLeft = levelData.MinMovesCount;
+	//	StarsGained = 0;
+	//	AMovesPanel.SetAmountForce(MovesLeft);
+ //       AStarsPanel.ResetScores();
+ //       //AStarsPanel.SetAmountForce(StarsGained);
+	//	ALevelPanel.SetText();
 		
-		PowerUps[GameData.PowerUpType.Reshuffle] = 0;
-		PowerUps[GameData.PowerUpType.Breake] = 0;
-		PowerUps[GameData.PowerUpType.Chain] = 0;
-		PowerUps[GameData.PowerUpType.DestroyColor] = 0;
-		AddsViewed = true;
+	//	PowerUps[GameData.PowerUpType.Reshuffle] = 0;
+	//	PowerUps[GameData.PowerUpType.Breake] = 0;
+	//	PowerUps[GameData.PowerUpType.Chain] = 0;
+	//	PowerUps[GameData.PowerUpType.DestroyColor] = 0;
+	//	AddsViewed = true;
 
-        // powerups
-        EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
-        eventData.Data["isStart"] = true;
-        GameManager.Instance.EventManager.CallOnPowerUpsResetNeededEvent(eventData);
-        BreakePowerup = false;
-        ChainPowerup = false;
-        DestroyColorPowerup = false;
+ //       // powerups
+ //       EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
+ //       eventData.Data["isStart"] = true;
+ //       GameManager.Instance.EventManager.CallOnPowerUpsResetNeededEvent(eventData);
+ //       BreakePowerup = false;
+ //       ChainPowerup = false;
+ //       DestroyColorPowerup = false;
 
-        yield return new WaitForSeconds(Consts.DARK_SCREEN_SHOW_HIDE_TIME);
-        yield return StartCoroutine(ClearBoard());
-        // create pipes force
-        for (int i = 0; i < levelData.StartStates.Count; ++i)
-        {
-            int x = levelData.StartStates[i].x;
-            int y = levelData.StartStates[i].y;
-            Slots[x, y].InitSavedSlot(levelData.StartStates[i]);
-            // pipe
-            EPipeType pType = (EPipeType)levelData.StartStates[i].pt;
-            if (pType != EPipeType.None)
-            {
-                // create pipe
-                SPipe pipe = CreatePipe(pType, levelData.StartStates[i].p, levelData.StartStates[i].c);
-                Slots[x, y].SetPipe(pipe);
-                pipe.PlayAddAnimation();
-                if (pType == EPipeType.Hole)
-                {
-                    Slots[x, y].SetAsHole();
-                }
-                yield return new WaitForSeconds(0.05f);
-            }
-        }
-        yield return new WaitForSeconds(0.25f);
-        UnsetPause();
-    }
+ //       yield return new WaitForSeconds(Consts.DARK_SCREEN_SHOW_HIDE_TIME);
+ //       yield return StartCoroutine(ClearBoard());
+ //       // create pipes force
+ //       for (int i = 0; i < levelData.StartStates.Count; ++i)
+ //       {
+ //           int x = levelData.StartStates[i].x;
+ //           int y = levelData.StartStates[i].y;
+ //           Slots[x, y].InitSavedSlot(levelData.StartStates[i]);
+ //           // pipe
+ //           EPipeType pType = (EPipeType)levelData.StartStates[i].pt;
+ //           if (pType != EPipeType.None)
+ //           {
+ //               // create pipe
+ //               SPipe pipe = CreatePipe(pType, levelData.StartStates[i].p, levelData.StartStates[i].c);
+ //               Slots[x, y].SetPipe(pipe);
+ //               pipe.PlayAddAnimation();
+ //               if (pType == EPipeType.Hole)
+ //               {
+ //                   Slots[x, y].SetAsHole();
+ //               }
+ //               yield return new WaitForSeconds(0.05f);
+ //           }
+ //       }
+ //       yield return new WaitForSeconds(0.25f);
+ //       UnsetPause();
+ //   }
 		
 	public void PlayGame()
     {
@@ -589,8 +589,11 @@ public class GameBoard : MonoBehaviour
         LevelData levelData = GameManager.Instance.Settings.User.SavedGame;
 		if (levelData == null || levelData.Slots.Count == 0)
 		{
-			levelData = GameManager.Instance.GameData.StartLevelData;
-		} else
+            //levelData = GameManager.Instance.GameData.StartLevelData;
+            string path = "CreatureMixLevels/cmlevel_" + GameManager.Instance.Player.CurrentLevel.ToString();
+            CreatureMixLevelData cmlevelData = (CreatureMixLevelData)Resources.Load<CreatureMixLevelData>(path);
+            levelData = LevelData.ConvertToLevelData(cmlevelData);
+        } else
 		{
 			GameManager.Instance.Settings.User.SavedGame = null;
 			GameManager.Instance.Settings.Save();
@@ -600,24 +603,24 @@ public class GameBoard : MonoBehaviour
 
 	public void PlayLeveledGame()
 	{
-        HideHint();
-		GameType = EGameType.Leveled;
-		_maxColoredLevels = GetMaxColoredLevels();
-        ResetTutor2Timer();
-        TryStartStartTutorSequence();
-
-        Reset();
-		_cameraPos = _camera.transform.position;
-		_cameraPos.x = 0;
-		_cameraPos.y = 0.2f;
-		_camera.transform.position = _cameraPos;
-		ShowDarkScreenForce();
-		Selection.SetActive(false);
-		SetGameState(EGameState.Pause);
-
-		string path = "Levels/level_" + GameManager.Instance.Player.CurrentLevel.ToString();
-		ScriptableLevelData leveledlevelData = (ScriptableLevelData)Resources.Load<ScriptableLevelData>(path);
-		StartCoroutine(CreateLeveledLevel(leveledlevelData));
+        //HideHint();
+        //GameType = EGameType.Leveled;
+        //_maxColoredLevels = GetMaxColoredLevels();
+        //ResetTutor2Timer();
+        //TryStartStartTutorSequence();
+        //
+        //Reset();
+        //_cameraPos = _camera.transform.position;
+        //_cameraPos.x = 0;
+        //_cameraPos.y = 0.2f;
+        //_camera.transform.position = _cameraPos;
+        //ShowDarkScreenForce();
+        //Selection.SetActive(false);
+        //SetGameState(EGameState.Pause);
+        //
+        //string path = "Levels/level_" + GameManager.Instance.Player.CurrentLevel.ToString();
+        //ScriptableLevelData leveledlevelData = (ScriptableLevelData)Resources.Load<ScriptableLevelData>(path);
+        //StartCoroutine(CreateLeveledLevel(leveledlevelData));
 	}
 
 	public void UnsetPause()
@@ -2899,5 +2902,4 @@ public class GameBoard : MonoBehaviour
         //        //eventData.Data["isforce"] = true;
         //        GameManager.Instance.EventManager.CallOnPowerUpsResetNeededEvent(eventData);
     }
-
 }

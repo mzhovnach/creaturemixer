@@ -112,12 +112,11 @@ public class GameMenuUIController : BaseUIController
 
     public void UpdatePlayEndlessButton()
     {
-        //		test
-        //		ButtonPlayEndless.SetActive(true);
-        //		ButtonPlayEndlessBlocked.SetActive(false);
-        bool unlocked = GameManager.Instance.Player.LevelsStates[Consts.UNLOCK_ENDLES_AFTER + 1].Unlocked;
-        ButtonPlayEndless.SetActive(unlocked);
-        ButtonPlayEndlessBlocked.SetActive(!unlocked);
+        ButtonPlayEndless.SetActive(true);
+        ButtonPlayEndlessBlocked.SetActive(false);
+        //bool unlocked = GameManager.Instance.Player.LevelsStates[Consts.UNLOCK_ENDLES_AFTER + 1].Unlocked;
+        //ButtonPlayEndless.SetActive(unlocked);
+        //ButtonPlayEndlessBlocked.SetActive(!unlocked);
     }
 
     public override void Hide()
