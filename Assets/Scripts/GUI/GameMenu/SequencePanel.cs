@@ -242,7 +242,7 @@ public class SequencePanel : MonoBehaviour
         }
         yield return new WaitForSeconds(Consts.PIPES_ON_SEQUENCE_ANIMATION_TIME);
         // shake screen
-        GameManager.Instance.BoardData.AGameBoard.ShakeCamera(Consts.SHAKE_POWER_ON_SEQUENCE, Consts.SHAKE_POWER_ON_SEQUENCE, Consts.SHAKE_TIME_ON_SEQUENCE);
+        GameManager.Instance.Game.ShakeCamera(Consts.SHAKE_POWER_ON_SEQUENCE, Consts.SHAKE_POWER_ON_SEQUENCE, Consts.SHAKE_TIME_ON_SEQUENCE);
         // show popup with points
         GameObject popupObj = (GameObject)GameObject.Instantiate(SequenceCompletePopupPrefab, Vector3.zero, Quaternion.identity);
         popupObj.transform.SetParent(transform, false);
@@ -255,7 +255,7 @@ public class SequencePanel : MonoBehaviour
         pointsText.text = Localer.GetText(points.ToString());
         GameObject.Destroy(popupObj, 5.0f);
         // add points
-        GameManager.Instance.BoardData.AddPointsForSequence(points);
+        GameManager.Instance.Game.AddPointsForSequence(points);
         //
         yield return null;
     }

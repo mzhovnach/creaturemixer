@@ -47,7 +47,7 @@ public class StarsPanel : MonoBehaviour
         {
             return;
         }
-		float amount = GameManager.Instance.BoardData.StarsGained;
+		float amount = GameManager.Instance.Game.StarsGained;
         bool isforce = false;
         if (e.Data.ContainsKey("isforce"))
         {

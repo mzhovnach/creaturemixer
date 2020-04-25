@@ -82,7 +82,7 @@ public class OptionsWindowUIController : BaseUIController
     public void ButtonRestartOnClick()
     {
         Hide();
-        GameManager.Instance.BoardData.AGameBoard.RestartGame();
+        GameManager.Instance.Game.RestartGame();
         //EventData eventData = new EventData("OnOpenFormNeededEvent");
         //eventData.Data["form"] = UIConsts.FORM_ID.CONFIRM_WINDOW;
         //eventData.Data["type"] = "confirm_restart";
@@ -93,7 +93,7 @@ public class OptionsWindowUIController : BaseUIController
     public void ButtonMainMenuOnClick()
     {
         Hide();
-        GameManager.Instance.BoardData.AGameBoard.GoHome();
+        GameManager.Instance.Game.GoHome();
     }
 
     public void ButtonHelpOnClick()
@@ -164,7 +164,7 @@ public class OptionsWindowUIController : BaseUIController
     //    UpdateSkinButtons();
     //    //if (_currentScene == "game_menu")
     //    {
-    //        GameManager.Instance.BoardData.AGameBoard.UpdateSkin();
+    //        GameManager.Instance.Game.UpdateSkin();
     //    }
     //}
 

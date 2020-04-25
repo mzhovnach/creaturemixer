@@ -19,7 +19,6 @@ public class GameManager : Singleton<GameManager>
 	
 	//Feeding
 	public GameBoard Game;
-	public GameBoardData BoardData;
 
 public UserData Player
     {
@@ -40,8 +39,6 @@ public UserData Player
         GameFlow = new GameFlow();
 		EventManager = new EventManager();
 		CurrentMenu = UISetType.Global;
-		// Feeding
-		BoardData = new GameBoardData();
     }
 
     private void CreatePauseListener()
@@ -88,10 +85,9 @@ public UserData Player
     {
         if (pauseStatus)
         {
-            if (GameManager.Instance.BoardData != null &&
-                GameManager.Instance.BoardData.AGameBoard != null)
+            if (GameManager.Instance.Game != null)
             {
-                GameManager.Instance.BoardData.AGameBoard.SaveGame();
+                GameManager.Instance.Game.SaveGame();
             }
             GameManager.Instance.Settings.Save(true);
         }

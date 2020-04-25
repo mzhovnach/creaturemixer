@@ -27,8 +27,8 @@ public class LeveledStatisticWindowUIController : BaseUIController
 
 		float atime = 0.3f;
 		LevelText.text = Localer.GetText("Level") + " " + (GameManager.Instance.Player.CurrentLevel + 1).ToString();
-		int starsAmount = (int)GameManager.Instance.BoardData.StarsGained;
-		int moves = GameManager.Instance.BoardData._allTurns;
+		int starsAmount = (int)GameManager.Instance.Game.StarsGained;
+		int moves = GameManager.Instance.Game._allTurns;
 
 		for (int i = 0; i < Stars.Count; ++i)
 		{

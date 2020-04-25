@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 public enum EGameType
 {
@@ -12,6 +13,12 @@ public enum EAddingType
 {
     EachXMoves = 0,
     OnNoMatch = 1
+}
+public enum EGameState
+{
+    Pause = 0,
+    Play = 1,
+    Loose = 2
 }
 
 public enum ESlideType
@@ -158,6 +165,23 @@ public class GameBoard : MonoBehaviour
 	private int                               _currentTouchId = -1; // for EInputType.UsingPositions
 	public Material[] ColoredMaterials;
 
+    // GameData
+    private List<long> _resources;
+    private long _pointsForSequences;
+    public EGameState GameState = EGameState.Pause;
+    public float TimePlayed;
+    public SSlot DragSlot;
+    public Dictionary<GameData.PowerUpType, int> PowerUps;
+    public bool AddsViewed;
+    private int _movesToNextPipe;           // for turn base game
+    public int _allTurns;                   // for all game types
+    private int _pipesAdded;
+    private int _pipesToNextBlocker;
+    // leveled
+    public float StarsGained;
+    public int MovesLeft;
+    //
+
     void Awake()
     {
         // limiting FPS
@@ -165,9 +189,33 @@ public class GameBoard : MonoBehaviour
         Application.targetFrameRate = Consts.MAX_FPS;
         //
         _camera = Camera.main;
-        GameManager.Instance.BoardData = new GameBoardData();
-		GameManager.Instance.BoardData.AGameBoard = this;
-		GameManager.Instance.Game = this;
+        //Game Board Data
+        _movesToNextPipe = 0;
+        if (GameBoard.AddingType != EAddingType.OnNoMatch)
+        {
+            _movesToNextPipe = Consts.TURNS_TO_NEXT_PIPE;
+        }
+        _allTurns = 0;
+        _pipesAdded = 0;
+        _pipesToNextBlocker = Consts.PIPES_TO_NEXT_BLOCKER;
+        _pointsForSequences = 0;
+        _resources = new List<long>();
+        for (int i = 0; i < Consts.CLASSIC_GAME_COLORS; ++i)
+        {
+            _resources.Add(0);
+            //SetResourceForce(0, i);
+        }
+        AddsViewed = false;
+        GameState = EGameState.Pause;
+        TimePlayed = 0;
+        DragSlot = null;
+        PowerUps = new Dictionary<GameData.PowerUpType, int>();
+        foreach (GameData.PowerUpType powerUp in Enum.GetValues(typeof(GameData.PowerUpType)))
+        {
+            PowerUps.Add(powerUp, 0);
+        }
+        GameManager.Instance.Game = this;
+        //
         //EventManager.OnTransitToMenu += OnTransitToMenu;
         //EventManager.OnStartPlayPressedEvent += CallOnStartPlayPressed;
 
@@ -235,7 +283,7 @@ public class GameBoard : MonoBehaviour
 		}
         Cheats.CheckMatchCheats(this);
 		// update drag of slot
-		if (GameManager.Instance.BoardData.IsPause() || GameManager.Instance.BoardData.IsLoose())
+		if (IsPause() || IsLoose())
 		{
 			return;
 		}
@@ -366,7 +414,7 @@ public class GameBoard : MonoBehaviour
 		GameObject pipeObj = null;
 		if (pType == EPipeType.Colored && color < 0)
 		{
-			color = GameManager.Instance.BoardData.GetRandomColor();
+			color = GetRandomColor();
 		}
 		pipeObj = GetPipeFromPool(pType, color);
 
@@ -414,8 +462,8 @@ public class GameBoard : MonoBehaviour
     protected IEnumerator CreateLevel(LevelData levelData) 
 	{
         _currentTouchId = -1;
-        GameManager.Instance.BoardData.DragSlot = null;
-        GameManager.Instance.BoardData.AGameBoard.HideSelection();
+        DragSlot = null;
+        HideSelection();
         //
         AQueuePanel.LoadPanel(levelData.QueueState);
         for (int i = 0; i < WIDTH; ++i)
@@ -426,17 +474,17 @@ public class GameBoard : MonoBehaviour
 			}
 		}
 
-		GameManager.Instance.BoardData.TimePlayed = levelData.timePlayed;
+		TimePlayed = levelData.timePlayed;
 		for (int i = 0; i < levelData.Resources.Count; ++i)
 		{
-			GameManager.Instance.BoardData.SetResourceForce(levelData.Resources[i], i);
+			SetResourceForce(levelData.Resources[i], i);
 		}
 
-		GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Reshuffle] = levelData.ReshufflePowerups;
-        GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Breake] = levelData.BreakePowerups;
-        GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Chain] = levelData.ChainPowerups;
-        GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.DestroyColor] = levelData.DestroyColorsPowerups;
-        GameManager.Instance.BoardData.AddsViewed = levelData.AddsViewed;
+		PowerUps[GameData.PowerUpType.Reshuffle] = levelData.ReshufflePowerups;
+        PowerUps[GameData.PowerUpType.Breake] = levelData.BreakePowerups;
+        PowerUps[GameData.PowerUpType.Chain] = levelData.ChainPowerups;
+        PowerUps[GameData.PowerUpType.DestroyColor] = levelData.DestroyColorsPowerups;
+        AddsViewed = levelData.AddsViewed;
 
 		// powerups
 		EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
@@ -472,22 +520,22 @@ public class GameBoard : MonoBehaviour
 	protected IEnumerator CreateLeveledLevel(ScriptableLevelData levelData) 
 	{
         _currentTouchId = -1;
-        GameManager.Instance.BoardData.DragSlot = null;
-        GameManager.Instance.BoardData.AGameBoard.HideSelection();
+        DragSlot = null;
+        HideSelection();
         //
-        GameManager.Instance.BoardData.TimePlayed = 0;
-		GameManager.Instance.BoardData.MovesLeft = levelData.MinMovesCount;
-		GameManager.Instance.BoardData.StarsGained = 0;
-		AMovesPanel.SetAmountForce(GameManager.Instance.BoardData.MovesLeft);
+        TimePlayed = 0;
+		MovesLeft = levelData.MinMovesCount;
+		StarsGained = 0;
+		AMovesPanel.SetAmountForce(MovesLeft);
         AStarsPanel.ResetScores();
-        //AStarsPanel.SetAmountForce(GameManager.Instance.BoardData.StarsGained);
+        //AStarsPanel.SetAmountForce(StarsGained);
 		ALevelPanel.SetText();
 		
-		GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Reshuffle] = 0;
-		GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Breake] = 0;
-		GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Chain] = 0;
-		GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.DestroyColor] = 0;
-		GameManager.Instance.BoardData.AddsViewed = true;
+		PowerUps[GameData.PowerUpType.Reshuffle] = 0;
+		PowerUps[GameData.PowerUpType.Breake] = 0;
+		PowerUps[GameData.PowerUpType.Chain] = 0;
+		PowerUps[GameData.PowerUpType.DestroyColor] = 0;
+		AddsViewed = true;
 
         // powerups
         EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
@@ -527,10 +575,9 @@ public class GameBoard : MonoBehaviour
 	public void PlayGame()
     {
 		GameType = EGameType.Classic;
-		_maxColoredLevels = GameManager.Instance.BoardData.GetMaxColoredLevels();
+		_maxColoredLevels = GetMaxColoredLevels();
 		ResetHint();
-
-        GameManager.Instance.BoardData.Reset();
+        Reset();
         _cameraPos = _camera.transform.position;
 		_cameraPos.x = 0;
 		_cameraPos.y = 0.2f;
@@ -555,11 +602,11 @@ public class GameBoard : MonoBehaviour
 	{
         HideHint();
 		GameType = EGameType.Leveled;
-		_maxColoredLevels = GameManager.Instance.BoardData.GetMaxColoredLevels();
+		_maxColoredLevels = GetMaxColoredLevels();
         ResetTutor2Timer();
         TryStartStartTutorSequence();
 
-        GameManager.Instance.BoardData.Reset();
+        Reset();
 		_cameraPos = _camera.transform.position;
 		_cameraPos.x = 0;
 		_cameraPos.y = 0.2f;
@@ -578,18 +625,13 @@ public class GameBoard : MonoBehaviour
 		SetGameState(EGameState.Play);
 	}
 
-	public void SetGameState(EGameState state)
-	{
-		GameManager.Instance.BoardData.SetGameState(state);
-	}
-	
 	protected LevelData GetLevelToSave()
     {
         LevelData res = new LevelData();
-		res.timePlayed = GameManager.Instance.BoardData.TimePlayed;
+		res.timePlayed = TimePlayed;
 		for (int i = 0; i < Consts.COLORS.Length; ++i)
 		{
-			res.Resources[i] = GameManager.Instance.BoardData.GetResourceAmount(i);
+			res.Resources[i] = GetResourceAmount(i);
 		}
         // pipes
         for (int i = 0; i < WIDTH; ++i)
@@ -613,11 +655,11 @@ public class GameBoard : MonoBehaviour
         // queue state
         res.QueueState = AQueuePanel.GetStateToSave();
         //
-        res.ReshufflePowerups = GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Reshuffle];
-        res.BreakePowerups = GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Breake];
-        res.ChainPowerups = GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Chain];
-        res.DestroyColorsPowerups = GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.DestroyColor];
-        res.AddsViewed = GameManager.Instance.BoardData.AddsViewed;
+        res.ReshufflePowerups = PowerUps[GameData.PowerUpType.Reshuffle];
+        res.BreakePowerups = PowerUps[GameData.PowerUpType.Breake];
+        res.ChainPowerups = PowerUps[GameData.PowerUpType.Chain];
+        res.DestroyColorsPowerups = PowerUps[GameData.PowerUpType.DestroyColor];
+        res.AddsViewed = AddsViewed;
         return res;
     }
 
@@ -1070,7 +1112,7 @@ public class GameBoard : MonoBehaviour
         }
         //LeanTween.delayedCall(Consts.MATCH_ROTATE_TIME, () =>
         //{
-            GameManager.Instance.BoardData.AddResourceByLevelOfColoredPipe(pipe.Param, pipe.AColor, multiplyer, slot2.transform.position);
+            AddResourceByLevelOfColoredPipe(pipe.Param, pipe.AColor, multiplyer, slot2.transform.position);
         //});
         // move new pipe to center of new slot
         Vector2 newPos = slot2.transform.position;
@@ -1145,7 +1187,7 @@ public class GameBoard : MonoBehaviour
             BreakePipeInSlot(slideData.Slot2, (slideData.Pipe as Pipe_Colored).GetExplodeEffectPrefab()); //BreakeEffectPrefab);
 			if (GameType == EGameType.Leveled)
 			{
-				GameManager.Instance.BoardData.StarsGained += Consts.STAR_PROGRESS;
+				StarsGained += Consts.STAR_PROGRESS;
 			}
             else
             //if (GameType == EGameType.Classic)
@@ -1183,7 +1225,7 @@ public class GameBoard : MonoBehaviour
 		GameManager.Instance.EventManager.CallOnCombineWasMadeEvent(eventData);
 		//
 		slideData.Slot2.WaitForPipe = false;
-		GameManager.Instance.BoardData.OnTurnWasMade(true, false);
+		OnTurnWasMade(true, false);
 	}
 
 	private void OnPipeArrivedToSlotWithoutMatch(SlideData slideData)
@@ -1205,7 +1247,7 @@ public class GameBoard : MonoBehaviour
 			//}
 		}
 		slideData.Slot2.WaitForPipe = false;
-		GameManager.Instance.BoardData.OnTurnWasMade(false, false);
+		OnTurnWasMade(false, false);
 	}
 
 	private void Bump(SlideData slideData)
@@ -1277,7 +1319,7 @@ public class GameBoard : MonoBehaviour
 		for (int i = 0; i < slots.Count; ++i)
 		{
 			// add colored pipe to slot
-			int color = GameManager.Instance.BoardData.GetRandomColor();
+			int color = GetRandomColor();
 			SPipe cPipe = GetPipeFromPool(EPipeType.Colored, color).GetComponent<SPipe>();
 			cPipe.InitPipe(0, color, false);
 			slots[i].SetPipe(cPipe);
@@ -1308,7 +1350,7 @@ public class GameBoard : MonoBehaviour
     //           {
     //			// add colored pipe to slot
     //			SPipe cPipe = GetPipeFromPool(EPipeType.Colored).GetComponent<SPipe>();
-    //			cPipe.InitPipe(0, GameManager.Instance.BoardData.GetRandomColor(), false);
+    //			cPipe.InitPipe(0, GetRandomColor(), false);
     //			slot.SetPipe(cPipe);
     //			cPipe.PlayAddAnimation();
     //		}
@@ -1347,7 +1389,7 @@ public class GameBoard : MonoBehaviour
             } else
             //if (newPipeType == EPipeType.Colored)
             {
-                AQueuePanel.MoveQueue(newPipeType, GameManager.Instance.BoardData.GetRandomColor(), 0);
+                AQueuePanel.MoveQueue(newPipeType, GetRandomColor(), 0);
             }
             //
             SSlot slot = slots[UnityEngine.Random.Range(0, slots.Count)];
@@ -1424,7 +1466,7 @@ public class GameBoard : MonoBehaviour
         {
             for (var powerup = GameData.PowerUpType.Reshuffle; powerup <= GameData.PowerUpType.DestroyColor; ++powerup)
             {
-                if (GameManager.Instance.BoardData.PowerUps[powerup] > 0) // && GameManager.Instance.Player.PowerUpsState.ContainsKey(powerup) && GameManager.Instance.Player.PowerUpsState[powerup].Level > 0)
+                if (PowerUps[powerup] > 0) // && GameManager.Instance.Player.PowerUpsState.ContainsKey(powerup) && GameManager.Instance.Player.PowerUpsState[powerup].Level > 0)
                 {
                     // show notification
                     EventData eventData = new EventData("OnShowNotificationEvent");
@@ -1698,9 +1740,9 @@ public class GameBoard : MonoBehaviour
             MusicManager.playSound("reshuffle");
             pipes.Clear();
             freeSlots.Clear();
-			int current = GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Reshuffle];
+			int current = PowerUps[GameData.PowerUpType.Reshuffle];
 			--current;
-			GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Reshuffle] = current;
+			PowerUps[GameData.PowerUpType.Reshuffle] = current;
 
 			//
 			EventData eventData = new EventData("OnPowerUpUsedEvent");
@@ -1737,9 +1779,9 @@ public class GameBoard : MonoBehaviour
     {
 		BreakePowerup = false;
         BreakePipeInSlot(slot, (slot.Pipe as Pipe_Colored).GetExplodeEffectPrefab()); //BreakePipeInSlot(slot, BreakeEffectPrefab);
-        int current = GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Breake];
+        int current = PowerUps[GameData.PowerUpType.Breake];
         --current;
-        GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Breake] = current;
+        PowerUps[GameData.PowerUpType.Breake] = current;
 		//
 		EventData eventData = new EventData("OnPowerUpUsedEvent");
 		eventData.Data["type"] = GameData.PowerUpType.Breake;
@@ -1749,7 +1791,7 @@ public class GameBoard : MonoBehaviour
         // if no pipes left - add new pipe on board without move counting
         if (GetMovablePipesCount() == 0)
         {
-            GameManager.Instance.BoardData.OnTurnWasMade(false, true);
+            OnTurnWasMade(false, true);
         }
         //
     }
@@ -1772,9 +1814,9 @@ public class GameBoard : MonoBehaviour
     {
 		ChainPowerup = false;
         SetGameState(EGameState.Pause);
-        int current = GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Chain];
+        int current = PowerUps[GameData.PowerUpType.Chain];
         --current;
-        GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Chain] = current;
+        PowerUps[GameData.PowerUpType.Chain] = current;
 
 		//
 		EventData eventData = new EventData("OnPowerUpUsedEvent");
@@ -1852,7 +1894,7 @@ public class GameBoard : MonoBehaviour
             // if no pipes left - add new pipe on board without move counting
             if (GetMovablePipesCount() == 0)
             {
-                GameManager.Instance.BoardData.OnTurnWasMade(false, true);
+                OnTurnWasMade(false, true);
             }
 			UnsetPause();
         } else
@@ -1906,16 +1948,16 @@ public class GameBoard : MonoBehaviour
                 // if no pipes left - add new pipe on board without move counting
                 if (GetMovablePipesCount() == 0)
                 {
-                    GameManager.Instance.BoardData.OnTurnWasMade(false, true);
+                    OnTurnWasMade(false, true);
                 }
                 //
                 UnsetPause();
             });
         slots.Clear();
         //
-        int current = GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.DestroyColor];
+        int current = PowerUps[GameData.PowerUpType.DestroyColor];
         --current;
-        GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.DestroyColor] = current;
+        PowerUps[GameData.PowerUpType.DestroyColor] = current;
         //
         EventData eventData = new EventData("OnPowerUpUsedEvent");
         eventData.Data["type"] = GameData.PowerUpType.DestroyColor;
@@ -1924,7 +1966,7 @@ public class GameBoard : MonoBehaviour
 
     public bool IsPlay()
     {
-        return GameManager.Instance.BoardData.GameState == EGameState.Play;
+        return GameState == EGameState.Play;
     }
 
     public int GetPipesCount()
@@ -2039,7 +2081,7 @@ public class GameBoard : MonoBehaviour
     {
 		if (GameType == EGameType.Classic)
 		{
-			if (GameManager.Instance.BoardData.GameState != EGameState.Loose)
+			if (GameState != EGameState.Loose)
 		  	{
 		  	    GameManager.Instance.Player.SaveLastGame(GetLevelToSave());
 		  	}
@@ -2248,7 +2290,7 @@ public class GameBoard : MonoBehaviour
             {
                 for (var powerup = GameData.PowerUpType.Reshuffle; powerup <= GameData.PowerUpType.DestroyColor; ++powerup)
                 {
-                    if (GameManager.Instance.BoardData.PowerUps[powerup] > 0) // && GameManager.Instance.Player.PowerUpsState.ContainsKey(powerup) && GameManager.Instance.Player.PowerUpsState[powerup].Level > 0)
+                    if (PowerUps[powerup] > 0) // && GameManager.Instance.Player.PowerUpsState.ContainsKey(powerup) && GameManager.Instance.Player.PowerUpsState[powerup].Level > 0)
                     {
                         GameManager.Instance.ShowTutorial("2", new Vector3(0, 0, 0));
                         return;
@@ -2421,8 +2463,8 @@ public class GameBoard : MonoBehaviour
             if (Input.touchCount == 0 && _currentTouchId != -1)
             {
                 _currentTouchId = -1;
-                GameManager.Instance.BoardData.DragSlot = null;
-                GameManager.Instance.BoardData.AGameBoard.HideSelection();
+                DragSlot = null;
+                HideSelection();
             } else
             // only 1 touch - first touch (B real) for clicks on buttons and popups
             if (Input.touchCount > 0)
@@ -2480,9 +2522,9 @@ public class GameBoard : MonoBehaviour
                                 LeftMouseUpByPosition(downGamePosNew2);
                             }
                             else
-                            if (GameManager.Instance.BoardData.DragSlot != null && Consts.SLIDE_WITHOUT_MOUSE_UP)
+                            if (DragSlot != null && Consts.SLIDE_WITHOUT_MOUSE_UP)
                             {
-                                GameManager.Instance.BoardData.DragSlot.UpdateSlot(downGamePosNew2);
+                                DragSlot.UpdateSlot(downGamePosNew2);
                             }
                             break;
                         }
@@ -2503,7 +2545,7 @@ public class GameBoard : MonoBehaviour
                 //Debug.Log("over-left down");
                 LeftMouseDownByPosition(downGamePosNew);
             } else
-            if (Consts.START_SLIDE_ON_NO_MOUSE_DOWN && Input.GetMouseButton(0) && GameManager.Instance.BoardData.DragSlot == null)
+            if (Consts.START_SLIDE_ON_NO_MOUSE_DOWN && Input.GetMouseButton(0) && DragSlot == null)
             {
                 // left down
                 //Debug.Log("left down");
@@ -2517,9 +2559,9 @@ public class GameBoard : MonoBehaviour
                 LeftMouseUpByPosition(downGamePosNew);
             }
             else
-            if (GameManager.Instance.BoardData.DragSlot != null && Consts.SLIDE_WITHOUT_MOUSE_UP)
+            if (DragSlot != null && Consts.SLIDE_WITHOUT_MOUSE_UP)
             {
-                GameManager.Instance.BoardData.DragSlot.UpdateSlot(downGamePosNew);
+                DragSlot.UpdateSlot(downGamePosNew);
             }
 		}
 	}
@@ -2530,7 +2572,7 @@ public class GameBoard : MonoBehaviour
 		{
 			return;
 		}
-		if (GameManager.Instance.BoardData.GameState != EGameState.Play || GameManager.Instance.BoardData.DragSlot != null)
+		if (GameState != EGameState.Play || DragSlot != null)
 		{
 			// can't drag
 			return;
@@ -2565,7 +2607,7 @@ public class GameBoard : MonoBehaviour
 				slot.OnMouseDownByPosition(downGamePos);
 			}
 		}
-        if (Consts.START_SLIDE_ON_NO_MOUSE_DOWN && GameManager.Instance.BoardData.DragSlot == null)
+        if (Consts.START_SLIDE_ON_NO_MOUSE_DOWN && DragSlot == null)
         {
             // we clicked on empty cell
             _currentTouchId = -1;
@@ -2578,9 +2620,9 @@ public class GameBoard : MonoBehaviour
 		{
 			return;
 		}
-		if (GameManager.Instance.BoardData.DragSlot != null)
+		if (DragSlot != null)
 		{
-			GameManager.Instance.BoardData.DragSlot.OnMouseUpByPosition(downGamePos);
+			DragSlot.OnMouseUpByPosition(downGamePos);
 		}
 	}
 
@@ -2588,5 +2630,274 @@ public class GameBoard : MonoBehaviour
 	{
 		return ColoredMaterials[acolor * Consts.CLASSIC_GAME_COLORS + param];
 	}
+
+    public void SetResourceForce(long amount, int color)
+    {
+        _resources[color] = amount;
+        EventData eventData = new EventData("OnResourcesChangedEvent");
+        eventData.Data["isforce"] = true;
+        GameManager.Instance.EventManager.CallOnResourcesChangedEvent(eventData);
+    }
+
+    public void SetResource(long amount, int color)
+    {
+        _resources[color] = amount;
+        EventData eventData = new EventData("OnResourcesChangedEvent");
+        eventData.Data["isforce"] = false;
+        GameManager.Instance.EventManager.CallOnResourcesChangedEvent(eventData);
+    }
+
+    //public void AddResource(long amount, int color)
+    //{
+    //	long sum = _resources[color] + amount;
+    //	SetResource(sum, color);
+    //}
+
+    public void AddResource(long amount, int color, Vector3 pos)
+    {
+        long sum = _resources[color] + amount;
+        pos = ConvertPositionFromLocalToScreenSpace(pos);
+        EventData e = new EventData("OnShowAddResourceEffect");
+        e.Data["x"] = pos.x;
+        e.Data["y"] = pos.y;
+        e.Data["amount"] = amount;
+        e.Data["color"] = color;
+        GameManager.Instance.EventManager.CallOnShowAddResourceEffect(e);
+        if (Consts.SHOW_ADD_POINTS_ANIMATION)
+        {
+            LeanTween.delayedCall(Consts.ADD_POINTS_EFFECT_TIME, () => { SetResource(sum, color); });
+        }
+        else
+        {
+            SetResource(sum, color);
+        }
+    }
+
+    public void RemoveResource(long amount, int color)
+    {
+        long sum = _resources[color] - amount;
+        if (sum < 0)
+        {
+            sum = 0;
+        }
+        SetResource(sum, color);
+    }
+
+    public void AddResourceByLevelOfColoredPipe(int value, int color, int multiplyer, Vector3 pos) // by level of colored pipe
+    {
+        AddResource(Consts.POINTS[value] * multiplyer, color, pos);
+        // TODO call to ResourcePanel to show "+points" animation
+    }
+
+    public long GetResourceAmount(int color)
+    {
+        return _resources[color];
+    }
+
+    public long GetTotalPoints()
+    {
+        long res = 0;
+        for (int i = 0; i < _resources.Count; ++i)
+        {
+            res += _resources[i];
+        }
+        res += _pointsForSequences;
+        return res;
+    }
+
+    public void AddPointsForSequence(long points)
+    {
+        _pointsForSequences += points;
+        EventData eventData = new EventData("OnResourcesChangedEvent");
+        eventData.Data["isforce"] = false;
+        eventData.Data["x"] = 0;
+        eventData.Data["y"] = 0;
+        GameManager.Instance.EventManager.CallOnResourcesChangedEvent(eventData);
+    }
+
+    public void SetGameState(EGameState astate)
+    {
+        GameState = astate;
+    }
+
+
+    public bool IsLoose()
+    {
+        return GameState == EGameState.Loose;
+    }
+
+    public bool IsPause()
+    {
+        return GameState == EGameState.Pause;
+    }
+
+    public int GetRandomColor()
+    {
+        //if (GameBoard.GameType == EGameType.Classic)
+        //{
+        return UnityEngine.Random.Range(0, Consts.CLASSIC_GAME_COLORS);
+        //}
+        //        else
+        //        //if (GameBoard.GameType == EGameType.Inverse)
+        //        {
+        //            return UnityEngine.Random.Range(0, Consts.INVERSE_GAME_COLORS);
+        //        }
+    }
+
+    public int GetColorsCount()
+    {
+        //if (GameBoard.GameType == EGameType.Classic)
+        //{
+        return Consts.CLASSIC_GAME_COLORS;
+        //} 
+        //		else
+        //        //if (GameBoard.GameType == EGameType.Inverse)
+        //        {
+        //            return Consts.INVERSE_GAME_COLORS;
+        //        }
+    }
+
+    public void UpdateTimer(float deltaTime)
+    {
+        TimePlayed += deltaTime;
+    }
+
+    public int GetMaxColoredLevels()
+    {
+        return Consts.MAX_COLORED_LEVELS;
+    }
+
+    public void OnTurnWasMade(bool wasMatch, bool justAddPipe)
+    {
+        if (GameBoard.GameType == EGameType.Leveled)
+        {
+            //if (!justAddPipe)
+            //{
+            ++_allTurns;
+            --MovesLeft;
+            CheckLeveledWinCondition();
+            //}
+        }
+        else
+        {
+            if (!justAddPipe && GameBoard.AddingType == EAddingType.EachXMoves)
+            {
+                --_movesToNextPipe;
+                ++_allTurns;
+            }
+            else
+            {
+                ++_allTurns;
+            }
+            bool pipeneeded = false;
+            if (justAddPipe)
+            {
+                pipeneeded = true;
+            }
+            else
+            if (GameBoard.AddingType == EAddingType.EachXMoves)
+            {
+                if (_movesToNextPipe == 0)
+                {
+                    pipeneeded = true;
+                }
+            }
+            else
+            if (GameBoard.AddingType == EAddingType.OnNoMatch)
+            {
+                if (!wasMatch)
+                {
+                    pipeneeded = true;
+                }
+            }
+
+            if (pipeneeded)
+            {
+                if (GameBoard.AddingType == EAddingType.EachXMoves && _movesToNextPipe == 0)
+                {
+                    _movesToNextPipe = Consts.TURNS_TO_NEXT_PIPE;
+                }
+                bool needBlocker = false;
+                if (GameBoard.AddingType != EAddingType.OnNoMatch || Consts.USE_BLOCKERS_ON_NO_MATCH_ADDING)
+                {
+                    needBlocker = _pipesToNextBlocker == 0;
+                    if (needBlocker)
+                    {
+                        _pipesToNextBlocker = Consts.PIPES_TO_NEXT_BLOCKER;
+                    }
+                    else
+                    {
+                        --_pipesToNextBlocker;
+                    }
+                }
+                // add new pipe to queue and create new
+                EPipeType pipeType = EPipeType.Colored;
+                if (needBlocker)
+                {
+                    pipeType = EPipeType.Blocker;
+                }
+                if (pipeneeded)
+                {
+                    if (pipeneeded && AddRandomPipe(pipeType))
+                    {
+                        ++_pipesAdded;
+                    }
+                    else
+                    {
+                        if (pipeType == EPipeType.Blocker)
+                        {
+                            // add blocker on next turn
+                            _pipesToNextBlocker = 0;
+                        }
+                    }
+                }
+            }
+        }
+        EventData eventData = new EventData("OnTurnWasMadeEvent");
+        eventData.Data["tonextpipe"] = _movesToNextPipe;
+        eventData.Data["turnsmade"] = _allTurns;
+        eventData.Data["pipesadded"] = _pipesAdded;
+        GameManager.Instance.EventManager.CallOnTurnWasMadeEvent(eventData);
+    }
+
+    public int GetMovesToNextPipe()
+    {
+        return _movesToNextPipe;
+    }
+
+    private void CheckLeveledWinCondition()
+    {
+        if (StarsGained >= 3 || MovesLeft <= 0)
+        {
+            OnLeveledGameCompleted();
+        }
+    }
+
+    public void Reset()
+    {
+        _movesToNextPipe = Consts.TURNS_TO_NEXT_PIPE;
+        _allTurns = 0; // for leveled too
+        _pipesAdded = 0;
+        _pipesToNextBlocker = Consts.PIPES_TO_NEXT_BLOCKER;
+        _pointsForSequences = 0;
+        for (int i = 0; i < _resources.Count; ++i)
+        {
+            _resources[i] = 0;
+        }
+        GameState = EGameState.Pause;
+        TimePlayed = 0;
+        DragSlot = null;
+        AddsViewed = false;
+
+        //		// leveled
+        //		StarsGained = 0;
+        //		MovesLeft = 0;
+        //		//
+
+        //        // powerups
+        //        EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
+        //        //eventData.Data["isforce"] = true;
+        //        GameManager.Instance.EventManager.CallOnPowerUpsResetNeededEvent(eventData);
+    }
 
 }

@@ -29,9 +29,9 @@ public class Cheats
         {
             if (Input.GetKeyDown(KeyCode.R)) //Reshuffle Powerup
             {
-                int current = GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Reshuffle];
+                int current = GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Reshuffle];
                 ++current;
-                GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Reshuffle] = current;
+                GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Reshuffle] = current;
                 //
                 EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
                 eventData.Data["isStart"] = true;
@@ -40,9 +40,9 @@ public class Cheats
 
             if (Input.GetKeyDown(KeyCode.C)) // Chain Powerup
             {
-                int current = GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Chain];
+                int current = GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Chain];
                 ++current;
-                GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Chain] = current;
+                GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Chain] = current;
                 //
                 EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
                 eventData.Data["isStart"] = true;

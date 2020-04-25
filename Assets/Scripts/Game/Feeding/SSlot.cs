@@ -119,7 +119,7 @@ public class SSlot : MonoBehaviour {
 //			}
 //		}
 //
-//		GameBoard board = GameManager.Instance.BoardData.AGameBoard;
+//		GameBoard board = GameManager.Instance.Game;
 //		if (board.BreakePowerup)
 //		{
 //			board.OnBreakePowerupUsed(this);
@@ -161,7 +161,7 @@ public class SSlot : MonoBehaviour {
 //				MouseDownPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 //				#endif
 //			}
-//			GameManager.Instance.BoardData.AGameBoard.ShowSelection(transform.position);
+//			GameManager.Instance.Game.ShowSelection(transform.position);
 //		}
 //	}
 //
@@ -173,7 +173,7 @@ public class SSlot : MonoBehaviour {
 //		}
 //		if (GameManager.Instance.BoardData.DragSlot == this)
 //		{
-//			GameManager.Instance.BoardData.AGameBoard.HideSelection();
+//			GameManager.Instance.Game.HideSelection();
 //			GameManager.Instance.BoardData.DragSlot = null;
 //
 //			Vector2 endPos = Vector2.zero;
@@ -213,11 +213,11 @@ public class SSlot : MonoBehaviour {
 //					if (dx > 0)
 //					{
 //						// impulse to right
-//						GameManager.Instance.BoardData.AGameBoard.SlidePipe(this, 1, 0);
+//						GameManager.Instance.Game.SlidePipe(this, 1, 0);
 //					} else
 //					{
 //						// impulse to left
-//						GameManager.Instance.BoardData.AGameBoard.SlidePipe(this, -1, 0);
+//						GameManager.Instance.Game.SlidePipe(this, -1, 0);
 //					}
 //				} else
 //				{
@@ -225,11 +225,11 @@ public class SSlot : MonoBehaviour {
 //					if (dy > 0)
 //					{
 //						// impulse to top
-//						GameManager.Instance.BoardData.AGameBoard.SlidePipe(this, 0, 1);
+//						GameManager.Instance.Game.SlidePipe(this, 0, 1);
 //					} else
 //					{
 //						// impulse to bottom
-//						GameManager.Instance.BoardData.AGameBoard.SlidePipe(this, 0, -1);
+//						GameManager.Instance.Game.SlidePipe(this, 0, -1);
 //					}
 //				}
 //			}
@@ -240,7 +240,7 @@ public class SSlot : MonoBehaviour {
 
 	public void OnMouseDownByPosition(Vector2 pos)
 	{
-		GameBoard board = GameManager.Instance.BoardData.AGameBoard;
+		GameBoard board = GameManager.Instance.Game;
 		if (board.BreakePowerup)
 		{
 			board.OnBreakePowerupUsed(this);
@@ -267,16 +267,16 @@ public class SSlot : MonoBehaviour {
 		else
 		{
 			// mark as slot that we drag now
-			GameManager.Instance.BoardData.DragSlot = this;
+			GameManager.Instance.Game.DragSlot = this;
 			MouseDownPos = pos;
-			GameManager.Instance.BoardData.AGameBoard.ShowSelection(transform.position);
+			GameManager.Instance.Game.ShowSelection(transform.position);
 		}
 	}
 
 	public void OnMouseUpByPosition(Vector2 endPos)
 	{
-		GameManager.Instance.BoardData.AGameBoard.HideSelection();
-		GameManager.Instance.BoardData.DragSlot = null;
+		GameManager.Instance.Game.HideSelection();
+		GameManager.Instance.Game.DragSlot = null;
 		// check if enough distance to slide and find direction
 		float dx = endPos.x - MouseDownPos.x;
 		float dy = endPos.y - MouseDownPos.y;
@@ -298,12 +298,12 @@ public class SSlot : MonoBehaviour {
             if (dx > 0)
             {
                 // impulse to right
-                GameManager.Instance.BoardData.AGameBoard.SlidePipe(this, 1, 0);
+                GameManager.Instance.Game.SlidePipe(this, 1, 0);
             }
             else
             {
                 // impulse to left
-                GameManager.Instance.BoardData.AGameBoard.SlidePipe(this, -1, 0);
+                GameManager.Instance.Game.SlidePipe(this, -1, 0);
             }
         }
         else
@@ -312,12 +312,12 @@ public class SSlot : MonoBehaviour {
             if (dy > 0)
             {
                 // impulse to top
-                GameManager.Instance.BoardData.AGameBoard.SlidePipe(this, 0, 1);
+                GameManager.Instance.Game.SlidePipe(this, 0, 1);
             }
             else
             {
                 // impulse to bottom
-                GameManager.Instance.BoardData.AGameBoard.SlidePipe(this, 0, -1);
+                GameManager.Instance.Game.SlidePipe(this, 0, -1);
             }
         }
     }
@@ -334,8 +334,8 @@ public class SSlot : MonoBehaviour {
             // impulse too short (cancelled impulse)
             return;
         }
-        GameManager.Instance.BoardData.AGameBoard.HideSelection();
-        GameManager.Instance.BoardData.DragSlot = null;
+        GameManager.Instance.Game.HideSelection();
+        GameManager.Instance.Game.DragSlot = null;
         Slide(dx, dy, absDx, absDy);
     }
 }

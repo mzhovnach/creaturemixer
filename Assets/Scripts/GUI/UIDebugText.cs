@@ -140,7 +140,7 @@ public class UIDebugText : MonoBehaviour
     {
         //MatchCheats.ExecuteWIN = true;
 
-        //////GameManager.Instance.BoardData.AGameBoard.SaveGame();
+        //////GameManager.Instance.Game.SaveGame();
         ////EventData eventData = new EventData("OnNeedSaveLevelEvent");
         ////GameManager.Instance.EventManager.CallOnNeedSaveLevelEvent(eventData);
         ////GameManager.Instance.Settings.Save(true);

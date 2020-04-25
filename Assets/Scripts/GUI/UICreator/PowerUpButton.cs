@@ -33,7 +33,7 @@ public class PowerUpButton : MonoBehaviour
 	public void UpdatePowerup() // and unselect
 	{
 		SelectionImage.color = NotSelectedColor;
-		int current = GameManager.Instance.BoardData.PowerUps[PowerupType];
+		int current = GameManager.Instance.Game.PowerUps[PowerupType];
 		AText.text = current.ToString();
 		if (current <= 0)
 		{

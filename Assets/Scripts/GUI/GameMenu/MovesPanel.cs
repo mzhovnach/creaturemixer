@@ -29,7 +29,7 @@ public class MovesPanel : MonoBehaviour
 		
 	void OnTurnWasMade(EventData e)
 	{		
-		long amount = GameManager.Instance.BoardData.MovesLeft;
+		long amount = GameManager.Instance.Game.MovesLeft;
 		//bool isforce = (bool)e.Data["isforce"];
 		//if (isforce)
 		//{

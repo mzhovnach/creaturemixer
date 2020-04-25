@@ -23,7 +23,7 @@ public class StatisticWindowUIController : BaseUIController
     public override bool OpenForm(EventData e)
 	{
         //TryRescale();
-        long points = GameManager.Instance.BoardData.GetTotalPoints();
+        long points = GameManager.Instance.Game.GetTotalPoints();
         PointsText.text = points.ToString();
         if (GameManager.Instance.Player.BestScore < points)
         {
@@ -66,7 +66,7 @@ public class StatisticWindowUIController : BaseUIController
             return;
         }
         Hide();
-        GameManager.Instance.BoardData.AGameBoard.RestartGame();
+        GameManager.Instance.Game.RestartGame();
     }
 
     public void StatisticWindowButtonShareOnClick()

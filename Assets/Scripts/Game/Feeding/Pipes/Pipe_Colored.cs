@@ -34,7 +34,7 @@ public class Pipe_Colored : SPipe
 	public override void RaseCombineAnimation(int dirX, int dirY)
 	{
         // animation of colored pipe when other pipe slides to it
-        // GameManager.Instance.BoardData.AGameBoard.ShakeCamera(Consts.SHAKE_POWER_ON_PIPE_COMBINE, Consts.SHAKE_POWER_ON_PIPE_COMBINE, Consts.SHAKE_TIME_ON_PIPE_COMBINE);
+        // GameManager.Instance.Game.ShakeCamera(Consts.SHAKE_POWER_ON_PIPE_COMBINE, Consts.SHAKE_POWER_ON_PIPE_COMBINE, Consts.SHAKE_TIME_ON_PIPE_COMBINE);
 		SetValue(Param + 1, dirX, dirY);
 	}
 

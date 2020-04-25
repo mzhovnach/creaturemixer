@@ -42,7 +42,7 @@ public class ResourcesPanel : MonoBehaviour
             BestText.text = Localer.GetText("BestScore") + GameManager.Instance.Player.BestScore.ToString();
             return;
         }
-		long amount = GameManager.Instance.BoardData.GetTotalPoints();
+		long amount = GameManager.Instance.Game.GetTotalPoints();
 		bool isforce = (bool)e.Data["isforce"];
 		if (isforce)
 		{

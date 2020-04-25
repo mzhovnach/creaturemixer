@@ -28,7 +28,7 @@ public class Pipe_Base : SPipe
 	{
 		// animation of base or storage when colored pipe slides to it
 		//TODO
-		GameManager.Instance.BoardData.AddResourceByLevelOfColoredPipe(value, color, 1, transform.position);
+		GameManager.Instance.Game.AddResourceByLevelOfColoredPipe(value, color, 1, transform.position);
 	}
 
 }

@@ -87,23 +87,23 @@ public class SequencePipe : MonoBehaviour
 		SkinData sd = GameManager.Instance.Player.CurrentSkin;
 		if (PipeType == EPipeType.Blocker) 
 		{
-			IconImage.sprite = GameManager.Instance.BoardData.AGameBoard.GetSprite("blocker");
+			IconImage.sprite = GameManager.Instance.Game.GetSprite("blocker");
 			ValueImage.gameObject.SetActive (false);
 		} else
 		{
 			//if (sd.PipeStructureType == EPipeStructureType.BackFront) 
 			//{
 				ValueImage.gameObject.SetActive (true);
-				IconImage.sprite = GameManager.Instance.BoardData.AGameBoard.GetSprite(sd.BackPrefix + AColor.ToString());
+				IconImage.sprite = GameManager.Instance.Game.GetSprite(sd.BackPrefix + AColor.ToString());
 				IconImage.SetNativeSize();
-				ValueImage.sprite = GameManager.Instance.BoardData.AGameBoard.GetSprite(sd.FrontPrefix + Param.ToString());
+				ValueImage.sprite = GameManager.Instance.Game.GetSprite(sd.FrontPrefix + Param.ToString());
 				ValueImage.SetNativeSize();
 			//} 
 			//else
 			//if (sd.PipeStructureType == EPipeStructureType.Solid) 
 			//{
 			//	ValueImage.gameObject.SetActive (false);
-			//	IconImage.sprite = GameManager.Instance.BoardData.AGameBoard.GetSprite(sd.BackPrefix + AColor.ToString() + "_" +  Param.ToString());
+			//	IconImage.sprite = GameManager.Instance.Game.GetSprite(sd.BackPrefix + AColor.ToString() + "_" +  Param.ToString());
 			//	IconImage.SetNativeSize();
 			//}
 		}

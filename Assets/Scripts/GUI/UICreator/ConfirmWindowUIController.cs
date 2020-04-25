@@ -85,7 +85,7 @@ public class ConfirmWindowUIController : BaseUIController {
 //		} else
 //        if (_atype == "confirm_restart")
 //        {            
-//			GameManager.Instance.BoardData.AGameBoard.RestartGame();
+//			GameManager.Instance.Game.RestartGame();
 //        }
 	}
 

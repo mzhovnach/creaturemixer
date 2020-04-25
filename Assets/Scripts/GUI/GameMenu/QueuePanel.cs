@@ -127,7 +127,7 @@ public class QueuePanel : MonoBehaviour
         //create full queue at start
         for (int i = 1; i <= SIZE; ++i)
         {
-            SequencePipe pipe = CreatePipe(EPipeType.Colored, GameManager.Instance.BoardData.GetRandomColor(), 0);
+            SequencePipe pipe = CreatePipe(EPipeType.Colored, GameManager.Instance.Game.GetRandomColor(), 0);
             {
                 pipe.ATransform.localPosition = _slotsPoses[i];
                 _sequence[i] = pipe;
@@ -149,7 +149,7 @@ public class QueuePanel : MonoBehaviour
         {
             for (int i = 0; i <= SIZE; ++i)
             {
-                state.Add(GameManager.Instance.BoardData.GetRandomColor());
+                state.Add(GameManager.Instance.Game.GetRandomColor());
             }
         }
         //create full queue at start

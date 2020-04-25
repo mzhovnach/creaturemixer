@@ -55,7 +55,7 @@ public class GameMenuUIController : BaseUIController
             else
             if (GameManager.Instance.CurrentMenu == UISetType.ClassicGame || GameManager.Instance.CurrentMenu == UISetType.LeveledGame)
             {
-                if (!GameManager.Instance.BoardData.IsLoose() && !GameManager.Instance.BoardData.IsPause())
+                if (!GameManager.Instance.Game.IsLoose() && !GameManager.Instance.Game.IsPause())
                 {
                     GameManager.Instance.Game.GoHome();
                 }
@@ -89,9 +89,9 @@ public class GameMenuUIController : BaseUIController
         {
             Powerups[GameData.PowerUpType.Breake].UpdatePowerup();
         }
-        GameManager.Instance.BoardData.AGameBoard.BreakePowerup = false;
-        GameManager.Instance.BoardData.AGameBoard.ChainPowerup = false;
-        GameManager.Instance.BoardData.AGameBoard.DestroyColorPowerup = false;
+        GameManager.Instance.Game.BreakePowerup = false;
+        GameManager.Instance.Game.ChainPowerup = false;
+        GameManager.Instance.Game.DestroyColorPowerup = false;
         //
         //GameManager.Instance.HideTutorial("");
         //GameManager.Instance.CurrentMenu = "game_menu";
@@ -150,7 +150,7 @@ public class GameMenuUIController : BaseUIController
                 //script.ResetPowerup();
             }
         }
-        GameManager.Instance.BoardData.AGameBoard.PlayGame();
+        GameManager.Instance.Game.PlayGame();
     }
 
     protected override void Awake()
@@ -230,7 +230,7 @@ public class GameMenuUIController : BaseUIController
         if (Consts.MAX_COLORED_LEVEL_GIVES_POWERUP)
         {
             //add powerup
-            GameManager.Instance.BoardData.PowerUps[Consts.MAX_COLORED_LEVEL_GIVES_POWERUP_TYPE] += 1;
+            GameManager.Instance.Game.PowerUps[Consts.MAX_COLORED_LEVEL_GIVES_POWERUP_TYPE] += 1;
             Powerups[Consts.MAX_COLORED_LEVEL_GIVES_POWERUP_TYPE].UpdatePowerup();
             Powerups[Consts.MAX_COLORED_LEVEL_GIVES_POWERUP_TYPE].PlayAddAnimation((float)e.Data["x"], (float)e.Data["y"]);
         }
@@ -240,7 +240,7 @@ public class GameMenuUIController : BaseUIController
     {
         //GameManager.Instance.HideTutorial("");
         Powerups[GameData.PowerUpType.Reshuffle].SelectPowerup();
-        GameManager.Instance.BoardData.AGameBoard.OnPowerUpClicked(GameData.PowerUpType.Reshuffle);
+        GameManager.Instance.Game.OnPowerUpClicked(GameData.PowerUpType.Reshuffle);
         //unselect other
         if (Powerups.ContainsKey(GameData.PowerUpType.Chain))
         {
@@ -256,7 +256,7 @@ public class GameMenuUIController : BaseUIController
     {
         //GameManager.Instance.HideTutorial("");
         Powerups[GameData.PowerUpType.Breake].SelectPowerup();
-        GameManager.Instance.BoardData.AGameBoard.OnPowerUpClicked(GameData.PowerUpType.Breake);
+        GameManager.Instance.Game.OnPowerUpClicked(GameData.PowerUpType.Breake);
         //unselect other
         if (Powerups.ContainsKey(GameData.PowerUpType.Chain))
         {
@@ -277,7 +277,7 @@ public class GameMenuUIController : BaseUIController
     {
         //GameManager.Instance.HideTutorial("");
         Powerups[GameData.PowerUpType.Chain].SelectPowerup();
-        GameManager.Instance.BoardData.AGameBoard.OnPowerUpClicked(GameData.PowerUpType.Chain);
+        GameManager.Instance.Game.OnPowerUpClicked(GameData.PowerUpType.Chain);
         //unselect other
         if (Powerups.ContainsKey(GameData.PowerUpType.Breake))
         {
@@ -293,7 +293,7 @@ public class GameMenuUIController : BaseUIController
     {
         //GameManager.Instance.HideTutorial("");
         Powerups[GameData.PowerUpType.DestroyColor].SelectPowerup();
-        GameManager.Instance.BoardData.AGameBoard.OnPowerUpClicked(GameData.PowerUpType.DestroyColor);
+        GameManager.Instance.Game.OnPowerUpClicked(GameData.PowerUpType.DestroyColor);
         //unselect other
         if (Powerups.ContainsKey(GameData.PowerUpType.Chain))
         {
@@ -312,10 +312,10 @@ public class GameMenuUIController : BaseUIController
 
     private void ResetPowerupsAmount()
     {
-        GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Reshuffle] = Consts.POWERUPS_RESHUFFLE_AT_START;
-        GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Breake] = Consts.POWERUPS_BREAKE_AT_START;
-        GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.Chain] = Consts.POWERUPS_CHAIN_AT_START;
-        GameManager.Instance.BoardData.PowerUps[GameData.PowerUpType.DestroyColor] = Consts.POWERUPS_DESTROY_COLOR_AT_START;
+        GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Reshuffle] = Consts.POWERUPS_RESHUFFLE_AT_START;
+        GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Breake] = Consts.POWERUPS_BREAKE_AT_START;
+        GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Chain] = Consts.POWERUPS_CHAIN_AT_START;
+        GameManager.Instance.Game.PowerUps[GameData.PowerUpType.DestroyColor] = Consts.POWERUPS_DESTROY_COLOR_AT_START;
 
     }
 
@@ -346,7 +346,7 @@ public class GameMenuUIController : BaseUIController
     {
         //MusicManager.PlayGameTracks();
 
-        //GameManager.Instance.BoardData.AGameBoard.RestartGame(); no need for restart course this clears saved game!
+        //GameManager.Instance.Game.RestartGame(); no need for restart course this clears saved game!
         GameManager.Instance.CurrentMenu = UISetType.ClassicGame;
         EventData eventData = new EventData("OnUISwitchNeededEvent");
         eventData.Data["setid"] = UISetType.ClassicGame;
