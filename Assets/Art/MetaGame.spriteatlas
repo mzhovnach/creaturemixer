@@ -1,0 +1,114 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MetaGame
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 2
+      m_CompressionQuality: 85
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: f6bd3f476ced2420cb37748bc7a806be, type: 3}
+    totalSpriteSurfaceArea: 5885573
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f23a8140d5e4f40ee8ba4a28fe2ad6d4, type: 3}
+  - {fileID: 21300000, guid: a48f7d7045daf4d1484b6d424d52a134, type: 3}
+  - {fileID: 21300000, guid: eb99d121c05ae4ee48d85ef8473b15f9, type: 3}
+  - {fileID: 21300000, guid: f9b93b41c832d479d93bfe870ea80687, type: 3}
+  - {fileID: 21300000, guid: aba11cc1a656340a69201fd8e66746de, type: 3}
+  - {fileID: 21300000, guid: b448b8320077a4bc7a9b609fdcb60537, type: 3}
+  - {fileID: 21300000, guid: b5dd919204ebe48adb4dcc5bdf0081fc, type: 3}
+  - {fileID: 21300000, guid: acade1c2ec3b745cebc5157459e193c6, type: 3}
+  - {fileID: 21300000, guid: 13d204e3ea4944ad9a7ce4d4b814346e, type: 3}
+  - {fileID: 21300000, guid: da15ee141344c4fbd93dd0d34759d003, type: 3}
+  - {fileID: 21300000, guid: a3958634f782c479cb17c18dd55af912, type: 3}
+  - {fileID: 21300000, guid: 7df96864f069740fe8daa1f76057a12e, type: 3}
+  - {fileID: 21300000, guid: 952bdd05c5da64e9e84a951d7aa1e71b, type: 3}
+  - {fileID: 21300000, guid: 083830f511e914c1e9da5a3d32f57d92, type: 3}
+  - {fileID: 21300000, guid: cc9119f5a2d5e4950b56c99517a7c752, type: 3}
+  - {fileID: 21300000, guid: dd814676edde847ec8f8a28c14744848, type: 3}
+  - {fileID: 21300000, guid: cd2e2ec62223345f78ac2f03abb06dd4, type: 3}
+  - {fileID: 21300000, guid: f5b5d417d2c614af598eba2672613c51, type: 3}
+  - {fileID: 21300000, guid: e9d02e97dbf96478fb9dc900dd5d7fa6, type: 3}
+  - {fileID: 21300000, guid: b43889e7a91bd481ebbb84fecdb53984, type: 3}
+  - {fileID: 21300000, guid: 47c719b845ea843ee914736fe3ef75b7, type: 3}
+  - {fileID: 21300000, guid: e4c06f99169594f5ca3fee2b0853ba44, type: 3}
+  - {fileID: 21300000, guid: 446f13ea936b94490b656c894fe284ff, type: 3}
+  - {fileID: 21300000, guid: 41cd1cfbb852a4f22833707833f5b7f9, type: 3}
+  - {fileID: 21300000, guid: 671c051c030af473e9dbcc51fb401859, type: 3}
+  - {fileID: 21300000, guid: b4970d5c3f7564602bea6fa12f4d0389, type: 3}
+  - {fileID: 21300000, guid: 9213c34d4b1b84392a8d47367220445d, type: 3}
+  - {fileID: 21300000, guid: 393b689dffb9c42d8a66dc456a6c9d8e, type: 3}
+  - {fileID: 21300000, guid: b8fe211ea01764426aa7b3b725095f7b, type: 3}
+  - {fileID: 21300000, guid: 18618bae10b7d4a68a1689d94b0a6910, type: 3}
+  - {fileID: 21300000, guid: d120736f4185141d0b60aec228d25678, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Hackaton_base_plants_04
+  - Hackaton_base_small_mushrooms_02
+  - Hackaton_base_small_mushrooms_01
+  - Hackaton_base_upgrade_08
+  - Hackaton_base_character_03
+  - Hackaton_base_upgrade_01
+  - Hackaton_base_plants_02
+  - Hackaton_base_pyramid_01
+  - Hackaton_base_maze_02
+  - Hackaton_base_upgrade_07
+  - Hackaton_base_background
+  - Hackaton_base_upgrade_02
+  - Hackaton_base_upgrade_03
+  - Hackaton_base_place_02
+  - Hackaton_base_upgrade_04
+  - Hackaton_base_plants_03
+  - Hackaton_base_fish
+  - Hackaton_base_place_03
+  - Hackaton_base_plants_06
+  - Hackaton_base_character_02
+  - Hackaton_base_upgrade_05
+  - Hackaton_base_small_mushrooms_03
+  - Hackaton_base_plants_01
+  - Hackaton_base_maze_01
+  - Hackaton_base_dock
+  - Hackaton_base_character_01
+  - Hackaton_base_plants_05
+  - Hackaton_base_upgrade_06
+  - Hackaton_base_volcanoes_01
+  - Hackaton_base_place_01
+  - Hackaton_base_upgrade_09
+  m_Tag: MetaGame
+  m_IsVariant: 0

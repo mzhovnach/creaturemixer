@@ -132,7 +132,7 @@ public class UICreator : MonoBehaviour
         ClicksCatcher = new GameObject();
         ClicksCatcher.name = "ClicksCatcher";
         RectTransform rt = ClicksCatcher.AddComponent<RectTransform>();
-        rt.sizeDelta = new Vector2(2400, 2000);
+        rt.sizeDelta = new Vector2(4096, 4096);
         ClicksCatcher.transform.SetParent(_newCanvas.transform, false);
         Image image = ClicksCatcher.AddComponent<Image>();
         Color acolor = UIConsts.CLICKS_CATCHER_COLOR;
