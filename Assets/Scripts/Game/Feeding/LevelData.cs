@@ -90,7 +90,43 @@ public class LevelData
         {
             res.Aims.Add(new Vector3Int(cmLevelData.Aims[i].x, cmLevelData.Aims[i].y, 0));
         }
+        if (IsEmptyLevel(res.Slots))
+        {
+            res.Slots.Clear();
+            for (int i = 0; i < GameBoard.WIDTH; ++i)
+            {
+                for (int j = 0; j < GameBoard.HEIGHT; ++j)
+                {
+                    if (UnityEngine.Random.Range(0, 100) <= 33)
+                    {
+                        SSlotData sData = new SSlotData();
+                        sData.x = i;
+                        sData.y = j;
+                        sData.pt = EPipeType.Colored;
+                        sData.p = 0;
+                        sData.c = -1;
+                        res.Slots.Add(sData);
+                    }
+                }
+                    
+            }
+        }
         return res;
     }
 
+    static bool IsEmptyLevel(List<SSlotData> slots)
+    {
+        if (slots.Count == 0)
+        {
+            return true;
+        }
+        for (int i = 0; i < slots.Count; ++i)
+        {
+            if (slots[i].pt == EPipeType.Colored)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }

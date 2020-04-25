@@ -254,6 +254,8 @@ public class GameBoard : MonoBehaviour
         _slotsToCheckAims.Add(new BoardPos(1, 4));
         _slotsToCheckAims.Add(new BoardPos(2, 4));
         _slotsToCheckAims.Add(new BoardPos(3, 4));
+        //
+        SetupCreatureMixUpgrades();
     }
 
     void OnDestroy()
@@ -2968,5 +2970,18 @@ public class GameBoard : MonoBehaviour
             }
         }
         return completed;
+    }
+
+    private void SetupCreatureMixUpgrades()
+    {
+        //TODO
+        //Додати скріптейбл обджект де для кожного рівня прописані частини що мають бути відкриті при виграші рівня, а які ховаємо!!!
+        //Петя має зробити
+        //string path = "Data/upgrades";
+        //UpgradesScriptableData data = (UpgradesScriptableData)Resources.Load<UpgradesScriptableData>(path);
+        //for (int i = 0; i < data.Levels.Count; ++i)
+        //{
+        //    ...
+        //}
     }
 }
