@@ -24,15 +24,15 @@ public class ResourcesPanel : MonoBehaviour
 		Amount = 0;
 		AmountText.text = "0";
 		BestText.text = Localer.GetText("BestScore") + GameManager.Instance.Player.BestScore.ToString();
-		EventManager.OnResourcesChangedEvent += OnResourcesChanged;
-        EventManager.OnShowAddResourceEffect += OnShowAddResourceEffect;
-        //_worker = new ZActionWorker();
+		//EventManager.OnResourcesChangedEvent += OnResourcesChanged;
+        //EventManager.OnShowAddResourceEffect += OnShowAddResourceEffect;
+        ////_worker = new ZActionWorker();
     }
 	
 	void OnDestroy()
 	{
-		EventManager.OnResourcesChangedEvent -= OnResourcesChanged;
-        EventManager.OnShowAddResourceEffect -= OnShowAddResourceEffect;
+		//EventManager.OnResourcesChangedEvent -= OnResourcesChanged;
+        //EventManager.OnShowAddResourceEffect -= OnShowAddResourceEffect;
     }
 
 	void OnResourcesChanged(EventData e)
