@@ -181,7 +181,9 @@ public class GameBoard : MonoBehaviour
     // leveled
     public float StarsGained;
     public int MovesLeft;
-    //
+    // slots to check aims
+    List<BoardPos> _slotsToCheckAims = new List<BoardPos>();
+    BoardPos _lastSlotWithMatch = new BoardPos(-1, -1);
 
     void Awake()
     {
@@ -248,6 +250,10 @@ public class GameBoard : MonoBehaviour
         {
             _sprites.Add(Sprites[i].name, Sprites[i]);
         }
+        //
+        _slotsToCheckAims.Add(new BoardPos(1, 4));
+        _slotsToCheckAims.Add(new BoardPos(2, 4));
+        _slotsToCheckAims.Add(new BoardPos(3, 4));
     }
 
     void OnDestroy()
@@ -583,6 +589,7 @@ public class GameBoard : MonoBehaviour
         _cameraPos = _camera.transform.position;
 		_cameraPos.x = 0;
 		_cameraPos.y = 0.2f;
+        _lastSlotWithMatch.x = -1; // no matches were made
 		_camera.transform.position = _cameraPos;
 		ShowDarkScreenForce();
 		Selection.SetActive(false);
@@ -1075,8 +1082,9 @@ public class GameBoard : MonoBehaviour
 
 	private void OnPipeArrivedToSlotWithMatch(SlideData slideData)
 	{
-		SSlot slot2 = slideData.Slot2;
-		SPipe pipe2 = slideData.Pipe2;
+        SSlot slot2 = slideData.Slot2;
+        _lastSlotWithMatch = new BoardPos(slot2.X, slot2.Y);
+        SPipe pipe2 = slideData.Pipe2;
 		SPipe pipe = slideData.Pipe;
 //		// rotate pipe
 //		if (slideData.DirX != 0)
@@ -2785,32 +2793,52 @@ public class GameBoard : MonoBehaviour
         }
         else
         {
-            if (!justAddPipe && GameBoard.AddingType == EAddingType.EachXMoves)
+            bool aimComplited = false;
+            if (Consts.CHECK_AIM_ON_COMBINE)
             {
-                --_movesToNextPipe;
-                ++_allTurns;
-            }
-            else
+                aimComplited = CheckAimsInSpecificSlots();
+            } else
             {
-                ++_allTurns;
-            }
-            bool pipeneeded = false;
-            if (justAddPipe)
-            {
-                pipeneeded = true;
-            }
-            else
-            if (GameBoard.AddingType == EAddingType.EachXMoves)
-            {
-                if (_movesToNextPipe == 0)
+                if (_lastSlotWithMatch.x >= 0)
                 {
-                    pipeneeded = true;
+                    aimComplited = AAimPanel.CheckSlot(GetSlot(_lastSlotWithMatch));
+                    _lastSlotWithMatch.x = -1;
                 }
             }
-            else
-            if (GameBoard.AddingType == EAddingType.OnNoMatch)
+            bool pipeneeded = false;
+            if (!aimComplited || justAddPipe)
             {
-                if (!wasMatch)
+                if (!justAddPipe && GameBoard.AddingType == EAddingType.EachXMoves)
+                {
+                    --_movesToNextPipe;
+                    ++_allTurns;
+                } else
+                {
+                    ++_allTurns;
+                }
+                
+                if (justAddPipe)
+                {
+                    pipeneeded = true;
+                } else
+                if (GameBoard.AddingType == EAddingType.EachXMoves)
+                {
+                    if (_movesToNextPipe == 0)
+                    {
+                        pipeneeded = true;
+                    }
+                } else
+                if (GameBoard.AddingType == EAddingType.OnNoMatch)
+                {
+                    if (!wasMatch)
+                    {
+                        pipeneeded = true;
+                    }
+                }
+            } else
+            {
+                ++_allTurns;
+                if (GetMovablePipesCount() == 0)
                 {
                     pipeneeded = true;
                 }
@@ -2903,5 +2931,19 @@ public class GameBoard : MonoBehaviour
         //        EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
         //        //eventData.Data["isforce"] = true;
         //        GameManager.Instance.EventManager.CallOnPowerUpsResetNeededEvent(eventData);
+    }
+
+    private bool CheckAimsInSpecificSlots()
+    {
+        bool completed = false;
+        for (int i = 0; i < _slotsToCheckAims.Count; ++i)
+        {
+            SSlot slot = GetSlot(_slotsToCheckAims[i]);
+            if (AAimPanel.CheckSlot(slot))
+            {
+                completed = true;
+            }
+        }
+        return completed;
     }
 }

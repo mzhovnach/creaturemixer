@@ -136,4 +136,5 @@ public class Consts
 #endif
 
     public static int MAX_FPS = 60;
+    public static bool CHECK_AIM_ON_COMBINE = true; // if false - will check only in _slotsToCheckAims slots
 }

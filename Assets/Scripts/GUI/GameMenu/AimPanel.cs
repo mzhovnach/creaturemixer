@@ -22,7 +22,7 @@ public class AimPanel : MonoBehaviour
     {
         for (int i = 0; i < Slots.Count; ++i)
         {
-            Slots[i].gameObject.SetActive(false);
+            Slots[i].DisableSlot();
         }
         for (int i = 0; i < levelData.Aims.Count; ++i)
         {
@@ -41,5 +41,37 @@ public class AimPanel : MonoBehaviour
             }
         }
         return res;
+    }
+
+    public bool CheckSlot(SSlot slot)
+    {
+        if (!slot || !slot.Pipe || slot.Pipe.PipeType != EPipeType.Colored)
+        {
+            return false;
+        }
+        int pipeColor = slot.Pipe.AColor;
+        if (pipeColor < Slots.Count)
+        {
+            if (Slots[pipeColor].CheckAim(pipeColor))
+            {
+                //TODO fly to panel
+                SPipe pipe = slot.TakePipe();
+                pipe.PlayHideAnimation();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool IsAllAimsCompleted()
+    {
+        for (int i = 0; i < Slots.Count; ++i)
+        {
+            if (Slots[i].IsIncompleted())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
