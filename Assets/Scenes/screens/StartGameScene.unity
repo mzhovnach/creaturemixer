@@ -349,6 +349,14 @@ PrefabInstance:
       propertyPath: m_CullingMask.m_Bits
       value: 256
       objectReference: {fileID: 0}
+    - target: {fileID: 11400420, guid: 203f292769045ba479f00b952167059d, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1280
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400420, guid: 203f292769045ba479f00b952167059d, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 720
+      objectReference: {fileID: 0}
     - target: {fileID: 22364450, guid: 203f292769045ba479f00b952167059d, type: 3}
       propertyPath: m_SortingOrder
       value: 1000
