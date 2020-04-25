@@ -44,33 +44,48 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: 5868d071e0f02704bb109f4570345ea7, type: 3}
     - {fileID: 102900000, guid: d13f8482f8b6741499f347efb5d2d0c5, type: 3}
-    totalSpriteSurfaceArea: 4113861
+    totalSpriteSurfaceArea: 5116165
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 3489ac101d83afd4f87bcfe25f043542, type: 3}
   - {fileID: 21300000, guid: c18b3c404385fda49ae6b730b6e8da71, type: 3}
+  - {fileID: 21300000, guid: ef06b5607cf4149549b297ef54a7b27a, type: 3}
+  - {fileID: 21300000, guid: fbdcf0b06558b49dfb91f63b4445bb77, type: 3}
   - {fileID: 21300000, guid: 1a12dfc00e857944aabccf692657480f, type: 3}
   - {fileID: 21300000, guid: 789167f037b4c384188a4989957d137e, type: 3}
   - {fileID: 21300000, guid: 4dd02e1183fac374d8cd188921ed00e8, type: 3}
+  - {fileID: 21300000, guid: 9c646e217b5534efdb92d6cbe8662577, type: 3}
+  - {fileID: 21300000, guid: 21b5b641c66364f6bbfbf3c3063ea22c, type: 3}
+  - {fileID: 21300000, guid: 9ffc69615b1ab4459833a2550d5c97ab, type: 3}
   - {fileID: 21300000, guid: 02a881711a3a6ac4ab023bc1eb5a07ec, type: 3}
+  - {fileID: 21300000, guid: 2a49d0910b6114c8ba5c23fc36d517aa, type: 3}
   - {fileID: 21300000, guid: efef5ba1eaf9a2a47a12f15e9eda59d0, type: 3}
   - {fileID: 21300000, guid: 0a081ca138c43ed41a13c073865c6b65, type: 3}
   - {fileID: 21300000, guid: 660859c10282e064691427513932c629, type: 3}
   - {fileID: 21300000, guid: 07a4bcc187b17c7439fbe322b853ecb6, type: 3}
   - {fileID: 21300000, guid: d648f4e140aa6ae4bae50fd7f755de1b, type: 3}
   - {fileID: 21300000, guid: 7d9022f1e5ecb684e9a022a1807f98f1, type: 3}
+  - {fileID: 21300000, guid: 8065716288e6547bd854f2c56cbbb3f9, type: 3}
+  - {fileID: 21300000, guid: 19c7e2727bda64422a98d14161c453c9, type: 3}
+  - {fileID: 21300000, guid: be562d7244bc94a9f8e882c0ab56dc4c, type: 3}
   - {fileID: 21300000, guid: 13b9b98223557594a80b8a7c1bb2d13a, type: 3}
   - {fileID: 21300000, guid: bdc7d192f71d29d498bdc5de53b52fca, type: 3}
   - {fileID: 21300000, guid: 3bf156c24e16dee4da581516f9b7a7c4, type: 3}
   - {fileID: 21300000, guid: dc104cf28cf1698469b6b75db8454359, type: 3}
   - {fileID: 21300000, guid: 140eaff242dc8b34da9bfdc8e10b535e, type: 3}
+  - {fileID: 21300000, guid: 9de4ba03f26b8413987d981a5ed4d33d, type: 3}
+  - {fileID: 21300000, guid: 8b486213495084d21a4b9263a425baca, type: 3}
+  - {fileID: 21300000, guid: 45a2181323933415bbcd23bfc6b4717d, type: 3}
   - {fileID: 21300000, guid: d386ae13ab197b34caa480d4c24528a5, type: 3}
   - {fileID: 21300000, guid: d21a7543543a91841b56f35e53eef36a, type: 3}
   - {fileID: 21300000, guid: 3944aa53cf3938d47947da5d15c8f67f, type: 3}
   - {fileID: 21300000, guid: 844eec53e78ea8e489f868cbabe1835b, type: 3}
   - {fileID: 21300000, guid: ec32d063054101d4b87511a05ca94018, type: 3}
   - {fileID: 21300000, guid: 164ac7633c07a014985a5cc1b8c381dc, type: 3}
+  - {fileID: 21300000, guid: 864745838b69e4a42abc09e3c1027648, type: 3}
+  - {fileID: 21300000, guid: 84f0d1d313c024156913a9f57125c836, type: 3}
+  - {fileID: 21300000, guid: b65799d3353664d458690ce5c1a5daba, type: 3}
   - {fileID: 21300000, guid: d6c70e049b9fd7845a82dd2490c50e6f, type: 3}
   - {fileID: 21300000, guid: 889c741441138cb46993429398d08126, type: 3}
   - {fileID: 21300000, guid: 05652434a05818348857a4c452e30293, type: 3}
@@ -83,8 +98,11 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f1957d1541ba0264eb3371379e3948af, type: 3}
   - {fileID: 21300000, guid: 359d6535e3465c7419cde52c3450c49a, type: 3}
   - {fileID: 21300000, guid: 0ae65245b44c7d34ab7fc6777c8183c3, type: 3}
+  - {fileID: 21300000, guid: e1d0ad4519f9344c9b479dde9340348c, type: 3}
   - {fileID: 21300000, guid: fcb55b554214faf4c9ccc4f153901a16, type: 3}
   - {fileID: 21300000, guid: ede03b75838e3864a8033a9d7e04c4b9, type: 3}
+  - {fileID: 21300000, guid: 2a6ab0856c0224f62a240f9604335f93, type: 3}
+  - {fileID: 21300000, guid: 75710ca55dc9b4858b7ff0d19528ef8b, type: 3}
   - {fileID: 21300000, guid: 2bbbc7b5fc5120e44895c876f4c81a49, type: 3}
   - {fileID: 21300000, guid: 5e00d90655fee9f40955d626fd22b98a, type: 3}
   - {fileID: 21300000, guid: 0acfaa16eed519f4c88dcb610acce9ae, type: 3}
@@ -101,11 +119,14 @@ SpriteAtlas:
   - {fileID: 21300000, guid: a55c8b0724757154e83a1d11574c642f, type: 3}
   - {fileID: 21300000, guid: 74d5cb57f1e05404e804a6b79225829c, type: 3}
   - {fileID: 21300000, guid: e6701187e9313614292c5939fe279efd, type: 3}
+  - {fileID: 21300000, guid: 1080ee97c07954cc180c0e1ea61fbbe1, type: 3}
+  - {fileID: 21300000, guid: 22c5bbc7e70be4b1c815534af05db78e, type: 3}
   - {fileID: 21300000, guid: 23eb57f730287354d9a0fb0980a388ba, type: 3}
   - {fileID: 21300000, guid: e3e7aa282e32d4b4a924cfaa6f15e1cc, type: 3}
   - {fileID: 21300000, guid: defd1438ab5b40044b91a1c63e6ae164, type: 3}
   - {fileID: 21300000, guid: eeb6d63880672fc4cb26cbb40264160c, type: 3}
   - {fileID: 21300000, guid: 3888c34827ec5e54ba7ed22a331ae18a, type: 3}
+  - {fileID: 21300000, guid: 0a7a0b48247504539831d44b6dbfa969, type: 3}
   - {fileID: 21300000, guid: a7c0d678353b3dc40b363d0f9fb982c9, type: 3}
   - {fileID: 21300000, guid: 23ea59787f05c21468911d1d4d6bc9a2, type: 3}
   - {fileID: 21300000, guid: 96d234b871c61944a9fcd50d6ba60d63, type: 3}
@@ -125,6 +146,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 4581855abe766414696eb839c22089a3, type: 3}
   - {fileID: 21300000, guid: 73244c7a61bda410fac2697d94ba668c, type: 3}
   - {fileID: 21300000, guid: 7e2937dafcea22b4595f62a74cffb667, type: 3}
+  - {fileID: 21300000, guid: 342e9eea10f794d28affab93bce3b0cc, type: 3}
   - {fileID: 21300000, guid: 118ee31b675f68e46af4ef76d214fd2e, type: 3}
   - {fileID: 21300000, guid: b761272b72abf6644b79c4d64624c240, type: 3}
   - {fileID: 21300000, guid: d6283f4b4eeacb946bdc6c4d8b708393, type: 3}
@@ -141,6 +163,8 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 1f5505ec84ff9634b8fff9d186408d8e, type: 3}
   - {fileID: 21300000, guid: 1b203aec3e5d2e748beb5e884de13425, type: 3}
   - {fileID: 21300000, guid: 67cb4cfc62d6aff4f8b6145be113316f, type: 3}
+  - {fileID: 21300000, guid: f629ed0d40f924b6e84baf95b9f7e7ef, type: 3}
+  - {fileID: 21300000, guid: 4ce2c01d5e99446a98f059598f180660, type: 3}
   - {fileID: 21300000, guid: 41df971d0ea20eb4d93813ec0c932291, type: 3}
   - {fileID: 21300000, guid: 241c46cdac4fabe42bbb1593c6651204, type: 3}
   - {fileID: 21300000, guid: e5c4beed35df58648b85df4cca210123, type: 3}
@@ -150,6 +174,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: a8fc0e1ec1d81904497e904e92abdc4d, type: 3}
   - {fileID: 21300000, guid: b49bc72e254a4fa4f9d44d723c4f816f, type: 3}
   - {fileID: 21300000, guid: 8e9cc95ebbf3f6a4386f85a5aa8dc570, type: 3}
+  - {fileID: 21300000, guid: d96c776e8ed684dc290fb9e83e8b444b, type: 3}
   - {fileID: 21300000, guid: db07d5beba6505c4792ab1e79c52b323, type: 3}
   - {fileID: 21300000, guid: df0444ce43c254541882edea6940abce, type: 3}
   - {fileID: 21300000, guid: 997069de71b79164588b9316dfb156f5, type: 3}
@@ -162,27 +187,42 @@ SpriteAtlas:
   m_PackedSpriteNamesToIndex:
   - BTN_OptionsHome_back
   - Color_1
+  - Monster_2_Layer 31
+  - Monster_2_Layer 25
   - TrophyBack
   - colored_0_1
   - EndlessStatisticTrophy
+  - Monster_2_Layer 21
+  - Monster_2_Layer 39
+  - Monster_2_Layer 23
   - money
+  - Monster_2_Layer 28
   - FlyingStar
   - colored_3_1
   - ButtonRemoveColorIcon
   - BTN_EndlessStatisticShare_icon
   - trophy_window
   - StarsPanelFiller
+  - Monster_2_Layer 22
+  - Monster_2_Layer 42
+  - Monster_2_Layer 29
   - Symbol_0
   - BTN_Options_Icon
   - MovesPanel_star
   - resourcesEffect
   - colored_1_3
+  - Monster_2_Layer 43
+  - Monster_2_Layer 20
+  - Monster_2_Layer 44
   - Destroy_Particle_Emitter
   - PowerupCounterBack
   - GameBack
   - UpBack
   - MovesPanel_icon
   - Symbol_1
+  - Monster_2_eye
+  - Monster_2_Layer 17
+  - Monster_2_Layer 36
   - ButtonLeftDown
   - BTN_LevelsNextPrev
   - UpShadow
@@ -195,8 +235,11 @@ SpriteAtlas:
   - colored_4_3
   - colored_2_3
   - Color_2
+  - Monster_2_Layer 35
   - BTN_EndlessStatisticShare_back
   - MovesPanel_back
+  - Monster_2_Layer 26
+  - Monster_2_Layer 33
   - colored_2_1
   - Color_3
   - Trophy
@@ -213,11 +256,14 @@ SpriteAtlas:
   - Color_4
   - NextButtonBack
   - ButtonLeftNormal
+  - Monster_2_Layer 40
+  - Monster_2_Layer 19
   - BTN_OptionClose_icon
   - colored_0_2
   - Up
   - PowerupCounterBackRed
   - BTN_Levels_HomeIcon
+  - Monster_2_Layer 41
   - colored_0_4
   - StarsPlaces
   - colored_2_2
@@ -237,6 +283,7 @@ SpriteAtlas:
   - BackgroundDecor
   - Map_test
   - WindowBack
+  - Monster_2_Layer 18
   - colored_4_2
   - white_hole
   - LevelStatisticStar
@@ -253,6 +300,8 @@ SpriteAtlas:
   - BTN_FacebookFriendsScores_Icon
   - ButtonBlowIcon
   - colored_1_1
+  - Monster_2_Layer 38
+  - Monster_2_Layer 24
   - Selection
   - BTN_OptionsRestore_icon
   - BTN_OptionsHome_icon
@@ -262,6 +311,7 @@ SpriteAtlas:
   - ButtonPause
   - PowerUpButtonBack
   - BTN_Leaderboard_Icon
+  - Monster_2_Layer 45
   - LevelsButton_lock
   - sslot
   - BTN_OptionsFacebook_icon
