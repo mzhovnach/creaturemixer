@@ -39,3 +39,5 @@ sysinfo.txt
 \.vs/
 BuildsArchive/
 ProjectSettings/ProjectSettings.7z
+Assets/BuildReports
+BuildReports.meta
