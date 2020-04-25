@@ -142,6 +142,7 @@ public class GameBoard : MonoBehaviour
     private MatchHintData                       _startTutorHintData;
 
     public GameMenuUIController                 GameMenuUIController;
+    public AimPanel                             AAimPanel;
 
     private Camera _camera;
     private Canvas _canvas;
@@ -466,6 +467,7 @@ public class GameBoard : MonoBehaviour
         HideSelection();
         //
         AQueuePanel.LoadPanel(levelData.QueueState);
+        AAimPanel.InitPanel(levelData);
         for (int i = 0; i < WIDTH; ++i)
 		{
 			for (int j = 0; j < HEIGHT; ++j)
