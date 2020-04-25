@@ -599,7 +599,7 @@ public class GameBoard : MonoBehaviour
 		if (levelData == null || levelData.Slots.Count == 0)
 		{
             //levelData = GameManager.Instance.GameData.StartLevelData;
-            string path = "CreatureMixLevels/cmlevel_" + GameManager.Instance.Player.CurrentLevel.ToString();
+            string path = "CreatureMixLevels/cmlevel_" + GameManager.Instance.Player.CreatureMixLevel.ToString();
             CreatureMixLevelData cmlevelData = (CreatureMixLevelData)Resources.Load<CreatureMixLevelData>(path);
             levelData = LevelData.ConvertToLevelData(cmlevelData);
         } else
@@ -672,6 +672,7 @@ public class GameBoard : MonoBehaviour
         res.ChainPowerups = PowerUps[GameData.PowerUpType.Chain];
         res.DestroyColorsPowerups = PowerUps[GameData.PowerUpType.DestroyColor];
         res.AddsViewed = AddsViewed;
+        res.Aims = AAimPanel.GetDataToSave();
         return res;
     }
 
@@ -2383,6 +2384,20 @@ public class GameBoard : MonoBehaviour
         });
 	}
 
+    public void OnCreatureMixGameCompleted()
+    {
+        SetGameState(EGameState.Loose);
+        int nextLevel = GameManager.Instance.Player.CreatureMixLevel + 1;
+        if (nextLevel < Consts.CREATURE_MIX_LEVELS_COUNT)
+        {
+            GameManager.Instance.Player.CreatureMixLevel = nextLevel;
+        }
+        LeanTween.delayedCall(1.0f, () =>
+        {
+            RestartGame();
+        });
+    }
+
     private void TryStartStartTutorSequence()
     {
         _startSequenceState = 0;
@@ -2796,14 +2811,14 @@ public class GameBoard : MonoBehaviour
             bool aimComplited = false;
             if (Consts.CHECK_AIM_ON_COMBINE)
             {
-                aimComplited = CheckAimsInSpecificSlots();
-            } else
-            {
                 if (_lastSlotWithMatch.x >= 0)
                 {
                     aimComplited = AAimPanel.CheckSlot(GetSlot(_lastSlotWithMatch));
                     _lastSlotWithMatch.x = -1;
                 }
+            } else
+            {
+                aimComplited = CheckAimsInSpecificSlots();
             }
             bool pipeneeded = false;
             if (!aimComplited || justAddPipe)
@@ -2891,6 +2906,14 @@ public class GameBoard : MonoBehaviour
         eventData.Data["turnsmade"] = _allTurns;
         eventData.Data["pipesadded"] = _pipesAdded;
         GameManager.Instance.EventManager.CallOnTurnWasMadeEvent(eventData);
+
+        if (GameBoard.GameType == EGameType.Classic)
+        {
+            if (AAimPanel.IsAllAimsCompleted())
+            {
+                OnCreatureMixGameCompleted();
+            }
+        }
     }
 
     public int GetMovesToNextPipe()

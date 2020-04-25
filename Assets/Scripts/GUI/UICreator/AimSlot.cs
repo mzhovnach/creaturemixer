@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class AimSlot : MonoBehaviour
@@ -11,27 +12,33 @@ public class AimSlot : MonoBehaviour
     }
 
     public int AColor = 0; // hand, eye,...
+    public GameObject CheckMark;
+    public Text LevelText; 
     private int _level = 1;
     private EAimSlotState _state = EAimSlotState.Disabled;
 
     public void InitSlot(Vector3Int data)
     {
         gameObject.SetActive(true);
+        LevelText.gameObject.SetActive(true);
         _level = data.y;
+        LevelText.text = _level.ToString();
         if (data.z == 1)
         {
-            _state = EAimSlotState.Completed;
+            SetCompleted();
         } else
         {
-            _state = EAimSlotState.Incompleted;
+            SetIncompleted();
         }
     }
 
     public void DisableSlot()
     {
         _state = EAimSlotState.Disabled;
+        CheckMark.SetActive(false);
         //TODO можливо просто притіняти
         gameObject.SetActive(false);
+        LevelText.gameObject.SetActive(false);
     }
 
     public void SaveData(ref List<Vector3Int> res)
@@ -55,13 +62,24 @@ public class AimSlot : MonoBehaviour
 
     public bool CheckAim(int alevel)
     {
-        if (IsIncompleted() && _level == alevel)
+        if (IsIncompleted() && _level == alevel + 1) //бо параметр з 0, фішка з одиничкою має level 0
         {
-            _state = EAimSlotState.Completed;
-            //TODO mark as completed visually
+            SetCompleted();
             return true;
         }
         return false;
+    }
+
+    private void SetCompleted()
+    {
+        _state = EAimSlotState.Completed;
+        CheckMark.SetActive(true);
+    }
+
+    private void SetIncompleted()
+    {
+        _state = EAimSlotState.Incompleted;
+        CheckMark.SetActive(false);
     }
 
 }

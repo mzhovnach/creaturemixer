@@ -69,6 +69,7 @@ public class UserData
 	public List<LevelState>					LevelsStates;
 	public int								CurrentLevel;
     public int                              RestartCounter;
+    public int                              CreatureMixLevel;
 	//
 
     public UserData()

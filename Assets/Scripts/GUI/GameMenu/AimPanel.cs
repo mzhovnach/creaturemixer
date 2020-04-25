@@ -52,7 +52,7 @@ public class AimPanel : MonoBehaviour
         int pipeColor = slot.Pipe.AColor;
         if (pipeColor < Slots.Count)
         {
-            if (Slots[pipeColor].CheckAim(pipeColor))
+            if (Slots[pipeColor].CheckAim(slot.Pipe.Param))
             {
                 //TODO fly to panel
                 SPipe pipe = slot.TakePipe();

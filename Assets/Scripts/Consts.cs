@@ -137,4 +137,5 @@ public class Consts
 
     public static int MAX_FPS = 60;
     public static bool CHECK_AIM_ON_COMBINE = true; // if false - will check only in _slotsToCheckAims slots
+    public static int CREATURE_MIX_LEVELS_COUNT = 1;
 }
