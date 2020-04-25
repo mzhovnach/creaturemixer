@@ -415,6 +415,10 @@ public class GameMenuUIController : BaseUIController
 
     public void ButtonResetSettingsOnClick()
     {
+        GameBoard.GameType = EGameType.Leveled; // тоді при переході в ендлесс гру вона ресетнеться
+        GameManager.Instance.Settings.User.SavedGame = null;
+        GameManager.Instance.Settings.Save();
+        GameManager.Instance.Game.ClearBoardForce();
         GameManager.Instance.Settings.ResetSettings();
         UpdatePlayEndlessButton();
     }
