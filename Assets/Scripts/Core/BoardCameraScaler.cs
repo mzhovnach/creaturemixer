@@ -21,9 +21,4 @@ public class BoardCameraScaler : MonoBehaviour
             camera.orthographicSize = 10.7f;
         }
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

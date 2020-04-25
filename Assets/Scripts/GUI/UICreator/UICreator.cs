@@ -62,10 +62,10 @@ public class UICreator : MonoBehaviour
 			_newCanvasCanvas.pixelPerfect = false; //true
 			_newCanvasCanvas.planeDistance = 1;
 
-			_newCanvasCanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-			_newCanvasCanvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-			_newCanvasCanvasScaler.matchWidthOrHeight = 0.0f;
-			_newCanvasCanvasScaler.referenceResolution = UIConsts.DESIGN_RESOLUTION;
+			//_newCanvasCanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+			//_newCanvasCanvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+			//_newCanvasCanvasScaler.matchWidthOrHeight = 0.0f;
+			//_newCanvasCanvasScaler.referenceResolution = UIConsts.DESIGN_RESOLUTION;
 		} else
 		{
 			Canvas _newCanvasCanvas = _newCanvas.GetComponent<Canvas>();
@@ -109,9 +109,9 @@ public class UICreator : MonoBehaviour
 			exitCanvasCanvas.planeDistance = 1;
 			exitCanvasCanvas.sortingOrder = 1;
 
-			exitCanvasCanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-			exitCanvasCanvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
-			exitCanvasCanvasScaler.referenceResolution = UIConsts.DESIGN_RESOLUTION;
+			//exitCanvasCanvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+			//exitCanvasCanvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
+			//exitCanvasCanvasScaler.referenceResolution = UIConsts.DESIGN_RESOLUTION;
 		} else
 		{
 			Canvas exitCanvasCanvas = _exitCanvas.GetComponent<Canvas>();

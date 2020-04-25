@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class UIConsts
 {
-	public static Vector3 DESIGN_RESOLUTION = new Vector2(1080, 1920);
+	public static Vector3 DESIGN_RESOLUTION = new Vector2(1280, 720);
 
 	public static Vector3 START_POSITION = new Vector3(0f,1920f,0f);
 	public static Vector3 STOP_POSITION = new Vector3(0f,0f,0f);

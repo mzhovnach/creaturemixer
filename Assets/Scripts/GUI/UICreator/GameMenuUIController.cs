@@ -177,12 +177,12 @@ public class GameMenuUIController : BaseUIController
         //transform.Find("ScoreDock").GetComponent<ScoreDock>().ActivateTriggers();
     }
 
-    Vector3 localToFixed(Vector3 pos)
-    {
-        pos.x = ((UIConsts.DESIGN_RESOLUTION.x / 2 - pos.x) * -1);
-        pos.y = ((UIConsts.DESIGN_RESOLUTION.y / 2 - pos.y));
-        return pos;
-    }
+    //Vector3 localToFixed(Vector3 pos)
+    //{
+    //    pos.x = ((UIConsts.DESIGN_RESOLUTION.x / 2 - pos.x) * -1);
+    //    pos.y = ((UIConsts.DESIGN_RESOLUTION.y / 2 - pos.y));
+    //    return pos;
+    //}
 
     public void DisableMenu()
     {
