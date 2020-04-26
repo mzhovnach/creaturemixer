@@ -134,7 +134,8 @@ public class CreatureMixLevelEditor : Editor
                 }
             }
 			GUILayout.EndHorizontal();
-			if (GUILayout.Button("Check"))
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("CHECK"))
 			{
 				CheckCurrentLevel();
 			}
@@ -145,6 +146,7 @@ public class CreatureMixLevelEditor : Editor
 					SaveLevel();
 				}
             }
+            GUILayout.EndHorizontal();
         }
     }
     
@@ -321,15 +323,27 @@ public class CreatureMixLevelEditor : Editor
             Debug.LogError("ADD AIMS!!!");
         } else
         {
+            bool higherThan1 = false;
             for (int i = 0; i < _myLevel.Aims.Count; ++i)
             {
-                if (!_myLevel.Colors.Exists(x => x == _myLevel.Aims[i].x))
+                if (_myLevel.Colors.Count > 0 && !_myLevel.Colors.Exists(x => x == _myLevel.Aims[i].x))
                 {
                     Debug.LogError("NO COLOR TO COMPLETE AIM!!!");
                 }
+                if (_myLevel.Aims[i].y > 1)
+                {
+                    higherThan1 = true;
+                }
+                if (_myLevel.Aims[i].y < 1 || _myLevel.Aims[i].y > 4)
+                {
+                    Debug.LogError("AIM'S LEVEL SHOULD BE BETWEEN 1 AND 4");
+                }
+            }
+            if (!higherThan1)
+            {
+                Debug.LogError("SHOULD BE AT LEAST ONE AIM WITH LEVEL > 1!!!");
             }
         }
-        Debug.Log("Level is correct");
         return true;
 	}
 }
