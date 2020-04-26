@@ -2455,7 +2455,7 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(1);
         //
         MusicManager.playSound("Mimishki_WIN");
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(0.7f);
         RestartGame();
     }
 
