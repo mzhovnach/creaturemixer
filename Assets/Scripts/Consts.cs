@@ -110,7 +110,7 @@ public class Consts
     public static float HINT_DELAY = 15;
     public static bool SHOW_ADD_POINTS_ANIMATION = false;
 
-    public static float ADD_POINTS_EFFECT_TIME = 0.5f;
+    public static float ADD_POINTS_EFFECT_TIME = 1.0f;
     public static float POINTS_RASE_TIME = 0.5f;
 
     public static int LEVELS_COUNT = 99;
