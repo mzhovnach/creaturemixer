@@ -143,6 +143,7 @@ public class GameBoard : MonoBehaviour
 
     public GameMenuUIController                 GameMenuUIController;
     public AimPanel                             AAimPanel;
+    [SerializeField] UpgradesManager _upgradesManager;
 
     private Camera _camera;
     private Canvas _canvas;
@@ -256,7 +257,7 @@ public class GameBoard : MonoBehaviour
         _slotsToCheckAims.Add(new BoardPos(2, 4));
         _slotsToCheckAims.Add(new BoardPos(3, 4));
         //
-        SetupCreatureMixUpgrades();
+        _upgradesManager.Reset();
     }
 
     void OnDestroy()
@@ -3006,19 +3007,6 @@ public class GameBoard : MonoBehaviour
         return completed;
     }
 
-    private void SetupCreatureMixUpgrades()
-    {
-        //TODO
-        //Додати скріптейбл обджект де для кожного рівня прописані частини що мають бути відкриті при виграші рівня, а які ховаємо!!!
-        //Петя має зробити
-        //string path = "Data/upgrades";
-        //UpgradesScriptableData data = (UpgradesScriptableData)Resources.Load<UpgradesScriptableData>(path);
-        //for (int i = 0; i < data.Levels.Count; ++i)
-        //{
-        //    ...
-        //}
-    }
-
     public void ClearProgress()
     {
         GameBoard.GameType = EGameType.Leveled; // тоді при переході в ендлесс гру вона ресетнеться
@@ -3026,6 +3014,6 @@ public class GameBoard : MonoBehaviour
         //GameManager.Instance.Settings.Save();
         GameManager.Instance.Settings.ResetSettings();
         ClearBoardForce();
-        SetupCreatureMixUpgrades();
+        _upgradesManager.Reset();
     }
 }

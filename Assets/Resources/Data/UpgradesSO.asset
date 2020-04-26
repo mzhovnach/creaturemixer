@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 607478827c7244bc981101bde9b4f69e, type: 3}
+  m_Name: UpgradesSO
+  m_EditorClassIdentifier: 
+  Upgrades:
+  - Id: InitState
+    LevelNum: 0
+    ToEnable:
+    - background
+    - upgrade_07
+    - dock
+    - upgrade_01
+    - upgrade_02
+    - fish
+    - upgrade_08
+    - pyramid_01
+    - upgrade_09
+    - volcanoes_01
+    - upgrade_06
+    - maze_02
+    - upgrade_05
+    - maze_01
+    - upgrade_03
+    - place_01
+    - upgrade_04
+    - small_mushrooms_03
+    - small_mushrooms_02
+    - small_mushrooms_01
+    - place_03
+    - place_02
+    - plants_06
+    - plants_05
+    - plants_04
+    - plants_03
+    - plants_02
+    - plants_01
+    - character_03
+    - character_02
+    - character_01
+    ToDisable: []
