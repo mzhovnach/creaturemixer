@@ -44,7 +44,7 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: 5868d071e0f02704bb109f4570345ea7, type: 3}
     - {fileID: 102900000, guid: d13f8482f8b6741499f347efb5d2d0c5, type: 3}
-    totalSpriteSurfaceArea: 12636915
+    totalSpriteSurfaceArea: 12767940
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -218,6 +218,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 43955ee7a78f94ccf98be20fd8395521, type: 3}
   - {fileID: 21300000, guid: 23eb57f730287354d9a0fb0980a388ba, type: 3}
   - {fileID: 21300000, guid: 85f38ff790fad497e9ac75911cdf794d, type: 3}
+  - {fileID: 21300000, guid: 875c9008cc73a482db001146431c7a14, type: 3}
   - {fileID: 21300000, guid: 75b88708373ea42718dd2321e2c079bd, type: 3}
   - {fileID: 21300000, guid: e3e7aa282e32d4b4a924cfaa6f15e1cc, type: 3}
   - {fileID: 21300000, guid: 61721238f0d194545beb289edd2b8359, type: 3}
@@ -236,6 +237,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: ac613ea8d59ab46b281e29dabdb5b2c4, type: 3}
   - {fileID: 21300000, guid: 96d234b871c61944a9fcd50d6ba60d63, type: 3}
   - {fileID: 21300000, guid: c5955db85ce1dee4fb565c6bcc5c3301, type: 3}
+  - {fileID: 21300000, guid: 7648e4d8b72f54c318b0f16ce83e6f37, type: 3}
   - {fileID: 21300000, guid: ff584dd80c68c10449e08f9ec2b8a320, type: 3}
   - {fileID: 21300000, guid: 399388e8e6eaa4055948c6b26470990c, type: 3}
   - {fileID: 21300000, guid: 9de8e2f84618d41bc98f7411eb0c953a, type: 3}
@@ -355,6 +357,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: be6cc7bef852742c382624398f17a9a5, type: 3}
   - {fileID: 21300000, guid: df0444ce43c254541882edea6940abce, type: 3}
   - {fileID: 21300000, guid: 1c1d39ceed7f048b9993d84b048e8f4a, type: 3}
+  - {fileID: 21300000, guid: a31972dec82844121b43f996381533bc, type: 3}
   - {fileID: 21300000, guid: f1c1b4de38468497390d70c40d0ba4d7, type: 3}
   - {fileID: 21300000, guid: f81805de539ca46b495e264fef8e70e7, type: 3}
   - {fileID: 21300000, guid: 997069de71b79164588b9316dfb156f5, type: 3}
@@ -373,6 +376,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e91ef06f1939d464ab5fdd816b5882a6, type: 3}
   - {fileID: 21300000, guid: 44193d7f504462441a591d3e615a8dbb, type: 3}
   - {fileID: 21300000, guid: de8ecf8f26fbf4b7c8612315c6341aa6, type: 3}
+  - {fileID: 21300000, guid: ae88a59f6f32e4b259c1cd0cfa7c3df7, type: 3}
   - {fileID: 21300000, guid: 075d84af773fbaa46b8efaa892439321, type: 3}
   - {fileID: 21300000, guid: 06463aaf26c6e45d7ab6400659948c74, type: 3}
   - {fileID: 21300000, guid: d83816bf4e2e2476d85116f96a68f699, type: 3}
@@ -557,6 +561,7 @@ SpriteAtlas:
   - LevelMap_maze_01
   - BTN_OptionClose_icon
   - LevelMap_place_02
+  - AimSlotLampOn
   - Monster_1_Layer 52
   - colored_0_2
   - Monster_1_Layer 53
@@ -575,6 +580,7 @@ SpriteAtlas:
   - LevelMap_sm__05_shadow
   - colored_2_2
   - colored_1_4
+  - TargetFrameBack
   - colored_4_0
   - Monster_1_Layer 48
   - LevelMap_mush_02_base
@@ -694,6 +700,7 @@ SpriteAtlas:
   - LevelMap_mush_03_shadow
   - sslot
   - LevelMap_upgrade_05_left_iris
+  - AimSlotLampOff
   - Monster_1_Layer 69 copy 3
   - LevelMap_place_01
   - BTN_OptionsFacebook_icon
@@ -712,6 +719,7 @@ SpriteAtlas:
   - TrophyLine
   - BTN_RateMe_Icon
   - LevelMap_plants_09
+  - AimSlotFrame
   - BTN_LevelsPrev_icon
   - LevelMap_sm__03_shadow
   - LevelMap_upgrade_07_wave_03
