@@ -623,8 +623,124 @@ PrefabInstance:
     - target: {fileID: 224426984489252930, guid: d7125060805d95a498ffa58f879024fc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -85.000015
+      value: -85
       objectReference: {fileID: 0}
+    - target: {fileID: 338126596559194206, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 338126596559194206, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 6de7be63cc4f845f4badb1d560bd8a0e,
+        type: 3}
+    - target: {fileID: 338126596559194206, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: fd506bfebff3547c28a14aa6da23b10a,
+        type: 3}
+    - target: {fileID: 338126596559194206, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: b121416c47383446cbe9152d2581e466,
+        type: 3}
+    - target: {fileID: 338126596559194206, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 37f72e9b0471842d29de5dd2a9e104a2,
+        type: 3}
+    - target: {fileID: 656358519358172178, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 656358519358172178, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 93bcf51968d9c4812b57a40137e88515,
+        type: 3}
+    - target: {fileID: 656358519358172178, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 0eeffe5eea2ec44c5914f090f6612810,
+        type: 3}
+    - target: {fileID: 656358519358172178, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: b4ac6329f9db94533a4858c522077d1b,
+        type: 3}
+    - target: {fileID: 656358519358172178, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: c3721417026a34b4aad55c7fd5b4ab8e,
+        type: 3}
+    - target: {fileID: 7802904455080165874, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7802904455080165874, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 77693a47a2b444626baa3f7f850e5771,
+        type: 3}
+    - target: {fileID: 7802904455080165874, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 2d86edc4aaa4e4c6594212902b78ab0f,
+        type: 3}
+    - target: {fileID: 7802904455080165874, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 393d1696766c54f1baf8b02ea7be5694,
+        type: 3}
+    - target: {fileID: 7802904455080165874, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 157233b1ab5d34ddfbc14a7938788969,
+        type: 3}
+    - target: {fileID: 8481954448772672178, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8481954448772672178, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[0]
+      value: 
+      objectReference: {fileID: 21300000, guid: 4fb827d17af9c422eacc897db32b4acb,
+        type: 3}
+    - target: {fileID: 8481954448772672178, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[1]
+      value: 
+      objectReference: {fileID: 21300000, guid: 5b9c196be56b8420c9772a7f1e0f3366,
+        type: 3}
+    - target: {fileID: 8481954448772672178, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[2]
+      value: 
+      objectReference: {fileID: 21300000, guid: 75529c42d599b4886aa6791b88e43425,
+        type: 3}
+    - target: {fileID: 8481954448772672178, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: TargetIcons.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: 1c5de60d0b5ad472996389ec70fa997d,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7125060805d95a498ffa58f879024fc, type: 3}
 --- !u!114 &612422771 stripped
