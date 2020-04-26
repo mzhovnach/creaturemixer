@@ -1852,7 +1852,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -24.999878}
+  m_AnchoredPosition: {x: 0, y: -24.999756}
   m_SizeDelta: {x: -40, y: -90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &222248136336868180
@@ -20414,6 +20414,8 @@ MonoBehaviour:
   - {fileID: 656358519358172178}
   - {fileID: 338126596559194206}
   - {fileID: 7802904455080165874}
+  FlyEffectPrefab: {fileID: 1679762849928260, guid: 36d36fbb737cbe04fbe1c4626e5b708b,
+    type: 3}
 --- !u!1001 &3646291654700039859
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ public class AimPanel : MonoBehaviour
 {
 	public GameObject AGameObject;
     public List<AimSlot> Slots;
+    public GameObject FlyEffectPrefab;
 
     void Awake()
 	{
@@ -54,16 +55,8 @@ public class AimPanel : MonoBehaviour
         {
             if (Slots[pipeColor].CheckAim(slot.Pipe.Param))
             {
-                //Vector3[] pathPoints = new Vector3[4];
-                //Vector3 p0 = slot.Pipe.transform.position;
-                //p0.z = 0;
-                //pathPoints[0] = p0;
-                //Vector3 p1 = Slots[pipeColor].transform.position;
-                //p0.z = 0;
-                //pathPoints[0] = p0;
-                //LTSpline spline = new LTSpline(pathPoints);
                 SPipe pipe = slot.TakePipe();
-                pipe.PlayHideAnimation();
+                StartCoroutine(FlyingEffectCoroutine(pipe));
                 return true;
             }
         }
@@ -80,5 +73,62 @@ public class AimPanel : MonoBehaviour
             }
         }
         return true;
+    }
+
+    protected IEnumerator FlyingEffectCoroutine(SPipe pipe)
+    {
+        int pipeColor = pipe.AColor;
+        pipe.PlayHideAnimation();
+        Vector3 fromPos = pipe.transform.position;
+        fromPos.z = 0;
+        Vector3 toPos = Slots[pipeColor].transform.position;
+        toPos.z = 0;
+        int amount = 3;
+        for (long i = 0; i < amount; ++i)
+        {
+            Vector3[] pathPoints = new Vector3[5];
+            // from
+            Vector3 p1 = fromPos;
+            pathPoints[1] = p1;
+            // to
+            Vector3 p3 = toPos;
+            pathPoints[3] = p3;
+            // first liverage
+            Vector3 p0 = p1;
+            p0.x += UnityEngine.Random.Range(-4.0f, 4.0f);
+            p0.y += UnityEngine.Random.Range(-2.0f, -4.0f);
+            pathPoints[0] = p0;
+            // second liverage
+            Vector3 p4 = p3;
+            p4.x += UnityEngine.Random.Range(-4.0f, 4.0f);
+            p4.y += UnityEngine.Random.Range(2.0f, 4.0f);
+            pathPoints[4] = p4;
+            // middle point
+            Vector3 p2 = (p1 + p3) / 2.0f;
+            p2.x += UnityEngine.Random.Range(-3.0f, 3.0f);
+            pathPoints[2] = p2;
+            //
+            LTSpline spline = new LTSpline(pathPoints);
+            //
+            GameObject trailEffect = GameObject.Instantiate(FlyEffectPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+            trailEffect.transform.SetParent(transform.parent.transform, false);
+            trailEffect.transform.position = fromPos;
+            trailEffect.transform.localScale = new Vector3(0, 0, 1);
+            LeanTween.scale(trailEffect, Vector3.one, Consts.ADD_POINTS_EFFECT_TIME / 2.0f)
+                .setEase(LeanTweenType.easeInOutSine)
+                .setLoopPingPong()
+                .setLoopCount(2);
+            LeanTween.value(trailEffect, 0.0f, 1.0f, Consts.ADD_POINTS_EFFECT_TIME)
+                .setOnUpdate((float norm)=>
+                {
+                    spline.place(trailEffect.transform, norm);
+                })
+                .setOnComplete(() =>
+                {
+                    Destroy(trailEffect, Consts.ADD_POINTS_EFFECT_TIME + 0.2f);
+                });
+            yield return new WaitForSeconds(0.15f);
+        }
+
     }
 }
