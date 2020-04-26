@@ -2448,6 +2448,7 @@ public class GameBoard : MonoBehaviour
     {
         SetGameState(EGameState.Loose);
         int nextLevel = GameManager.Instance.Player.CreatureMixLevel + 1;
+        _upgradesManager.SetLevel(nextLevel, false);
         GameManager.Instance.Player.CreatureMixLevel = nextLevel;
         LeanTween.delayedCall(1.0f, () =>
         {
@@ -3012,6 +3013,8 @@ public class GameBoard : MonoBehaviour
         TimePlayed = 0;
         DragSlot = null;
         AddsViewed = false;
+
+        _upgradesManager.SetLevel(GameManager.Instance.Player.CreatureMixLevel, true);
 
         //		// leveled
         //		StarsGained = 0;
