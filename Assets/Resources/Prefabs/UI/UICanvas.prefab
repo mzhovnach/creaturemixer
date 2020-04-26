@@ -20243,7 +20243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4390553966743259223
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20416,6 +20416,7 @@ MonoBehaviour:
   - {fileID: 7802904455080165874}
   FlyEffectPrefab: {fileID: 1679762849928260, guid: 36d36fbb737cbe04fbe1c4626e5b708b,
     type: 3}
+  _creaturesManager: {fileID: 0}
 --- !u!1001 &3646291654700039859
 PrefabInstance:
   m_ObjectHideFlags: 0

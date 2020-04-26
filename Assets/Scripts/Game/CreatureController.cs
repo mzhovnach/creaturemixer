@@ -23,23 +23,9 @@ public class CreatureController : MonoBehaviour
         }
     }
 
-    void ColorizePart(List<Transform> items, bool state)
-    {
-        if (items.Count == 0) return;
-        for (int i = 0; i < items.Count; i++)
-        {
-            items[i].GetComponent<SpriteRenderer>().color = (state) ? new Color(1.0f, 1.0f, 1.0f, 1.0f) : new Color(0.0f, 0.0f, 0.0f, 1.0f);
-        }
-    }
-
-    public void SetColorLevel(int bodyPart, int level)
+    public void SetCustomization(int bodyPart, int level)
     {
         SetCustomizationLevel(GetPart(bodyPart), level);
-    }
-
-    public void SetColorizedState(int bodyPart, bool state)
-    {
-        ColorizePart(GetPart(bodyPart), state);
     }
 
     List<Transform> GetPart(int bodyPart)
@@ -47,11 +33,11 @@ public class CreatureController : MonoBehaviour
         switch (bodyPart)
         {
             case 0:
-                return _hands;
-            case 1:
                 return _legs;
-            case 2:
+            case 1:
                 return _eyes;
+            case 2:
+                return _hands;
             case 3:
                 return _horns;
             default:

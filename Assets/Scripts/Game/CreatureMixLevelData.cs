@@ -10,4 +10,5 @@ public class CreatureMixLevelData : ScriptableObject
 	[HideInInspector]
 	public List<SSlotData>			    NeededStates;
     public bool                         AddNewPipes = false;
+    [Range(0, 2)] public int            CreatureId;
 }

@@ -38,7 +38,8 @@ public class LevelData
 {
     public List<long>      	Resources;
 	public List<SSlotData>  Slots;
-    public List<Vector3Int> Aims; // x - chip type, y - level of chip, z - completed or not(0 or 1)
+public List<Vector3Int> Aims; // x - chip type, y - level of chip, z - completed or not(0 or 1)
+    [Range(0, 2)] public int CreatureId;
     public int              ReshufflePowerups;
     public int              BreakePowerups;
     public int              ChainPowerups;
@@ -96,6 +97,7 @@ public class LevelData
         res.DestroyColorsPowerups = Consts.POWERUPS_DESTROY_COLOR_AT_START;
         res.AddsViewed = true;
         res.Aims = new List<Vector3Int>();
+        res.CreatureId = cmLevelData.CreatureId;
         for (int i = 0; i < cmLevelData.Aims.Count; ++i)
         {
             res.Aims.Add(new Vector3Int(cmLevelData.Aims[i].x, cmLevelData.Aims[i].y, 0));
@@ -160,6 +162,9 @@ public class LevelData
         res.Aims.Add(new Vector3Int(1, UnityEngine.Random.Range(2, 5), 0));
         res.Aims.Add(new Vector3Int(2, UnityEngine.Random.Range(2, 5), 0));
         res.Aims.Add(new Vector3Int(3, UnityEngine.Random.Range(2, 5), 0));
+
+        res.CreatureId = UnityEngine.Random.Range(0, 3);
+
         // start pipes
         res.Slots = new List<SSlotData>();
         for (int i = 0; i < GameBoard.WIDTH; ++i)

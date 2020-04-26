@@ -16,6 +16,9 @@ public class AimSlot : MonoBehaviour
     public Text LevelText;
     public Sprite[] TargetIcons; 
     private int _level = 1;
+    public int GetLevel() {
+        return _level;
+    }
     private EAimSlotState _state = EAimSlotState.Disabled;
 
     public void InitSlot(Vector3Int data)

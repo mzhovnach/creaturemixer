@@ -8,6 +8,7 @@ public class AimPanel : MonoBehaviour
 	public GameObject AGameObject;
     public List<AimSlot> Slots;
     public GameObject FlyEffectPrefab;
+    [SerializeField] CreaturesManager _creaturesManager;
 
     void Awake()
 	{
@@ -21,13 +22,24 @@ public class AimPanel : MonoBehaviour
 
     public void InitPanel(LevelData levelData)
     {
+        _creaturesManager.Reset();
         for (int i = 0; i < Slots.Count; ++i)
         {
             Slots[i].DisableSlot();
         }
+
+        _creaturesManager.ShowCreature(levelData.CreatureId);
         for (int i = 0; i < levelData.Aims.Count; ++i)
         {
             Slots[levelData.Aims[i].x].InitSlot(levelData.Aims[i]);
+            if (levelData.Aims[i].z == 0)
+            {
+                _creaturesManager.CustomizeCreature(levelData.Aims[i].x, 0);
+            }
+            else
+            {
+                _creaturesManager.CustomizeCreature(levelData.Aims[i].x, levelData.Aims[i].y);
+            }
         }
     }
 
@@ -55,6 +67,7 @@ public class AimPanel : MonoBehaviour
         {
             if (Slots[pipeColor].CheckAim(slot.Pipe.Param))
             {
+                _creaturesManager.CustomizeCreature(pipeColor, Slots[pipeColor].GetLevel());
                 SPipe pipe = slot.TakePipe();
                 FlyingEffect(pipe);
                 return true;

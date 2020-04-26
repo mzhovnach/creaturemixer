@@ -145,6 +145,7 @@ public class GameBoard : MonoBehaviour
     public GameMenuUIController                 GameMenuUIController;
     public AimPanel                             AAimPanel;
     [SerializeField] UpgradesManager            _upgradesManager;
+    [SerializeField] CreaturesManager           _creaturesManager;
 
     private Camera _camera;
     private Canvas _canvas;
@@ -261,6 +262,7 @@ public class GameBoard : MonoBehaviour
         //
         _upgradesManager.Reset();
         _slotsContainerPos = SlotsContainer.transform.position;
+        _creaturesManager.Reset();
     }
 
     void OnDestroy()
@@ -3040,5 +3042,6 @@ public class GameBoard : MonoBehaviour
         GameManager.Instance.Settings.ResetSettings();
         ClearBoardForce();
         _upgradesManager.Reset();
+        _creaturesManager.Reset();
     }
 }
