@@ -741,6 +741,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UICanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1621784942180032, guid: d7125060805d95a498ffa58f879024fc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114307783880930168, guid: d7125060805d95a498ffa58f879024fc,
         type: 3}
       propertyPath: ShareCamera
@@ -889,7 +893,7 @@ PrefabInstance:
     - target: {fileID: 224426984489252930, guid: d7125060805d95a498ffa58f879024fc,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -85.000015
+      value: -85
       objectReference: {fileID: 0}
     - target: {fileID: 224871005816555908, guid: d7125060805d95a498ffa58f879024fc,
         type: 3}
