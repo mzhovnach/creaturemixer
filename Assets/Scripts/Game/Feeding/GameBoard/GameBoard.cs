@@ -184,6 +184,7 @@ public class GameBoard : MonoBehaviour
     // slots to check aims
     List<BoardPos> _slotsToCheckAims = new List<BoardPos>();
     BoardPos _lastSlotWithMatch = new BoardPos(-1, -1);
+    private List<int> _possibleColors = new List<int>();
 
     void Awake()
     {
@@ -474,6 +475,12 @@ public class GameBoard : MonoBehaviour
         DragSlot = null;
         HideSelection();
         //
+        _possibleColors.Clear();
+        for (int i = 0; i < levelData.Colors.Count; ++i)
+        {
+            _possibleColors.Add(levelData.Colors[i]);
+        }
+        //
         AQueuePanel.LoadPanel(levelData.QueueState);
         AAimPanel.InitPanel(levelData);
         for (int i = 0; i < WIDTH; ++i)
@@ -601,9 +608,16 @@ public class GameBoard : MonoBehaviour
 		if (levelData == null || levelData.Slots.Count == 0)
 		{
             //levelData = GameManager.Instance.GameData.StartLevelData;
-            string path = "CreatureMixLevels/cmlevel_" + GameManager.Instance.Player.CreatureMixLevel.ToString();
+            int level = GameManager.Instance.Player.CreatureMixLevel;
+            string path = "CreatureMixLevels/cmlevel_" + level.ToString();
             CreatureMixLevelData cmlevelData = (CreatureMixLevelData)Resources.Load<CreatureMixLevelData>(path);
-            levelData = LevelData.ConvertToLevelData(cmlevelData);
+            if (cmlevelData)
+            {
+                levelData = LevelData.ConvertToLevelData(cmlevelData, level);
+            } else
+            {
+                levelData = LevelData.GenerateCreatureMixLevel(level);
+            }
         } else
 		{
 			GameManager.Instance.Settings.User.SavedGame = null;
@@ -615,6 +629,7 @@ public class GameBoard : MonoBehaviour
 	public void PlayLeveledGame()
 	{
         //HideHint();
+        //_possibleColors.Clear();
         //GameType = EGameType.Leveled;
         //_maxColoredLevels = GetMaxColoredLevels();
         //ResetTutor2Timer();
@@ -632,9 +647,9 @@ public class GameBoard : MonoBehaviour
         //string path = "Levels/level_" + GameManager.Instance.Player.CurrentLevel.ToString();
         //ScriptableLevelData leveledlevelData = (ScriptableLevelData)Resources.Load<ScriptableLevelData>(path);
         //StartCoroutine(CreateLeveledLevel(leveledlevelData));
-	}
+    }
 
-	public void UnsetPause()
+    public void UnsetPause()
 	{
 		SetGameState(EGameState.Play);
 	}
@@ -675,6 +690,11 @@ public class GameBoard : MonoBehaviour
         res.DestroyColorsPowerups = PowerUps[GameData.PowerUpType.DestroyColor];
         res.AddsViewed = AddsViewed;
         res.Aims = AAimPanel.GetDataToSave();
+
+        for (int i = 0; i < _possibleColors.Count; ++i)
+        {
+            res.Colors.Add(_possibleColors[i]);
+        }
         return res;
     }
 
@@ -2390,10 +2410,7 @@ public class GameBoard : MonoBehaviour
     {
         SetGameState(EGameState.Loose);
         int nextLevel = GameManager.Instance.Player.CreatureMixLevel + 1;
-        if (nextLevel < Consts.CREATURE_MIX_LEVELS_COUNT)
-        {
-            GameManager.Instance.Player.CreatureMixLevel = nextLevel;
-        }
+        GameManager.Instance.Player.CreatureMixLevel = nextLevel;
         LeanTween.delayedCall(1.0f, () =>
         {
             RestartGame();
@@ -2765,7 +2782,13 @@ public class GameBoard : MonoBehaviour
     {
         //if (GameBoard.GameType == EGameType.Classic)
         //{
-        return UnityEngine.Random.Range(0, Consts.CLASSIC_GAME_COLORS);
+        if (_possibleColors.Count <= 1)
+        {
+            return UnityEngine.Random.Range(0, Consts.CLASSIC_GAME_COLORS);
+        } else
+        {
+            return _possibleColors[UnityEngine.Random.Range(0, _possibleColors.Count)];
+        }
         //}
         //        else
         //        //if (GameBoard.GameType == EGameType.Inverse)

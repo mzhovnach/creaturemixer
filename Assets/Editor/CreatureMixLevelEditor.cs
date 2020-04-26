@@ -312,9 +312,22 @@ public class CreatureMixLevelEditor : Editor
 
 	private bool CheckCurrentLevel()
 	{
+        if (_myLevel.Colors.Count == 1)
+        {
+            Debug.LogError("ADD MORE COLORS!!!");
+        }
         if (_myLevel.Aims.Count == 0)
         {
-            Debug.Log("ADD AIMS!!!");
+            Debug.LogError("ADD AIMS!!!");
+        } else
+        {
+            for (int i = 0; i < _myLevel.Aims.Count; ++i)
+            {
+                if (!_myLevel.Colors.Exists(x => x == _myLevel.Aims[i].x))
+                {
+                    Debug.LogError("NO COLOR TO COMPLETE AIM!!!");
+                }
+            }
         }
         Debug.Log("Level is correct");
         return true;

@@ -46,6 +46,7 @@ public class LevelData
     public int              SwapPowerups;
     public bool             AddsViewed; // for getting Chain Powerup
     public List<int>        QueueState;
+    public List<int>        Colors;
     // statistic
     public float			timePlayed;
 
@@ -70,11 +71,17 @@ public class LevelData
         //    QueueState.Add(GameManager.Instance.BoardData.GetRandomColor());
         //}
         timePlayed = 0;
+        Colors = new List<int>();
 	}
 
-    public static LevelData ConvertToLevelData(CreatureMixLevelData cmLevelData)
+    public static LevelData ConvertToLevelData(CreatureMixLevelData cmLevelData, int level)
     {
         LevelData res = new LevelData();
+        res.Colors = new List<int>();
+        for (int i = 0; i < cmLevelData.Colors.Count; ++i)
+        {
+            res.Colors.Add(cmLevelData.Colors[i]);
+        }
         res.Slots = new List<SSlotData>();
         for (int i = 0; i < cmLevelData.NeededStates.Count; ++i)
         {
@@ -92,6 +99,7 @@ public class LevelData
         }
         if (IsEmptyLevel(res.Slots))
         {
+            UnityEngine.Random.InitState(level);
             res.Slots.Clear();
             for (int i = 0; i < GameBoard.WIDTH; ++i)
             {
@@ -114,7 +122,7 @@ public class LevelData
         return res;
     }
 
-    static bool IsEmptyLevel(List<SSlotData> slots)
+    public static bool IsEmptyLevel(List<SSlotData> slots)
     {
         if (slots.Count == 0)
         {
@@ -128,5 +136,42 @@ public class LevelData
             }
         }
         return true;
+    }
+
+    public static LevelData GenerateCreatureMixLevel(int level)
+    {
+        UnityEngine.Random.InitState(level);
+        LevelData res = new LevelData();
+        res.ReshufflePowerups = Consts.POWERUPS_RESHUFFLE_AT_START;
+        res.BreakePowerups = Consts.POWERUPS_BREAKE_AT_START;
+        res.ChainPowerups = Consts.POWERUPS_CHAIN_AT_START;
+        res.DestroyColorsPowerups = Consts.POWERUPS_DESTROY_COLOR_AT_START;
+        res.AddsViewed = true;
+        res.Colors = new List<int>();
+        // aims
+        res.Aims = new List<Vector3Int>();
+        res.Aims.Add(new Vector3Int(0, UnityEngine.Random.Range(2, 5), 0));
+        res.Aims.Add(new Vector3Int(1, UnityEngine.Random.Range(2, 5), 0));
+        res.Aims.Add(new Vector3Int(2, UnityEngine.Random.Range(2, 5), 0));
+        res.Aims.Add(new Vector3Int(3, UnityEngine.Random.Range(2, 5), 0));
+        // start pipes
+        res.Slots = new List<SSlotData>();
+        for (int i = 0; i < GameBoard.WIDTH; ++i)
+        {
+            for (int j = 0; j < GameBoard.HEIGHT; ++j)
+            {
+                if (UnityEngine.Random.Range(0, 100) <= 33)
+                {
+                    SSlotData sData = new SSlotData();
+                    sData.x = i;
+                    sData.y = j;
+                    sData.pt = EPipeType.Colored;
+                    sData.p = 0;
+                    sData.c = -1;
+                    res.Slots.Add(sData);
+                }
+            }
+        }
+        return res;
     }
 }
