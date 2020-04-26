@@ -16,7 +16,17 @@ MonoBehaviour:
   - Id: InitState
     LevelNum: 0
     ToEnable: []
-    ToDisable: []
+    ToDisable:
+    - Monster1
+    - upgrade_02
+    - upgrade_08
+    - Monster2
+    - upgrade_01
+    - upgrade_03
+    - upgrade_09
+    - Monster3
+    - upgrade_05
+    - upgrade_06
   - Id: Monster1
     LevelNum: 1
     ToEnable:
@@ -25,7 +35,7 @@ MonoBehaviour:
     - upgrade_08
     ToDisable: []
   - Id: Monster2
-    LevelNum: 0
+    LevelNum: 2
     ToEnable:
     - Monster2
     - upgrade_01
@@ -33,7 +43,7 @@ MonoBehaviour:
     - upgrade_09
     ToDisable: []
   - Id: Monster3
-    LevelNum: 0
+    LevelNum: 3
     ToEnable:
     - Monster3
     - upgrade_05
