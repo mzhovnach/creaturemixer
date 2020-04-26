@@ -13,7 +13,8 @@ public class AimSlot : MonoBehaviour
 
     public int AColor = 0; // hand, eye,...
     public GameObject CheckMark;
-    public Text LevelText; 
+    public Text LevelText;
+    public Sprite[] TargetIcons; 
     private int _level = 1;
     private EAimSlotState _state = EAimSlotState.Disabled;
 
@@ -23,6 +24,14 @@ public class AimSlot : MonoBehaviour
         LevelText.gameObject.SetActive(true);
         _level = data.y;
         LevelText.text = _level.ToString();
+        if (TargetIcons.Length >= _level)
+        {
+            var image = GetComponent<Image>();
+            if (image)
+            {
+                image.sprite = TargetIcons[_level - 1];
+            }
+        }
         if (data.z == 1)
         {
             SetCompleted();
