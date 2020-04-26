@@ -455,6 +455,23 @@ public class GameBoard : MonoBehaviour
         }
     }
 
+    private void ClearBoardQuick()
+    {
+        if (Slots == null) return;
+
+        for (int i = 0; i < WIDTH; ++i)
+        {
+            for (int j = 0; j < HEIGHT; ++j)
+            {
+                SPipe pipe = Slots[i, j].TakePipe();
+                if (pipe)
+                {
+                    pipe.PlayHideAnimation();
+                }
+            }
+        }
+    }
+
     protected IEnumerator ClearBoard()
     {
         if (Slots == null) yield return null;
@@ -2430,6 +2447,7 @@ public class GameBoard : MonoBehaviour
     public void OnCreatureMixGameCompleted()
     {
         SetGameState(EGameState.Loose);
+        ClearBoardQuick();
         int nextLevel = GameManager.Instance.Player.CreatureMixLevel + 1;
         GameManager.Instance.Player.CreatureMixLevel = nextLevel;
         LeanTween.delayedCall(1.0f, () =>
@@ -2843,6 +2861,7 @@ public class GameBoard : MonoBehaviour
 
     public void OnTurnWasMade(bool wasMatch, bool justAddPipe)
     {
+        bool allAimsCompleted = false;
         if (GameBoard.GameType == EGameType.Leveled)
         {
             //if (!justAddPipe)
@@ -2861,10 +2880,12 @@ public class GameBoard : MonoBehaviour
                 {
                     aimComplited = AAimPanel.CheckSlot(GetSlot(_lastSlotWithMatch));
                     _lastSlotWithMatch.x = -1;
+                    allAimsCompleted = AAimPanel.IsAllAimsCompleted();
                 }
             } else
             {
                 aimComplited = CheckAimsInSpecificSlots();
+                allAimsCompleted = AAimPanel.IsAllAimsCompleted();
             }
             bool pipeneeded = false;
             if (!aimComplited || justAddPipe)
@@ -2930,7 +2951,7 @@ public class GameBoard : MonoBehaviour
                 {
                     pipeType = EPipeType.Blocker;
                 }
-                if (_addNewPipes && pipeneeded)
+                if (_addNewPipes && pipeneeded && (!allAimsCompleted))
                 {
                     if (pipeneeded && AddRandomPipe(pipeType))
                     {
@@ -2953,12 +2974,9 @@ public class GameBoard : MonoBehaviour
         eventData.Data["pipesadded"] = _pipesAdded;
         GameManager.Instance.EventManager.CallOnTurnWasMadeEvent(eventData);
 
-        if (GameBoard.GameType == EGameType.Classic)
+        if (allAimsCompleted)
         {
-            if (AAimPanel.IsAllAimsCompleted())
-            {
-                OnCreatureMixGameCompleted();
-            }
+            OnCreatureMixGameCompleted();
         }
     }
 

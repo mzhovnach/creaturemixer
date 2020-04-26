@@ -103,7 +103,7 @@ public class SPipe : MonoBehaviour
     {
         // animation when pipe added to board
         LeanTween.cancel(gameObject);
-        LeanTween.scale(gameObject, new Vector3(0.5f, 0.5f, 1), 0.25f)
+        LeanTween.scale(gameObject, new Vector3(0.0f, 0.0f, 1), 0.25f)
             .setEase(LeanTweenType.easeOutBack)
             .setOnComplete(()=> { gameObject.SetActive(false); });
     }
