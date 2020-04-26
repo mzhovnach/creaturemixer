@@ -68,6 +68,7 @@ public class Consts
     public static GameData.PowerUpType MAX_COLORED_LEVEL_GIVES_POWERUP_TYPE = GameData.PowerUpType.Reshuffle; // when pipe reached MAX_COLORED_LEVELS it blast off and gives powerup
     public static float DARK_SCREEN_SHOW_HIDE_TIME = 0.5f;
     public static int CLASSIC_GAME_COLORS = 5;
+    public static int CREATURE_MIX_COLORS = 4;
     public static float IMPULSE_DISTANCE = 0.3f;
     public static float IMPULSE_SPEED = 0.05f;              // speed of moving pipe when it slide after impulse (for each slot)
 	public static float MATCH_ROTATE_TIME = 0.4f;

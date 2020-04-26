@@ -127,6 +127,19 @@ public class CreatureMixLevelEditor : Editor
 				int xx1 = GetSlotPosX(indexNeeded);
 				if (indexNeeded >= 0 && IsOnBoard(xx1, yy1))
 				{
+                    if (_carrentBrushType == EPipeType.Colored)
+                    {
+                        if (_carrentBrushColor == 4)
+                        {
+                            Debug.LogError("Dont use this color!");
+                            return;
+                        } else
+                        if (_carrentBrushParam == LAST_COLOR_PARAM)
+                        {
+                            Debug.LogError("Dont use last pipes!");
+                            return;
+                        }
+                    }
                     _neededStates[xx1][yy1].pt = _carrentBrushType;
                     _neededStates[xx1][yy1].c = _carrentBrushColor;
                     _neededStates[xx1][yy1].p = _carrentBrushParam;

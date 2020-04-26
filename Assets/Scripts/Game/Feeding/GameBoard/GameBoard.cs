@@ -2797,7 +2797,7 @@ public class GameBoard : MonoBehaviour
         //{
         if (_possibleColors.Count <= 1)
         {
-            return UnityEngine.Random.Range(0, Consts.CLASSIC_GAME_COLORS);
+            return UnityEngine.Random.Range(0, Consts.CREATURE_MIX_COLORS);
         } else
         {
             return _possibleColors[UnityEngine.Random.Range(0, _possibleColors.Count)];

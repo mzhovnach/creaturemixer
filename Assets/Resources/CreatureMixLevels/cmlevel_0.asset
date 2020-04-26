@@ -18,6 +18,7 @@ MonoBehaviour:
   - {x: 0, y: 2}
   - {x: 1, y: 2}
   - {x: 2, y: 2}
+  - {x: 3, y: 2}
   NeededStates:
   - x: 0
     y: 4
@@ -26,24 +27,24 @@ MonoBehaviour:
     c: 0
   - x: 1
     y: 4
-    pt: 1
-    p: 1
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   - x: 2
     y: 4
-    pt: 1
-    p: 2
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   - x: 3
-    y: 4
-    pt: 1
-    p: 3
-    c: 0
-  - x: 4
     y: 4
     pt: 0
     p: -1
     c: -1
+  - x: 4
+    y: 4
+    pt: 0
+    p: -1
+    c: -1
   - x: 0
     y: 3
     pt: 0
@@ -57,38 +58,38 @@ MonoBehaviour:
   - x: 2
     y: 3
     pt: 1
-    p: 1
-    c: 1
-  - x: 3
-    y: 3
-    pt: 1
-    p: 2
-    c: 1
-  - x: 4
-    y: 3
-    pt: 1
-    p: 3
-    c: 1
-  - x: 0
-    y: 2
-    pt: 1
     p: 0
     c: 2
+  - x: 3
+    y: 3
+    pt: 1
+    p: 0
+    c: 3
+  - x: 4
+    y: 3
+    pt: 0
+    p: -1
+    c: -1
+  - x: 0
+    y: 2
+    pt: 0
+    p: -1
+    c: -1
   - x: 1
     y: 2
-    pt: 1
-    p: 1
-    c: 2
+    pt: 0
+    p: -1
+    c: -1
   - x: 2
     y: 2
-    pt: 1
-    p: 2
-    c: 2
+    pt: 0
+    p: -1
+    c: -1
   - x: 3
     y: 2
-    pt: 1
-    p: 3
-    c: 2
+    pt: 0
+    p: -1
+    c: -1
   - x: 4
     y: 2
     pt: 0
@@ -107,40 +108,40 @@ MonoBehaviour:
   - x: 2
     y: 1
     pt: 1
-    p: 1
-    c: 3
+    p: 0
+    c: 2
   - x: 3
     y: 1
-    pt: 1
-    p: 2
-    c: 3
-  - x: 4
-    y: 1
-    pt: 1
-    p: 3
-    c: 3
-  - x: 0
-    y: 0
     pt: 1
     p: 0
-    c: 4
-  - x: 1
-    y: 0
-    pt: 1
-    p: 1
-    c: 4
-  - x: 2
-    y: 0
-    pt: 1
-    p: 2
-    c: 4
-  - x: 3
-    y: 0
-    pt: 1
-    p: 3
-    c: 4
+    c: 1
   - x: 4
+    y: 1
+    pt: 0
+    p: -1
+    c: -1
+  - x: 0
     y: 0
     pt: 0
     p: -1
     c: -1
+  - x: 1
+    y: 0
+    pt: 0
+    p: -1
+    c: -1
+  - x: 2
+    y: 0
+    pt: 0
+    p: -1
+    c: -1
+  - x: 3
+    y: 0
+    pt: 0
+    p: -1
+    c: -1
+  - x: 4
+    y: 0
+    pt: 1
+    p: 0
+    c: 0
