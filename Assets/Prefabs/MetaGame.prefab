@@ -935,6 +935,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1561948736687995830}
   - component: {fileID: 3337498535301928936}
+  - component: {fileID: 4115052474089882527}
   m_Layer: 0
   m_Name: fish_body
   m_TagString: Untagged
@@ -1009,6 +1010,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &4115052474089882527
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1126700762529234363}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1311652812378406457
 GameObject:
   m_ObjectHideFlags: 0
@@ -1769,7 +1789,7 @@ Animator:
   m_GameObject: {fileID: 1894073319630376266}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c63df607dcf85314bbf2bae1525f4bd6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3606,7 +3626,7 @@ Animator:
   m_GameObject: {fileID: 2994275972087144256}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f7c21dd3c142bd6459030fbf8022c5e8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -6654,7 +6674,7 @@ Animator:
   m_GameObject: {fileID: 5626681248769402957}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cb0efb43761c14742ad8d9beac7ce247, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
