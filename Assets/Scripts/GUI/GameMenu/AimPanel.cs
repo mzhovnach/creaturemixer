@@ -99,12 +99,12 @@ public class AimPanel : MonoBehaviour
         Vector3[] pathPoints = new Vector3[5];
         // from
         Vector3 p1 = fromPos;
-        p1.z = -2;
+        p1.z = -3;
         pathPoints[1] = p1;
         pipe.transform.position = p1;
         // to
         Vector3 p3 = toPos;
-        p3.z = -2;
+        p3.z = -11;
         pathPoints[3] = p3;
         // first liverage
         Vector3 p0 = p1;
@@ -132,16 +132,29 @@ public class AimPanel : MonoBehaviour
         ////LeanTween.scale(trailEffect, Vector3.one, Consts.ADD_POINTS_EFFECT_TIME / 2.0f)
         ////    .setEase(LeanTweenType.easeInOutSine)
         ////    .setLoopPingPong(1)
+        Vector3 startAngle = pipe.transform.eulerAngles;
         LeanTween.value(pipe.gameObject, 0.0f, 1.0f, Consts.ADD_POINTS_EFFECT_TIME)
             .setOnUpdate((float norm)=>
             {
-                spline.place(pipe.transform, norm);
+                Vector3 pos = spline.point(norm);
+                pipe.transform.position = pos;
             })
             .setOnComplete(() =>
             {
                 //Destroy(trailEffect, Consts.ADD_POINTS_EFFECT_TIME + 0.2f);
                 pipe.transform.localScale = Vector3.one;
-                pipe.PlayHideAnimation();
-            });
+                //pipe.PlayHideAnimation();
+                pipe.gameObject.SetActive(false);
+                pipe.transform.localScale = Vector3.zero;
+            })
+            .setEaseInOutSine();
+        LeanTween.rotateX(pipe.gameObject, startAngle.x + 40, (Consts.ADD_POINTS_EFFECT_TIME - 0.05f) / 2.0f)
+            .setLoopPingPong(1)
+            .setEase(LeanTweenType.easeInOutSine);
+        LeanTween.rotateY(pipe.gameObject, startAngle.y + 40, (Consts.ADD_POINTS_EFFECT_TIME - 0.05f) / 2.0f)
+            .setLoopPingPong(1)
+            .setEase(LeanTweenType.easeInOutSine);
+        float scale = 0.85f;
+        LeanTween.scale(pipe.gameObject, new Vector3(scale, scale, scale), Consts.ADD_POINTS_EFFECT_TIME - 0.1f);
     }
 }
