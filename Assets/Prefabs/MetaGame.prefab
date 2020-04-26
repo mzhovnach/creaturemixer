@@ -1687,6 +1687,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2090778785363652476}
   - component: {fileID: 563873832233824942}
+  - component: {fileID: 1622566466024521311}
   m_Layer: 0
   m_Name: upgrade_09
   m_TagString: Untagged
@@ -1758,6 +1759,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1622566466024521311
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1894073319630376266}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1919720253580691055
 GameObject:
   m_ObjectHideFlags: 0
@@ -6967,7 +6987,7 @@ Animator:
   m_GameObject: {fileID: 5804313768991296919}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7e0dab2c71b12154fa977e171f38093b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
