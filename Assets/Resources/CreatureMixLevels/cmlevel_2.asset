@@ -15,8 +15,8 @@ MonoBehaviour:
   Id: 0
   Colors: 
   Aims:
-  - {x: 0, y: 4}
-  - {x: 1, y: 4}
+  - {x: 0, y: 3}
+  - {x: 1, y: 3}
   - {x: 2, y: 3}
   - {x: 3, y: 3}
   NeededStates:
@@ -37,9 +37,9 @@ MonoBehaviour:
     c: 0
   - x: 3
     y: 4
-    pt: 1
-    p: 0
-    c: 1
+    pt: 0
+    p: -1
+    c: -1
   - x: 4
     y: 4
     pt: 1
@@ -52,9 +52,9 @@ MonoBehaviour:
     c: 2
   - x: 1
     y: 3
-    pt: 1
-    p: 0
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   - x: 2
     y: 3
     pt: 1
@@ -62,9 +62,9 @@ MonoBehaviour:
     c: 1
   - x: 3
     y: 3
-    pt: 1
-    p: 0
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   - x: 4
     y: 3
     pt: 0
@@ -107,9 +107,9 @@ MonoBehaviour:
     c: 0
   - x: 2
     y: 1
-    pt: 1
-    p: 0
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   - x: 3
     y: 1
     pt: 1
@@ -117,14 +117,14 @@ MonoBehaviour:
     c: 3
   - x: 4
     y: 1
-    pt: 1
-    p: 0
-    c: 1
+    pt: 0
+    p: -1
+    c: -1
   - x: 0
     y: 0
-    pt: 1
-    p: 0
-    c: 1
+    pt: 0
+    p: -1
+    c: -1
   - x: 1
     y: 0
     pt: 1
@@ -132,9 +132,9 @@ MonoBehaviour:
     c: 3
   - x: 2
     y: 0
-    pt: 1
-    p: 0
-    c: 1
+    pt: 0
+    p: -1
+    c: -1
   - x: 3
     y: 0
     pt: 1
@@ -142,8 +142,8 @@ MonoBehaviour:
     c: 1
   - x: 4
     y: 0
-    pt: 1
-    p: 0
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   AddNewPipes: 0
   CreatureId: 2

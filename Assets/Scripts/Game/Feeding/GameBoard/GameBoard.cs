@@ -552,10 +552,10 @@ public class GameBoard : MonoBehaviour
                 SPipe pipe = CreatePipe(pType, levelData.Slots[i].p, levelData.Slots[i].c);
                 Slots[x, y].SetPipe(pipe);
                 pipe.PlayAddAnimation();
-                yield return new WaitForSeconds(0.05f);
+                yield return new WaitForSeconds(0.025f);
             }
         }
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(0.15f);
         UnsetPause();
     }
 
@@ -1247,7 +1247,7 @@ public class GameBoard : MonoBehaviour
 
 	private void OnPipeLandAfterMatch(SlideData slideData)
 	{
-		MusicManager.playSound("chip_hit");
+		MusicManager.playSound("Match");//"chip_hit"
 		slideData.Pipe2.RemoveCombineAnimation();
 		EventData eventData = new EventData("OnCombineWasMadeEvent");
 		eventData.Data["acolor"] = slideData.Pipe.AColor;
@@ -2443,17 +2443,20 @@ public class GameBoard : MonoBehaviour
             GameManager.Instance.EventManager.CallOnOpenFormNeededEvent(eventData);
         });
 	}
-
-    public void OnCreatureMixGameCompleted()
+    private IEnumerator OnCreatureMixGameCompleted()
     {
         SetGameState(EGameState.Loose);
         int nextLevel = GameManager.Instance.Player.CreatureMixLevel + 1;
         _upgradesManager.SetLevel(nextLevel, false);
         GameManager.Instance.Player.CreatureMixLevel = nextLevel;
-        LeanTween.delayedCall(1.0f, () =>
-        {
-            RestartGame();
-        });
+        yield return new WaitForSeconds(Consts.ADD_POINTS_EFFECT_TIME);
+        // teleport
+        MusicManager.playSound("Teleport");
+        yield return new WaitForSeconds(1);
+        //
+        MusicManager.playSound("Mimishki_WIN");
+        yield return new WaitForSeconds(2.0f);
+        RestartGame();
     }
 
     private void TryStartStartTutorSequence()
@@ -2978,10 +2981,7 @@ public class GameBoard : MonoBehaviour
         {
             SetGameState(EGameState.Loose);
             ClearBoardQuick();
-            LeanTween.delayedCall(Consts.ADD_POINTS_EFFECT_TIME, ()=>
-            {
-                OnCreatureMixGameCompleted();
-            });
+            StartCoroutine(OnCreatureMixGameCompleted());
         }
     }
 
