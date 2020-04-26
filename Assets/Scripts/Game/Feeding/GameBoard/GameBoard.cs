@@ -90,8 +90,9 @@ public class GameBoard : MonoBehaviour
 	private float								_shakeDy = 0;
 
 	private Vector3								_cameraPos;
+    private Vector3                             _slotsContainerPos;
 
-	public QueuePanel                           AQueuePanel;
+    public QueuePanel                           AQueuePanel;
 	public SequencePanel                        ASequencePanel;
 	public MovesPanel							AMovesPanel;
 	public StarsPanel							AStarsPanel;
@@ -143,7 +144,7 @@ public class GameBoard : MonoBehaviour
 
     public GameMenuUIController                 GameMenuUIController;
     public AimPanel                             AAimPanel;
-    [SerializeField] UpgradesManager _upgradesManager;
+    [SerializeField] UpgradesManager            _upgradesManager;
 
     private Camera _camera;
     private Canvas _canvas;
@@ -302,12 +303,13 @@ public class GameBoard : MonoBehaviour
         TryShowHint();
         TryShowTutor2();
         //camera shakes	
-        Vector3 realPos = _cameraPos;
+        Vector3 realPos = _slotsContainerPos; //_cameraPos;
         realPos.x -= _shakeDx;
         realPos.y -= _shakeDy;
-        _camera.transform.position = realPos;
+        //_camera.transform.position = realPos;
+        SlotsContainer.position = realPos;
 
-		UpdateInput();
+        UpdateInput();
     }
 
   //  void OnTransitToMenu(EventData e)
@@ -637,6 +639,7 @@ public class GameBoard : MonoBehaviour
             }
         }
         //
+        _slotsContainerPos = SlotsContainer.transform.position;
         StartCoroutine(CreateLevel(levelData));
     }
 
@@ -1552,6 +1555,7 @@ public class GameBoard : MonoBehaviour
         {
             return;
         }
+        xpower *= -1; // якщо шатаємо не камеру, а гейм обжект - інвертуємо
         // shake it
         MusicManager.playSound("chip_hit");
         LeanTween.cancel(BumpShakeObject);
@@ -1582,6 +1586,7 @@ public class GameBoard : MonoBehaviour
         {
             return;
         }
+        ypower *= -1; // якщо шатаємо не камеру, а гейм обжект - інвертуємо
         // shake it
         MusicManager.playSound("chip_hit");
         LeanTween.cancel(BumpShakeObject);
