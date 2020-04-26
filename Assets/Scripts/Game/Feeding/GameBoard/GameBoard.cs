@@ -204,7 +204,7 @@ public class GameBoard : MonoBehaviour
         _pipesToNextBlocker = Consts.PIPES_TO_NEXT_BLOCKER;
         _pointsForSequences = 0;
         _resources = new List<long>();
-        for (int i = 0; i < Consts.CLASSIC_GAME_COLORS; ++i)
+        for (int i = 0; i < Consts.COLORS.Length; ++i)
         {
             _resources.Add(0);
             //SetResourceForce(0, i);
