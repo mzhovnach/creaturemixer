@@ -1636,6 +1636,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1860866039294480261}
   - component: {fileID: 7565730356637187639}
+  - component: {fileID: 8370476651158956496}
   m_Layer: 0
   m_Name: Monster1
   m_TagString: Untagged
@@ -1693,6 +1694,38 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8370476651158956496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7540855270050062200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 971d34a27f0354bde85a187160155680, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _hands:
+  - {fileID: 1240086083049662214}
+  - {fileID: 1096712724749252272}
+  - {fileID: 1539377401543738059}
+  - {fileID: 5503588700071086362}
+  _legs:
+  - {fileID: 7564285861871735668}
+  - {fileID: 3369945359868567171}
+  - {fileID: 5911779595596806881}
+  - {fileID: 8619315448503159978}
+  _eyes:
+  - {fileID: 168674948316984547}
+  - {fileID: 9209847730592846999}
+  - {fileID: 8723359662757377560}
+  - {fileID: 4764326438003174864}
+  _horns:
+  - {fileID: 5686483238210941262}
+  - {fileID: 2697186770837298832}
+  - {fileID: 586585904062158113}
+  - {fileID: 3508152020731789734}
 --- !u!1 &7660479561127045898
 GameObject:
   m_ObjectHideFlags: 0
