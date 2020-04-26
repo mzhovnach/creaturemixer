@@ -6,7 +6,7 @@ SpriteAtlas:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Monster1
+  m_Name: Monsters
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -86,5 +86,5 @@ SpriteAtlas:
   - Monster_1_Layer 69 copy 3
   - Monster_1_Layer 70
   - Monster_1_Layer 49
-  m_Tag: Monster1
+  m_Tag: Monsters
   m_IsVariant: 0
