@@ -2984,4 +2984,14 @@ public class GameBoard : MonoBehaviour
         //    ...
         //}
     }
+
+    public void ClearProgress()
+    {
+        GameBoard.GameType = EGameType.Leveled; // тоді при переході в ендлесс гру вона ресетнеться
+        //GameManager.Instance.Player.SavedGame = null;
+        //GameManager.Instance.Settings.Save();
+        GameManager.Instance.Settings.ResetSettings();
+        ClearBoardForce();
+        SetupCreatureMixUpgrades();
+    }
 }
