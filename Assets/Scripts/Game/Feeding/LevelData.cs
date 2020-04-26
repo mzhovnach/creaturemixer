@@ -47,6 +47,7 @@ public class LevelData
     public bool             AddsViewed; // for getting Chain Powerup
     public List<int>        QueueState;
     public List<int>        Colors;
+    public bool                    AddNewPipes;
     // statistic
     public float			timePlayed;
 
@@ -61,7 +62,9 @@ public class LevelData
         DestroyColorsPowerups = 0;
         SwapPowerups = 0;
         AddsViewed = false;
-		for (int i = 0; i < Consts.COLORS.Length; ++i)
+        AddNewPipes = true;
+
+        for (int i = 0; i < Consts.COLORS.Length; ++i)
 		{
 			Resources.Add(0);
 		}
@@ -99,6 +102,7 @@ public class LevelData
         }
         if (IsEmptyLevel(res.Slots))
         {
+            res.AddNewPipes = true;
             UnityEngine.Random.InitState(level);
             res.Slots.Clear();
             for (int i = 0; i < GameBoard.WIDTH; ++i)
@@ -119,6 +123,7 @@ public class LevelData
                     
             }
         }
+        res.AddNewPipes = cmLevelData.AddNewPipes;
         return res;
     }
 
@@ -142,6 +147,7 @@ public class LevelData
     {
         UnityEngine.Random.InitState(level);
         LevelData res = new LevelData();
+        res.AddNewPipes = true;
         res.ReshufflePowerups = Consts.POWERUPS_RESHUFFLE_AT_START;
         res.BreakePowerups = Consts.POWERUPS_BREAKE_AT_START;
         res.ChainPowerups = Consts.POWERUPS_CHAIN_AT_START;

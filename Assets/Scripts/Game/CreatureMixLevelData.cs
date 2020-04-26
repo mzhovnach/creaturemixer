@@ -9,4 +9,5 @@ public class CreatureMixLevelData : ScriptableObject
     public List<Vector2Int>             Aims; // x - type, y - level of pipe
 	[HideInInspector]
 	public List<SSlotData>			    NeededStates;
+    public bool                         AddNewPipes = false;
 }

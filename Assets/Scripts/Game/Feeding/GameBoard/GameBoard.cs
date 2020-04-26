@@ -186,6 +186,7 @@ public class GameBoard : MonoBehaviour
     List<BoardPos> _slotsToCheckAims = new List<BoardPos>();
     BoardPos _lastSlotWithMatch = new BoardPos(-1, -1);
     private List<int> _possibleColors = new List<int>();
+    bool _addNewPipes = false;
 
     void Awake()
     {
@@ -475,6 +476,7 @@ public class GameBoard : MonoBehaviour
         _currentTouchId = -1;
         DragSlot = null;
         HideSelection();
+        _addNewPipes = levelData.AddNewPipes;
         //
         _possibleColors.Clear();
         for (int i = 0; i < levelData.Colors.Count; ++i)
@@ -707,6 +709,7 @@ public class GameBoard : MonoBehaviour
         {
             res.Colors.Add(_possibleColors[i]);
         }
+        res.AddNewPipes = _addNewPipes;
         return res;
     }
 
@@ -2922,7 +2925,7 @@ public class GameBoard : MonoBehaviour
                 {
                     pipeType = EPipeType.Blocker;
                 }
-                if (pipeneeded)
+                if (_addNewPipes && pipeneeded)
                 {
                     if (pipeneeded && AddRandomPipe(pipeType))
                     {
