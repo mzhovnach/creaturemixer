@@ -623,6 +623,17 @@ public class GameBoard : MonoBehaviour
 			GameManager.Instance.Settings.User.SavedGame = null;
 			GameManager.Instance.Settings.Save();
 		}
+        // complete aims with level 1
+        for (int i = 0; i < levelData.Aims.Count; ++i)
+        {
+            if (levelData.Aims[i].y == 1)
+            {
+                Vector3Int aim = levelData.Aims[i];
+                aim.z = 1; // complete force
+                levelData.Aims[i] = aim;
+            }
+        }
+        //
         StartCoroutine(CreateLevel(levelData));
     }
 
