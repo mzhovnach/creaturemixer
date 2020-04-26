@@ -90,7 +90,7 @@ public class AimPanel : MonoBehaviour
 
     protected void FlyingEffect(SPipe pipe)
     {
-        Time.timeScale = 0.1f;
+        //Time.timeScale = 0.1f;
         int pipeColor = pipe.AColor;
         //pipe.PlayHideAnimation();
         Vector3 fromPos = pipe.transform.position;
