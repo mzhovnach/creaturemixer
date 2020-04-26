@@ -746,6 +746,11 @@ PrefabInstance:
       propertyPath: ShareCamera
       value: 
       objectReference: {fileID: 2134954368}
+    - target: {fileID: 114697792406268258, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 223757415571479408, guid: d7125060805d95a498ffa58f879024fc,
         type: 3}
       propertyPath: m_Camera
@@ -885,6 +890,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -85
+      objectReference: {fileID: 0}
+    - target: {fileID: 224871005816555908, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 888.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 224871005816555908, guid: d7125060805d95a498ffa58f879024fc,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 422.7
       objectReference: {fileID: 0}
     - target: {fileID: 338126596559194206, guid: d7125060805d95a498ffa58f879024fc,
         type: 3}
