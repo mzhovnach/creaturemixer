@@ -75,6 +75,10 @@ public class GameMenuUIController : BaseUIController
 
     public void ButtonMenuOnClick()
     {
+        //if (!GameManager.Instance.Game.IsPlay())
+        //{
+        //    return;
+        //}
         //turn off powerups
         if (Powerups.ContainsKey(GameData.PowerUpType.DestroyColor))
         {

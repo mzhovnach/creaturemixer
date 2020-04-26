@@ -1510,7 +1510,7 @@ public class GameBoard : MonoBehaviour
             }
         }
         // check powerups
-        if (GameBoard.GameType == EGameType.Classic)
+        if (GameBoard.GameType == EGameType.Classic && Consts.WITH_POWERUPS)
         {
             for (var powerup = GameData.PowerUpType.Reshuffle; powerup <= GameData.PowerUpType.DestroyColor; ++powerup)
             {
@@ -2162,9 +2162,10 @@ public class GameBoard : MonoBehaviour
         SetGameState(EGameState.Loose);
         GameManager.Instance.Player.SavedGame = null;
         LeanTween.delayedCall(1.0f, () => {
-            EventData eventData = new EventData("OnOpenFormNeededEvent");
-            eventData.Data["form"] = UIConsts.FORM_ID.STATISTIC_WINDOW;
-            GameManager.Instance.EventManager.CallOnOpenFormNeededEvent(eventData);
+            //EventData eventData = new EventData("OnOpenFormNeededEvent");
+            //eventData.Data["form"] = UIConsts.FORM_ID.STATISTIC_WINDOW;
+            //GameManager.Instance.EventManager.CallOnOpenFormNeededEvent(eventData);
+            PlayGame();
         });
     }
 

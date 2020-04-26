@@ -54,7 +54,14 @@ public class AimPanel : MonoBehaviour
         {
             if (Slots[pipeColor].CheckAim(slot.Pipe.Param))
             {
-                //TODO fly to panel
+                //Vector3[] pathPoints = new Vector3[4];
+                //Vector3 p0 = slot.Pipe.transform.position;
+                //p0.z = 0;
+                //pathPoints[0] = p0;
+                //Vector3 p1 = Slots[pipeColor].transform.position;
+                //p0.z = 0;
+                //pathPoints[0] = p0;
+                //LTSpline spline = new LTSpline(pathPoints);
                 SPipe pipe = slot.TakePipe();
                 pipe.PlayHideAnimation();
                 return true;
