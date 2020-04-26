@@ -260,6 +260,7 @@ public class GameBoard : MonoBehaviour
         _slotsToCheckAims.Add(new BoardPos(3, 4));
         //
         _upgradesManager.Reset();
+        _slotsContainerPos = SlotsContainer.transform.position;
     }
 
     void OnDestroy()
@@ -295,19 +296,19 @@ public class GameBoard : MonoBehaviour
 			return;
 		}
         Cheats.CheckMatchCheats(this);
-		// update drag of slot
-		if (IsPause() || IsLoose())
-		{
-			return;
-		}
-        TryShowHint();
-        TryShowTutor2();
         //camera shakes	
         Vector3 realPos = _slotsContainerPos; //_cameraPos;
         realPos.x -= _shakeDx;
         realPos.y -= _shakeDy;
         //_camera.transform.position = realPos;
         SlotsContainer.position = realPos;
+        // update drag of slot
+        if (IsPause() || IsLoose())
+		{
+			return;
+		}
+        TryShowHint();
+        TryShowTutor2();
 
         UpdateInput();
     }
@@ -656,7 +657,6 @@ public class GameBoard : MonoBehaviour
             }
         }
         //
-        _slotsContainerPos = SlotsContainer.transform.position;
         StartCoroutine(CreateLevel(levelData));
     }
 
@@ -1572,15 +1572,14 @@ public class GameBoard : MonoBehaviour
         {
             return;
         }
-        xpower *= -1; // якщо шатаємо не камеру, а гейм обжект - інвертуємо
+        xpower *= -1; // якщо шатаємо не камеру, а гейм обжект - інвертуємо і збільшуємо силу
         // shake it
         MusicManager.playSound("chip_hit");
         LeanTween.cancel(BumpShakeObject);
-		LeanTween.value(BumpShakeObject, 0.0f, 1.0f, time)
-			.setLoopPingPong()
-			.setLoopCount(2)
-		//.setEase(UIConsts.SHOW_EASE)
-		//	.setDelay(UIConsts.SHOW_DELAY_TIME)
+        LeanTween.value(BumpShakeObject, 0.0f, 1.0f, time)
+			.setLoopPingPong(1)
+	        //.setEase(UIConsts.SHOW_EASE)
+		    //.setDelay(UIConsts.SHOW_DELAY_TIME)
 			.setOnUpdate
 			(
 				(float val)=>
@@ -1589,7 +1588,7 @@ public class GameBoard : MonoBehaviour
 				}
 			).setOnComplete
 			(
-				() =>
+                () =>
 				{
 					_shakeDx = 0;
 					_shakeDy = 0;
@@ -1603,13 +1602,12 @@ public class GameBoard : MonoBehaviour
         {
             return;
         }
-        ypower *= -1; // якщо шатаємо не камеру, а гейм обжект - інвертуємо
+        ypower *= -1; // якщо шатаємо не камеру, а гейм обжект - інвертуємо і збільшуємо силу
         // shake it
         MusicManager.playSound("chip_hit");
         LeanTween.cancel(BumpShakeObject);
 		LeanTween.value(BumpShakeObject, 0.0f, 1.0f, time)
-			.setLoopPingPong()
-			.setLoopCount(2)
+			.setLoopPingPong(1)
 			//.setEase(UIConsts.SHOW_EASE)
 			//	.setDelay(UIConsts.SHOW_DELAY_TIME)
 			.setOnUpdate
