@@ -736,10 +736,10 @@ PlayerSettings:
     m_VersionCode: 1
     m_VersionName: 
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 2b1d1a5e-498c-4a29-aab4-0bb5504cbb06
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: Feeding
+  organizationId: mykhailo-zhovnach
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
