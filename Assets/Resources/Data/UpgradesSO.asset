@@ -15,36 +15,27 @@ MonoBehaviour:
   Upgrades:
   - Id: InitState
     LevelNum: 0
+    ToEnable: []
+    ToDisable: []
+  - Id: Monster1
+    LevelNum: 1
     ToEnable:
-    - background
-    - upgrade_07
-    - dock
-    - upgrade_01
+    - Monster1
     - upgrade_02
-    - fish
     - upgrade_08
-    - pyramid_01
-    - upgrade_09
-    - volcanoes_01
-    - upgrade_06
-    - maze_02
-    - upgrade_05
-    - maze_01
+    ToDisable: []
+  - Id: Monster2
+    LevelNum: 0
+    ToEnable:
+    - Monster2
+    - upgrade_01
     - upgrade_03
-    - place_01
-    - upgrade_04
-    - small_mushrooms_03
-    - small_mushrooms_02
-    - small_mushrooms_01
-    - place_03
-    - place_02
-    - plants_06
-    - plants_05
-    - plants_04
-    - plants_03
-    - plants_02
-    - plants_01
-    - character_03
-    - character_02
-    - character_01
+    - upgrade_09
+    ToDisable: []
+  - Id: Monster3
+    LevelNum: 0
+    ToEnable:
+    - Monster3
+    - upgrade_05
+    - upgrade_06
     ToDisable: []
