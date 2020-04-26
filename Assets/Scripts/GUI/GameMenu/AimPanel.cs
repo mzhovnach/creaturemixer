@@ -99,7 +99,7 @@ public class AimPanel : MonoBehaviour
         Vector3[] pathPoints = new Vector3[5];
         // from
         Vector3 p1 = fromPos;
-        p1.z = -3;
+        p1.z = -11;
         pathPoints[1] = p1;
         pipe.transform.position = p1;
         // to
@@ -119,7 +119,6 @@ public class AimPanel : MonoBehaviour
         // middle point
         Vector3 p2 = (p1 + p3) / 2.0f;
         p2.x += UnityEngine.Random.Range(-3.0f, 3.0f);
-        p2.z = -5;
         pathPoints[2] = p2;
         //
         LTSpline spline = new LTSpline(pathPoints);
@@ -146,6 +145,7 @@ public class AimPanel : MonoBehaviour
                 //pipe.PlayHideAnimation();
                 pipe.gameObject.SetActive(false);
                 pipe.transform.localScale = Vector3.zero;
+                Slots[pipeColor].CheckMark.SetActive(true);
             })
             .setEaseInOutSine();
         LeanTween.rotateX(pipe.gameObject, startAngle.x + 40, (Consts.ADD_POINTS_EFFECT_TIME - 0.05f) / 2.0f)

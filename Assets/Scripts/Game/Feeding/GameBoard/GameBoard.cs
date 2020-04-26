@@ -2447,7 +2447,6 @@ public class GameBoard : MonoBehaviour
     public void OnCreatureMixGameCompleted()
     {
         SetGameState(EGameState.Loose);
-        ClearBoardQuick();
         int nextLevel = GameManager.Instance.Player.CreatureMixLevel + 1;
         GameManager.Instance.Player.CreatureMixLevel = nextLevel;
         LeanTween.delayedCall(1.0f, () =>
@@ -2976,7 +2975,12 @@ public class GameBoard : MonoBehaviour
 
         if (allAimsCompleted)
         {
-            OnCreatureMixGameCompleted();
+            SetGameState(EGameState.Loose);
+            ClearBoardQuick();
+            LeanTween.delayedCall(Consts.ADD_POINTS_EFFECT_TIME, ()=>
+            {
+                OnCreatureMixGameCompleted();
+            });
         }
     }
 

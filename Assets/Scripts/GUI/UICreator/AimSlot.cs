@@ -76,7 +76,7 @@ public class AimSlot : MonoBehaviour
     {
         if (IsIncompleted() && _level == alevel + 1) //бо параметр з 0, фішка з одиничкою має level 0
         {
-            SetCompleted();
+            SetCompletedNoCheckmark();
             return true;
         }
         return false;
@@ -86,6 +86,11 @@ public class AimSlot : MonoBehaviour
     {
         _state = EAimSlotState.Completed;
         CheckMark.SetActive(true);
+    }
+
+    private void SetCompletedNoCheckmark()
+    {
+        _state = EAimSlotState.Completed;
     }
 
     private void SetIncompleted()
