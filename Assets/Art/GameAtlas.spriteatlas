@@ -44,7 +44,7 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: 5868d071e0f02704bb109f4570345ea7, type: 3}
     - {fileID: 102900000, guid: d13f8482f8b6741499f347efb5d2d0c5, type: 3}
-    totalSpriteSurfaceArea: 11658374
+    totalSpriteSurfaceArea: 12636915
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -91,6 +91,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 7d9022f1e5ecb684e9a022a1807f98f1, type: 3}
   - {fileID: 21300000, guid: 1f521102bd99247eabb12ea04e0b9bda, type: 3}
   - {fileID: 21300000, guid: df4a0512fcaf4422b8ec1b4acb6176c2, type: 3}
+  - {fileID: 21300000, guid: 29d09522a54cb4e1e88edbcce0f62a64, type: 3}
   - {fileID: 21300000, guid: 615730325fea9401d87e5f26398917dc, type: 3}
   - {fileID: 21300000, guid: 4fa8b942cf8b24af88b458ca717ae3f8, type: 3}
   - {fileID: 21300000, guid: 75529c42d599b4886aa6791b88e43425, type: 3}
@@ -429,6 +430,7 @@ SpriteAtlas:
   - StarsPanelFiller
   - LevelMap_ten_03_shadow
   - LevelMap_pyramid_left_eye
+  - LeftPanelBack
   - LevelMap_upgrade_06_left_eye
   - LevelMap_singer_04_shadow
   - 2_3
