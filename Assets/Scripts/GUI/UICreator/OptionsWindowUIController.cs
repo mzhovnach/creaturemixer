@@ -133,13 +133,13 @@ public class OptionsWindowUIController : BaseUIController
 
     public void ButtonRestoreOnClick()
     {
-#if (UNITY_IOS || UNITY_ANDROID)
-        Purchaser purchaser = GameManager.Instance.GetComponent<Purchaser>();
-        if (purchaser)
-        {
-            purchaser.RestorePurchases();
-        }
-#endif
+//#if (UNITY_IOS || UNITY_ANDROID)
+//        Purchaser purchaser = GameManager.Instance.GetComponent<Purchaser>();
+//        if (purchaser)
+//        {
+//            purchaser.RestorePurchases();
+//        }
+//#endif
     }
 
     public void ButtonFacebookOnClick()
