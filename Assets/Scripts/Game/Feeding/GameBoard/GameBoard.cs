@@ -73,7 +73,7 @@ public class GameBoard : MonoBehaviour
     public static float             			PipeZ                	= 0.26f;
 	public static float             			PipeZForMatch			= -2.0f;
     public static float             			PipeDragZ             	= -0.3f;
-    public static float             			SlotSize              	= 1.86f * 0.85f;
+    public static float             			SlotSize              	= 1.86f;
 	public static float             			ImpulseSpeed       	  	= 30.0f;                            		// speed of moving pipe when it slide after impulse
     public static EGameType                     GameType                = EGameType.Classic;
     public static EAddingType                   AddingType              = EAddingType.EachXMoves;
@@ -273,7 +273,7 @@ public class GameBoard : MonoBehaviour
     // Use this for initialization
     void Start () 
 	{
-		_camera.transform.position = new Vector3(0, 0.2f, _camera.transform.position.z);
+		//_camera.transform.position = new Vector3(0, 0.2f, _camera.transform.position.z);
         //Invoke("PlayGame", 0.15f);
 		//PlayGame();
     }
