@@ -145,5 +145,15 @@ MonoBehaviour:
     pt: 1
     p: 0
     c: 2
-  AddNewPipes: 0
+  AddNewPipes: 1
   CreatureId: 0
+  Queue:
+  - Name: enemy_1
+    Delay: 2
+    Parameters: 
+  - Name: enemy_2
+    Delay: 3
+    Parameters: 
+  - Name: enemy_3
+    Delay: 5
+    Parameters: 

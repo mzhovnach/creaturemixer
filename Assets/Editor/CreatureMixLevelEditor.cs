@@ -5,32 +5,50 @@ using UnityEditor;
 [CustomEditor(typeof(CreatureMixLevelData))]
 public class CreatureMixLevelEditor : Editor
 {
-	private const int               PIPE_TYPE_HOLE_ID = 27; //32 for LAST_COLOR_PARAM == 5
-	private const int               PIPE_TYPE_NONE_ID = 26; //31 for LAST_COLOR_PARAM == 5
-	private const int               PIPE_TYPE_BLOCKER_ID = 25; // 30 for LAST_COLOR_PARAM == 5
-	private const int               LAST_COLOR_PARAM = 4; // = Consts.MAX_COLORS_LEVEL - 1
+	private const int                       PIPE_TYPE_HOLE_ID = 27; //32 for LAST_COLOR_PARAM == 5
+	private const int                       PIPE_TYPE_NONE_ID = 26; //31 for LAST_COLOR_PARAM == 5
+	private const int                       PIPE_TYPE_BLOCKER_ID = 25; // 30 for LAST_COLOR_PARAM == 5
+	private const int                       LAST_COLOR_PARAM = 4; // = Consts.MAX_COLORS_LEVEL - 1
 
-    private int 					SLOT_SIZE = 60;
-	private int 					_w = 5;
-	private int 					_h = 5;
-	private List<List<SSlotData>>	_neededStates = new List<List<SSlotData>>();
+    private int 					        SLOT_SIZE = 60;
+	private int 					        _w = 5;
+	private int 					        _h = 5;
+	private List<List<SSlotData>>	        _neededStates = new List<List<SSlotData>>();
 
     // current brush
-    private EPipeType               _carrentBrushType = EPipeType.None;
-    private int                     _carrentBrushColor = -1;
-    private int                     _carrentBrushParam = -1;
-    private int                     _intBrush = PIPE_TYPE_NONE_ID;
-    private int                     _indexStart = -1;
+    private EPipeType                       _carrentBrushType = EPipeType.None;
+    private int                             _carrentBrushColor = -1;
+    private int                             _carrentBrushParam = -1;
+    private int                             _intBrush = PIPE_TYPE_NONE_ID;
+    private int                             _indexStart = -1;
 
-	private EMoveType				_drawState = EMoveType.None;
+	private EMoveType				        _drawState = EMoveType.None;
     // 
 
-    private GUIStyle 				guiStyle = new GUIStyle();
+    private GUIStyle 				        guiStyle = new GUIStyle();
 
-	private Texture[] 				_statesTexs;
-	private Texture[] 				_textures;
+	private Texture[] 				        _statesTexs;
+	private Texture[] 				        _textures;
 
-    CreatureMixLevelData 			_myLevel = null;
+    CreatureMixLevelData 			        _myLevel = null;
+
+    // queue part
+    private const int                       QUEUE_ELEMENTS_IN_ROW = 10;
+    private GUIStyle                        guiStyleBlack = new GUIStyle();
+    private GUIStyle                        guiStyleRed = new GUIStyle();
+    private Dictionary<string, int>         _elementsNames = new Dictionary<string, int>();
+    private List<Texture>                   _queueTextures;
+    private List<QueueElement>              _queue = new List<QueueElement>();
+    private Texture                         _textureError;
+    private List<Texture>                   _colorSticksTextures = new List<Texture>();
+    private int                             _queueIndex = -1;
+    private int                             _currentQueueIndex = -1;
+    private List<int>                       _indexesFilter = new List<int>();
+    private Dictionary<string, Texture>     _awailableTextures = new Dictionary<string, Texture>();
+    private List<string>                    _awailableElements = new List<string>();
+    private string                          _currentNameFilter = "";
+    private
+    //
 
 
     void OnEnable()
@@ -88,7 +106,47 @@ public class CreatureMixLevelEditor : Editor
 			text_4_max,
 			text_blocker, text_none, text_hole
         };
-		_myLevel = (CreatureMixLevelData)target;
+
+        // queue part
+        List<string> elementsNamesList = new List<string>(); //TODO from some file or find all prefabs in folder or from scriptable data about enemies!
+        elementsNamesList.Add("none");
+        elementsNamesList.Add("enemy_1");
+        elementsNamesList.Add("enemy_2");
+        elementsNamesList.Add("enemy_3");
+        _elementsNames = new Dictionary<string, int>();
+        _awailableElements = new List<string>();
+        _queueTextures = new List<Texture>();
+        string elementName = "";
+
+        for (int i = 0; i < elementsNamesList.Count; ++i)
+        {
+            elementName = elementsNamesList[i];
+            Texture text = EditorGUIUtility.Load("queue/elements/qe_" + elementName + ".png") as Texture;
+            _queueTextures.Add(text);
+            _awailableTextures.Add(elementName, _queueTextures[i]);
+            _elementsNames.Add(elementName, i);
+            _awailableElements.Add(elementName);
+        }
+
+        _textureError = EditorGUIUtility.Load("queue/ERROR.png") as Texture;
+
+        for (int i = 0; i < 5; ++i)
+        {
+            _colorSticksTextures.Add(EditorGUIUtility.Load("queue/color_stick_" + i.ToString() + ".png") as Texture);
+        }
+
+        guiStyleBlack.fontSize = 20;
+        guiStyleBlack.fontStyle = FontStyle.Bold;
+        guiStyleBlack.alignment = TextAnchor.MiddleLeft;
+        guiStyleRed.normal.textColor = Color.black;
+
+        guiStyleRed.fontSize = 20;
+        guiStyleRed.fontStyle = FontStyle.Bold;
+        guiStyleRed.alignment = TextAnchor.MiddleLeft;
+        guiStyleRed.normal.textColor = Color.red;
+
+        //
+        _myLevel = (CreatureMixLevelData)target;
 		ReloadLevel();
 	}
 
@@ -101,10 +159,23 @@ public class CreatureMixLevelEditor : Editor
             guiStyle.fontStyle = FontStyle.Bold;
             guiStyle.alignment = TextAnchor.MiddleCenter;
 
-			if (GUILayout.Button("RECREATE LEVEL"))
-			{
-				RecreateLevel();
-			}
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("RECREATE"))
+            {
+                RecreateLevel();
+            }
+            if (GUILayout.Button("CHECK"))
+            {
+                CheckCurrentLevel();
+            }
+            if (GUILayout.Button("SAVE"))
+            {
+                if (CheckCurrentLevel())
+                {
+                    SaveLevel();
+                }
+            }
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("PALETTE", guiStyle);
@@ -147,17 +218,196 @@ public class CreatureMixLevelEditor : Editor
                 }
             }
 			GUILayout.EndHorizontal();
+
+            // queue part
+            GUILayout.Label("----- QUEUE -----------------------------------------------------------------------------------------------------------", guiStyleBlack);
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("CHECK"))
-			{
-				CheckCurrentLevel();
-			}
-            if (GUILayout.Button("SAVE"))
+            if (GUILayout.Button("LEFT"))
             {
-				if (CheckCurrentLevel())
-				{
-					SaveLevel();
-				}
+                OnLeftArrowClick();
+            }
+            if (GUILayout.Button("RIGHT"))
+            {
+                OnRightArrowClick();
+            }
+            if (GUILayout.Button("UP"))
+            {
+                OnUpArrowClick();
+            }
+            if (GUILayout.Button("DOWN"))
+            {
+                OnDownArrowClick();
+            }
+            if (GUILayout.Button("CLEAR QUEUE"))
+            {
+                ClearQueue();
+            }
+            if (GUILayout.Button("ADD ELEMENT"))
+            {
+                AddElementToQueue();
+            }
+            GUILayout.EndHorizontal();
+
+            // REMOVE-INSERT-APPLY EPISODE->
+            if (_queueIndex >= 0) // when selected episode
+            {
+                if (GUILayout.Button("REMOVE EPISODE"))
+                {
+                    _queue.RemoveAt(_queueIndex);
+                    if (_queueIndex > 0)
+                    {
+                        --_queueIndex;
+                    }
+                    else
+                    if (_queue.Count > 0)
+                    {
+                        _queueIndex = 0;
+                    }
+                    else
+                    {
+                        _queueIndex = -1;
+                    }
+                }
+                if (GUILayout.Button("INSERT ELEMENT"))
+                {
+                    _queue.Insert(_queueIndex, new QueueElement("HZ", 0, ""));
+                }
+                // applying
+                GUILayout.BeginVertical();
+                for (int ii = 0; ii < _awailableElements.Count; ii += 5)
+                {
+                    GUILayout.BeginHorizontal();
+                    string objectName = "";
+                    for (int jj = ii; jj < ii + 5; ++jj)
+                    {
+                        if (jj < _awailableElements.Count)
+                        {
+                            if (GUILayout.Button(_awailableElements[jj]))
+                            {
+                                objectName = _awailableElements[jj];
+                                //!!!QueueObject obj = CreateObjectTemporarly(objectName).GetComponent<QueueObject>();
+                                QueueElement newData = _queue[_queueIndex];
+                                newData.Name = objectName;
+                                newData.Parameters = "";
+                                //!!!newData = obj.GeneratePipesQueueElementData(newData);
+                                //!!!GameObject.DestroyImmediate(obj.gameObject);
+                                //!!!obj = null;
+                                if (_queueIndex > 0)
+                                {
+                                    newData.Delay = GameData.GetDelayAfterQueueElement(_queue[_queueIndex - 1].Name);
+                                } else
+                                {
+                                    newData.Delay = 2;
+                                }
+                                _queue[_queueIndex] = newData;// new PipesQueueElement(_awailableElements[jj], _queue[_queueIndex].Delay, _queue[_queueIndex].Angle, (int)pos.x, (int)pos.y, _queue[_queueIndex].Parameters);
+                            }
+                        }
+                    }
+                    GUILayout.EndHorizontal();
+                }
+                GUILayout.EndVertical();
+            }
+            // REMOVE-INSERT-APPLY EPISODE <-
+
+            // GRAPH ->
+            GUILayout.Label("----------------------------------------------------------------------------------------------------------------", guiStyleBlack);
+            GUILayout.Space(15);
+            int startX = 15;
+            int startY = 451;
+            int stickWidth = 10;
+            for (int i = 0; i < _queue.Count; ++i)
+            {
+                float stickHeight = 1 * _queue[i].Delay;
+                int stickColor = 0;
+                //if (_queue[i].Name.StartsWith("p_"))
+                //{
+                //    stickColor = 0;
+                //} else
+                //if (_queue[i].Name.StartsWith("w_"))
+                //{
+                //    stickColor = 1;
+                //}
+                Rect rect = new Rect();
+                rect.x = startX + i * (stickWidth + 2);
+                rect.y = startY - stickHeight;
+                rect.width = stickWidth;
+                rect.height = stickHeight;
+                GUI.DrawTexture(rect, _colorSticksTextures[stickColor]);
+            }
+            if (_queueIndex >= 0)
+            {
+                Rect rect2 = new Rect();
+                rect2.x = startX + _queueIndex * (stickWidth + 2);
+                rect2.y = startY + 2;
+                rect2.width = stickWidth;
+                rect2.height = 5;
+                GUI.DrawTexture(rect2, _colorSticksTextures[1]);
+            }
+            GUILayout.Label("----------------------------------------------------------------------------------------------------------------", guiStyleBlack);
+            // GRAPH <-
+
+            // DRAW ->
+            GUILayout.BeginHorizontal();
+            int startId = _queueIndex / QUEUE_ELEMENTS_IN_ROW * QUEUE_ELEMENTS_IN_ROW;
+            for (int i = 0; i < QUEUE_ELEMENTS_IN_ROW; ++i)
+            {
+                int aid = i + startId;
+                if (aid >= _queue.Count)
+                {
+                    break;
+                }
+                int asize = 60;
+                //GUIStyle guiStyle = guiStyleBlack;
+                //if (_queueIndex == aid)
+                //{
+                //    asize = 80;
+                //    guiStyle = guiStyleRed;
+                //}
+                Texture atexture = _textureError;
+                if (_awailableTextures.ContainsKey(_queue[aid].Name))
+                {
+                    atexture = _awailableTextures[_queue[aid].Name];
+                }
+                GUILayout.BeginVertical();
+                GUILayout.Label(aid.ToString());
+                GUILayout.Label(_queue[aid].Name);
+                //
+                GUILayout.Label("delay");
+                string prevDelay = _queue[aid].Delay.ToString();
+                string newDelay = GUILayout.TextField(prevDelay, 3, guiStyleRed);
+                if (newDelay != prevDelay)
+                {
+                    int newIdelay = 0;
+                    if (int.TryParse(newDelay, out newIdelay))
+                    {
+                        QueueElement qElement = _queue[aid];
+                        qElement.Delay = newIdelay;
+                        _queue[aid] = qElement;
+                    }
+                }
+                //
+                GUILayout.Label("parameters"); // divided by '|'
+                string prevParameters = _queue[aid].Parameters;
+                string newParameters = GUILayout.TextField(prevParameters, 20, guiStyleRed);
+                if (newParameters != prevParameters)
+                {
+                    QueueElement qElement = _queue[aid];
+                    qElement.Parameters = newParameters;
+                    _queue[aid] = qElement;
+                }
+                //
+                if (GUILayout.Button(atexture, GUILayout.Width(asize), GUILayout.Height(asize)))
+                {
+                    if (_queueIndex == aid)
+                    {
+                        _queueIndex = -1;
+                    } else
+                    {
+                        _queueIndex = aid;
+                    }
+                    UpdateQueueIndexes();
+                }
+                GUILayout.EndVertical();
             }
             GUILayout.EndHorizontal();
         }
@@ -294,6 +544,20 @@ public class CreatureMixLevelEditor : Editor
             }
 			_neededStates.Add(rowN);
         }
+        // queue
+        _queue.Clear();
+        for (int i = 0; i < _myLevel.Queue.Count; ++i)
+        {
+            _queue.Add(_myLevel.Queue[i]);
+        }
+        if (_queue.Count > 0)
+        {
+            _currentQueueIndex = 0;
+        } else
+        {
+            _currentQueueIndex = -1;
+        }
+        //
     }
 
 	private void SaveLevel()
@@ -322,7 +586,18 @@ public class CreatureMixLevelEditor : Editor
 				_myLevel.NeededStates.Add(neededSlot);
 			}
 		}
-		EditorUtility.SetDirty(_myLevel);
+        // queue
+        if (_myLevel.Queue == null)
+        {
+            _myLevel.Queue = new List<QueueElement>();
+        }
+        _myLevel.Queue.Clear();
+        for (int i = 0; i < _queue.Count; ++i)
+        {
+            _myLevel.Queue.Add(_queue[i]);
+        }
+        //
+        EditorUtility.SetDirty(_myLevel);
 	}
 
 	private bool CheckCurrentLevel()
@@ -359,4 +634,94 @@ public class CreatureMixLevelEditor : Editor
         }
         return true;
 	}
+
+    // queue
+    private void OnLeftArrowClick()
+    {
+        if (_queueIndex > 0)
+        {
+            --_queueIndex;
+        }
+    }
+
+    private void OnRightArrowClick()
+    {
+        if (_queue.Count > _queueIndex + 1)
+        {
+            ++_queueIndex;
+        }
+    }
+
+    private void OnUpArrowClick()
+    {
+        if (_queueIndex >= QUEUE_ELEMENTS_IN_ROW)
+        {
+            _queueIndex -= QUEUE_ELEMENTS_IN_ROW;
+        }
+    }
+
+    private void OnDownArrowClick()
+    {
+        if (_queue.Count > _queueIndex + QUEUE_ELEMENTS_IN_ROW)
+        {
+            _queueIndex += QUEUE_ELEMENTS_IN_ROW;
+        }
+    }
+
+    private void ClearQueue()
+    {
+        _queue.Clear();
+        _currentQueueIndex = -1;
+    }
+
+    private void AddElementToQueue()
+    {
+        QueueElement element = new QueueElement("HZ", 0, "");
+        _queue.Add(element);
+    }
+
+    private void RemoveElementFromQueue()
+    {
+        _queue.RemoveAt(_queueIndex);
+        if (_queueIndex > 0)
+        {
+            --_queueIndex;
+        }
+        else
+        if (_queue.Count == 0)
+        {
+            _queueIndex = -1;
+        }
+    }
+
+    private void UpdateQueueIndexes()
+    {
+        _indexesFilter.Clear();
+        for (int i = 0; i < _awailableElements.Count; ++i)
+        {
+            if (_currentNameFilter == "" || _awailableElements[i].Contains(_currentNameFilter))
+            {
+                _indexesFilter.Add(i);
+            }
+        }
+        if (_indexesFilter.Count > 0)
+        {
+            _currentQueueIndex = 0;
+        }
+        else
+        {
+            _currentQueueIndex = -1;
+        }
+    }
+
+    //private GameObject CreateObjectTemporarly(string objName)
+    //{
+    //    Object prefab = AssetDatabase.LoadAssetAtPath("Assets/Prefabs/Objects/" + objName + ".prefab", typeof(GameObject));
+    //    return ((GameObject)GameObject.Instantiate(prefab, Vector3.zero, Quaternion.identity));
+    //}
+
+    private int PipesNameToEditorsInt(string pipesName)
+    {
+        return _elementsNames[pipesName];
+    }
 }

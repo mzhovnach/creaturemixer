@@ -21,6 +21,7 @@ public class GameData
     public Dictionary<string, List<Vector3>> XMLSplineData;
 	public Dictionary<string, TutorialData> XMLtutorialsData;
 	public List<string> XMLhelpPagesData; // what tutors show in HelpWindow
+    public static Dictionary<string, int> DelaysAfterQueueElement = null; // delays by default
 
     //public LevelData StartLevelData;
 
@@ -34,8 +35,9 @@ public class GameData
     {
 		//LoadTutorialsData();
         LoadSplineData();
-		//LoadHelpPagesData();
-		//LoadTrophiesData();
+        LoadDelaysAfetrQueueElements();
+        //LoadHelpPagesData();
+        //LoadTrophiesData();
         //LoadStartLevelData();
     }
 
@@ -75,87 +77,87 @@ public class GameData
         }
     }
 
-	//private void LoadTutorialsData()
-	//{
-	//	XMLtutorialsData = new Dictionary<string, TutorialData>();
-		
-	//	TextAsset tutorXml = Resources.Load<TextAsset>("Data/Tutorials/tutorialsdata");
-		
-	//	XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
-	//	xmlDoc.LoadXml(tutorXml.text); // load the file.
-	//	XmlNodeList itemsList = xmlDoc.GetElementsByTagName("item"); // array of the tutorials nodes.
-		
-	//	foreach (XmlNode itemInfo in itemsList)
-	//	{
-	//		TutorialData tData = new TutorialData();
-	//		tData.Id = itemInfo.Attributes["id"].Value;
-	//		tData.Type = itemInfo.Attributes["type"].Value;
-	//		tData.X = float.Parse(itemInfo.Attributes["x"].Value);
-	//		tData.Y = float.Parse(itemInfo.Attributes["y"].Value);
-	//		tData.IsArrow = itemInfo.Attributes["isarrow"].Value == "true";
-	//		tData.Align = itemInfo.Attributes["align"].Value;
-	//		XMLtutorialsData[tData.Id] = tData;
-	//	}
-	//}
+    //private void LoadTutorialsData()
+    //{
+    //	XMLtutorialsData = new Dictionary<string, TutorialData>();
 
-//	private void LoadTrophiesData()
-//	{
-//		XMLtrophiesData = new Dictionary<ETrophyType, TrophyData>();
-//
-//		TextAsset aXml = Resources.Load<TextAsset>("Data/TrophiesData");
-//		XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
-//		xmlDoc.LoadXml(aXml.text); // load the file.
-//		XmlNodeList itemsList = xmlDoc.GetElementsByTagName("trophy");
-//
-//		foreach (XmlNode itemInfo in itemsList)
-//		{
-//			string sid = itemInfo.Attributes["id"].Value;
-//			ETrophyType id = (ETrophyType)System.Enum.Parse( typeof( ETrophyType ), sid );
-//			TrophyData tData = new TrophyData();
-//			tData.Reward = int.Parse(itemInfo.Attributes["reward"].Value);
-//			tData.Param = int.Parse(itemInfo.Attributes["param"].Value);
-//			tData.IsSingle = bool.Parse(itemInfo.Attributes["issingle"].Value);
-//			XMLtrophiesData.Add(id, tData);
-//		}
-//	}
+    //	TextAsset tutorXml = Resources.Load<TextAsset>("Data/Tutorials/tutorialsdata");
 
-	//private void LoadHelpPagesData()
-	//{
-	//	XMLhelpPagesData = new List<string>();
-	//	XMLhelpPagesData.Add("1");
-	//	XMLhelpPagesData.Add("2");
-	//	XMLhelpPagesData.Add("3");
-	//	XMLhelpPagesData.Add("4");
-	//	XMLhelpPagesData.Add("5");
-	//	XMLhelpPagesData.Add("6");
-	//	XMLhelpPagesData.Add("7");
-	//	XMLhelpPagesData.Add("8");
-	//	XMLhelpPagesData.Add("9");
-	//	XMLhelpPagesData.Add("10");
-	//	XMLhelpPagesData.Add("11");
-	//	XMLhelpPagesData.Add("12");
-	//	XMLhelpPagesData.Add("13");
-	//	XMLhelpPagesData.Add("14");
-	//	XMLhelpPagesData.Add("15");
-	//	XMLhelpPagesData.Add("16");
-	//	XMLhelpPagesData.Add("17");
-	//	XMLhelpPagesData.Add("18");
-	//	XMLhelpPagesData.Add("19");
-	//	XMLhelpPagesData.Add("20");
-	//	XMLhelpPagesData.Add("21");
-	//	XMLhelpPagesData.Add("22");
-	//	XMLhelpPagesData.Add("23");
-	//	XMLhelpPagesData.Add("24");
-	//	XMLhelpPagesData.Add("25");
-	//	XMLhelpPagesData.Add("26");
-	//	XMLhelpPagesData.Add("27");
-	//	XMLhelpPagesData.Add("28");
-	//	XMLhelpPagesData.Add("29");
-	//	XMLhelpPagesData.Add("30");
-	//	XMLhelpPagesData.Add("31");
-	//	XMLhelpPagesData.Add("32");
-	//	XMLhelpPagesData.Add("33");
-	//}
+    //	XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
+    //	xmlDoc.LoadXml(tutorXml.text); // load the file.
+    //	XmlNodeList itemsList = xmlDoc.GetElementsByTagName("item"); // array of the tutorials nodes.
+
+    //	foreach (XmlNode itemInfo in itemsList)
+    //	{
+    //		TutorialData tData = new TutorialData();
+    //		tData.Id = itemInfo.Attributes["id"].Value;
+    //		tData.Type = itemInfo.Attributes["type"].Value;
+    //		tData.X = float.Parse(itemInfo.Attributes["x"].Value);
+    //		tData.Y = float.Parse(itemInfo.Attributes["y"].Value);
+    //		tData.IsArrow = itemInfo.Attributes["isarrow"].Value == "true";
+    //		tData.Align = itemInfo.Attributes["align"].Value;
+    //		XMLtutorialsData[tData.Id] = tData;
+    //	}
+    //}
+
+    //	private void LoadTrophiesData()
+    //	{
+    //		XMLtrophiesData = new Dictionary<ETrophyType, TrophyData>();
+    //
+    //		TextAsset aXml = Resources.Load<TextAsset>("Data/TrophiesData");
+    //		XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
+    //		xmlDoc.LoadXml(aXml.text); // load the file.
+    //		XmlNodeList itemsList = xmlDoc.GetElementsByTagName("trophy");
+    //
+    //		foreach (XmlNode itemInfo in itemsList)
+    //		{
+    //			string sid = itemInfo.Attributes["id"].Value;
+    //			ETrophyType id = (ETrophyType)System.Enum.Parse( typeof( ETrophyType ), sid );
+    //			TrophyData tData = new TrophyData();
+    //			tData.Reward = int.Parse(itemInfo.Attributes["reward"].Value);
+    //			tData.Param = int.Parse(itemInfo.Attributes["param"].Value);
+    //			tData.IsSingle = bool.Parse(itemInfo.Attributes["issingle"].Value);
+    //			XMLtrophiesData.Add(id, tData);
+    //		}
+    //	}
+
+    //private void LoadHelpPagesData()
+    //{
+    //	XMLhelpPagesData = new List<string>();
+    //	XMLhelpPagesData.Add("1");
+    //	XMLhelpPagesData.Add("2");
+    //	XMLhelpPagesData.Add("3");
+    //	XMLhelpPagesData.Add("4");
+    //	XMLhelpPagesData.Add("5");
+    //	XMLhelpPagesData.Add("6");
+    //	XMLhelpPagesData.Add("7");
+    //	XMLhelpPagesData.Add("8");
+    //	XMLhelpPagesData.Add("9");
+    //	XMLhelpPagesData.Add("10");
+    //	XMLhelpPagesData.Add("11");
+    //	XMLhelpPagesData.Add("12");
+    //	XMLhelpPagesData.Add("13");
+    //	XMLhelpPagesData.Add("14");
+    //	XMLhelpPagesData.Add("15");
+    //	XMLhelpPagesData.Add("16");
+    //	XMLhelpPagesData.Add("17");
+    //	XMLhelpPagesData.Add("18");
+    //	XMLhelpPagesData.Add("19");
+    //	XMLhelpPagesData.Add("20");
+    //	XMLhelpPagesData.Add("21");
+    //	XMLhelpPagesData.Add("22");
+    //	XMLhelpPagesData.Add("23");
+    //	XMLhelpPagesData.Add("24");
+    //	XMLhelpPagesData.Add("25");
+    //	XMLhelpPagesData.Add("26");
+    //	XMLhelpPagesData.Add("27");
+    //	XMLhelpPagesData.Add("28");
+    //	XMLhelpPagesData.Add("29");
+    //	XMLhelpPagesData.Add("30");
+    //	XMLhelpPagesData.Add("31");
+    //	XMLhelpPagesData.Add("32");
+    //	XMLhelpPagesData.Add("33");
+    //}
 
     //private void LoadStartLevelData()
     //{
@@ -184,4 +186,37 @@ public class GameData
     //    StartLevelData.AddsViewed = false; // set true for paid version
     //}
 
+    private static void LoadDelaysAfetrQueueElements()
+    {
+        if (DelaysAfterQueueElement != null)
+        {
+            return;
+        }
+        DelaysAfterQueueElement = new Dictionary<string, int>();
+        TextAsset aXml = Resources.Load<TextAsset>("Data/delays_after_queue_elements");
+        XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
+        xmlDoc.LoadXml(aXml.text); // load the file.
+        XmlNodeList itemsList = xmlDoc.GetElementsByTagName("p"); // array of nodes.
+        string enemyName = "";
+        int delay = 0;
+        foreach (XmlNode itemInfo in itemsList)
+        {
+            enemyName = itemInfo.Attributes["name"].Value;
+            delay = int.Parse(itemInfo.Attributes["delay"].Value);
+            DelaysAfterQueueElement.Add(enemyName, delay);
+        }
+    }
+
+    public static int GetDelayAfterQueueElement(string aname)
+    {
+        if (DelaysAfterQueueElement == null)
+        {
+            LoadDelaysAfetrQueueElements();
+        }
+        if (DelaysAfterQueueElement.Count == 0)
+        {
+            return 0;
+        }
+        return DelaysAfterQueueElement[aname];
+    }
 }

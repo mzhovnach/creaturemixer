@@ -9,6 +9,11 @@ public class CreatureMixLevelData : ScriptableObject
     public List<Vector2Int>             Aims; // x - type, y - level of pipe
 	[HideInInspector]
 	public List<SSlotData>			    NeededStates;
-    public bool                         AddNewPipes = false;
+    public bool                         AddNewPipes = true;
     [Range(0, 2)] public int            CreatureId;
+
+
+    // battle part
+    [HideInInspector]
+    public List<QueueElement>           Queue;
 }

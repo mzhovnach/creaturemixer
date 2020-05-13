@@ -145,5 +145,6 @@ MonoBehaviour:
     pt: 0
     p: -1
     c: -1
-  AddNewPipes: 0
+  AddNewPipes: 1
   CreatureId: 2
+  Queue: []
