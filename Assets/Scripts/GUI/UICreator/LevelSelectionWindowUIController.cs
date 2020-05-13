@@ -49,21 +49,20 @@ public class LevelSelectionWindowUIController : BaseUIController {
 	public void LevelButtonOnClick(UnityEngine.Object buttonObject)
 	{
 		Hide();
-
-		//MusicManager.PlayGameTracks();
-
-		LevelButton lbutton = (LevelButton)buttonObject;
-		int level = lbutton.Level;
-		GameManager.Instance.Player.CurrentLevel = level;
-
-		GameManager.Instance.CurrentMenu = UISetType.LeveledGame;
-		EventData eventData = new EventData("OnUISwitchNeededEvent");
-		eventData.Data["setid"] = UISetType.LeveledGame;
-		GameManager.Instance.EventManager.CallOnUISwitchNeededEvent(eventData);
-
-        //TODO switch UI
-        GameManager.Instance.Game.ClearBoardForce();
-        GameManager.Instance.Game.PlayLeveledGame();
+        ////MusicManager.PlayGameTracks();
+        //
+        //LevelButton lbutton = (LevelButton)buttonObject;
+        //int level = lbutton.Level;
+        //GameManager.Instance.Player.CurrentLevel = level;
+        //
+        //GameManager.Instance.CurrentMenu = UISetType.LeveledGame;
+        //EventData eventData = new EventData("OnUISwitchNeededEvent");
+        //eventData.Data["setid"] = UISetType.LeveledGame;
+        //GameManager.Instance.EventManager.CallOnUISwitchNeededEvent(eventData);
+        //
+        ////TODO switch UI
+        //GameManager.Instance.Game.ClearBoardForce();
+        //GameManager.Instance.Game.PlayLeveledGame();
 	}
 
 	public override void Show ()

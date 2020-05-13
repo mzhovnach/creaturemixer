@@ -43,45 +43,46 @@ public class StarsPanel : MonoBehaviour
 
 	void OnReachMaxPipeLevel(EventData e)
 	{
-        if (GameBoard.GameType != EGameType.Leveled)
-        {
-            return;
-        }
-		float amount = GameManager.Instance.Game.StarsGained;
-        bool isforce = false;
-        if (e.Data.ContainsKey("isforce"))
-        {
-            isforce = (bool)e.Data["isforce"];
-        }
-        if (isforce)
-        {
-            LeanTween.cancel(AGameObject);
-            SetAmountForce(amount);
-        }
-        else
-        {
-            SetAmount(amount);
-        }
-        if (Consts.SHOW_ADD_POINTS_ANIMATION)
-        {
-            Vector3 startPos = new Vector3((float)e.Data["x"], (float)e.Data["y"], 0);
-            startPos = transform.parent.transform.InverseTransformPoint(startPos);
-            Vector3 endPos = transform.parent.transform.InverseTransformPoint(transform.position); // + new Vector3(-150.0f, RESOURCES_EFFECT_OFFSET - ((colorType - 1) * RESOURCES_EFFECT_OFFSET), 0.0f);
-            GameObject effect = GameObject.Instantiate(_effectPrefabs[UnityEngine.Random.Range(0, _effectPrefabs.Length)], Vector3.zero, Quaternion.identity) as GameObject;
-            effect.transform.SetParent(transform.parent.transform, false);
-            effect.transform.localPosition = startPos;
-            List<Vector3> path = GameManager.Instance.GameData.XMLSplineData[String.Format("chip_get_{0}", UnityEngine.Random.Range(1, 4))];
+        // було в грі на рівні з зірками
+  //      if (GameBoard.GameType != EGameType.Leveled)
+  //      {
+  //          return;
+  //      }
+  //      float amount = GameManager.Instance.Game.StarsGained;
+  //      bool isforce = false;
+  //      if (e.Data.ContainsKey("isforce"))
+  //      {
+  //          isforce = (bool)e.Data["isforce"];
+  //      }
+  //      if (isforce)
+  //      {
+  //          LeanTween.cancel(AGameObject);
+  //          SetAmountForce(amount);
+  //      }
+  //      else
+  //      {
+  //          SetAmount(amount);
+  //      }
+  //      if (Consts.SHOW_ADD_POINTS_ANIMATION)
+  //      {
+  //          Vector3 startPos = new Vector3((float)e.Data["x"], (float)e.Data["y"], 0);
+  //          startPos = transform.parent.transform.InverseTransformPoint(startPos);
+  //          Vector3 endPos = transform.parent.transform.InverseTransformPoint(transform.position); // + new Vector3(-150.0f, RESOURCES_EFFECT_OFFSET - ((colorType - 1) * RESOURCES_EFFECT_OFFSET), 0.0f);
+  //          GameObject effect = GameObject.Instantiate(_effectPrefabs[UnityEngine.Random.Range(0, _effectPrefabs.Length)], Vector3.zero, Quaternion.identity) as GameObject;
+  //          effect.transform.SetParent(transform.parent.transform, false);
+  //          effect.transform.localPosition = startPos;
+  //          List<Vector3> path = GameManager.Instance.GameData.XMLSplineData[String.Format("chip_get_{0}", UnityEngine.Random.Range(1, 4))];
 
-            MoveSplineAction splineMover = new MoveSplineAction(effect, path, startPos, endPos, Consts.ADD_POINTS_EFFECT_TIME);
-            _worker.AddParalelAction(splineMover);
+  //          MoveSplineAction splineMover = new MoveSplineAction(effect, path, startPos, endPos, Consts.ADD_POINTS_EFFECT_TIME);
+  //          _worker.AddParalelAction(splineMover);
 
-            GameObject.Destroy(effect, Consts.ADD_POINTS_EFFECT_TIME + 0.1f);
+  //          GameObject.Destroy(effect, Consts.ADD_POINTS_EFFECT_TIME + 0.1f);
 
-            LeanTween.delayedCall(AGameObject, Consts.ADD_POINTS_EFFECT_TIME, () =>
-            {
-                SetAmountForce(amount);
-            });
-        }
+  //          LeanTween.delayedCall(AGameObject, Consts.ADD_POINTS_EFFECT_TIME, () =>
+  //          {
+  //              SetAmountForce(amount);
+  //          });
+  //      }
 	}
 
     public void ResetScores()

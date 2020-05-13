@@ -117,8 +117,6 @@ public class Consts
 
     public static float PIPE_SIZE = 180;
 
-	public static float STAR_PROGRESS = 0.6f;
-
 	public static int UNLOCK_ENDLES_AFTER = 1;
 
     public static float TUTOR_2_DELAY = 13.0f;

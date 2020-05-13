@@ -80,7 +80,6 @@ public class MainMenuUIController : BaseUIController {
     public void ButtonPlayOnClick ()
 	{
         //MusicManager.PlayGameTracks();
-        GameBoard.GameType = EGameType.Classic;
         GameBoard.AddingType = EAddingType.OnNoMatch;
         GameManager.Instance.GameFlow.TransitToScene(UIConsts.SCENE_ID.GAME_SCENE);        
 	}

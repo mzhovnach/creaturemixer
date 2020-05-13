@@ -355,16 +355,8 @@ public class GameMenuUIController : BaseUIController
         GameManager.Instance.EventManager.CallOnUISwitchNeededEvent(eventData);
 
         GameBoard.AddingType = EAddingType.OnNoMatch;
-        if (GameBoard.GameType != EGameType.Classic)
-        {
-            GameManager.Instance.Game.ClearBoardForce();
-            GameManager.Instance.Game.PlayGame();
-        }
-        else
-        {
-            GameManager.Instance.Settings.User.SavedGame = null;
-        }
-
+        GameManager.Instance.Game.ClearBoardForce();
+        GameManager.Instance.Game.PlayGame();
     }
 
     public void ButtonPlayEndlessBlockedOnClick()

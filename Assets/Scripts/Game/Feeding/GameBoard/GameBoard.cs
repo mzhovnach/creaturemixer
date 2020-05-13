@@ -4,11 +4,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 
-public enum EGameType
-{
-    Classic = 0,
-	Leveled = 1
-}
 public enum EAddingType
 {
     EachXMoves = 0,
@@ -75,7 +70,6 @@ public class GameBoard : MonoBehaviour
     public static float             			PipeDragZ             	= -0.3f;
     public static float             			SlotSize              	= 1.86f;
 	public static float             			ImpulseSpeed       	  	= 30.0f;                            		// speed of moving pipe when it slide after impulse
-    public static EGameType                     GameType                = EGameType.Classic;
     public static EAddingType                   AddingType              = EAddingType.EachXMoves;
 
     public float             					ImpulseDistance	  		= 0.5f;//TODO в опшнси винести!				// how far need slide to pull pipe
@@ -182,7 +176,6 @@ public class GameBoard : MonoBehaviour
     private int _pipesAdded;
     private int _pipesToNextBlocker;
     // leveled
-    public float StarsGained;
     public int MovesLeft;
     // slots to check aims
     List<BoardPos> _slotsToCheckAims = new List<BoardPos>();
@@ -616,7 +609,6 @@ public class GameBoard : MonoBehaviour
 		
 	public void PlayGame()
     {
-		GameType = EGameType.Classic;
 		_maxColoredLevels = GetMaxColoredLevels();
 		ResetHint();
         Reset();
@@ -629,9 +621,9 @@ public class GameBoard : MonoBehaviour
 		Selection.SetActive(false);
 		SetGameState(EGameState.Pause);
 
-        LevelData levelData = GameManager.Instance.Settings.User.SavedGame;
-		if (levelData == null || levelData.Slots.Count == 0)
-		{
+        LevelData levelData = null; //GameManager.Instance.Player.SavedGame; поки без сейва, бо треба сейвити інфу про ворогів на полі і чергу ворогів
+		//if (levelData == null || levelData.Slots.Count == 0)
+		//{
             //levelData = GameManager.Instance.GameData.StartLevelData;
             int level = GameManager.Instance.Player.CreatureMixLevel;
             string path = "CreatureMixLevels/cmlevel_" + level.ToString();
@@ -643,11 +635,11 @@ public class GameBoard : MonoBehaviour
             {
                 levelData = LevelData.GenerateCreatureMixLevel(level);
             }
-        } else
-		{
-			GameManager.Instance.Settings.User.SavedGame = null;
-			GameManager.Instance.Settings.Save();
-		}
+        //} else
+		//{
+		//	GameManager.Instance.Player.SavedGame = null;
+		//	GameManager.Instance.Settings.Save();
+		//}
         // complete aims with level 1
         for (int i = 0; i < levelData.Aims.Count; ++i)
         {
@@ -662,78 +654,55 @@ public class GameBoard : MonoBehaviour
         StartCoroutine(CreateLevel(levelData));
     }
 
-	public void PlayLeveledGame()
-	{
-        //HideHint();
-        //_possibleColors.Clear();
-        //GameType = EGameType.Leveled;
-        //_maxColoredLevels = GetMaxColoredLevels();
-        //ResetTutor2Timer();
-        //TryStartStartTutorSequence();
-        //
-        //Reset();
-        //_cameraPos = _camera.transform.position;
-        //_cameraPos.x = 0;
-        //_cameraPos.y = 0.2f;
-        //_camera.transform.position = _cameraPos;
-        //ShowDarkScreenForce();
-        //Selection.SetActive(false);
-        //SetGameState(EGameState.Pause);
-        //
-        //string path = "Levels/level_" + GameManager.Instance.Player.CurrentLevel.ToString();
-        //ScriptableLevelData leveledlevelData = (ScriptableLevelData)Resources.Load<ScriptableLevelData>(path);
-        //StartCoroutine(CreateLeveledLevel(leveledlevelData));
-    }
-
     public void UnsetPause()
 	{
 		SetGameState(EGameState.Play);
 	}
 
-	protected LevelData GetLevelToSave()
-    {
-        LevelData res = new LevelData();
-		res.timePlayed = TimePlayed;
-		for (int i = 0; i < Consts.COLORS.Length; ++i)
-		{
-			res.Resources[i] = GetResourceAmount(i);
-		}
-        // pipes
-        for (int i = 0; i < WIDTH; ++i)
-        {
-            for (int j = 0; j < HEIGHT; ++j)
-            {
-                SSlot slotScript = Slots[i, j];
-				SPipe pipeScript = slotScript.Pipe;
-				if (pipeScript != null)
-				{
-					SSlotData slotData = new SSlotData();
-					slotData.x = slotScript.X;
-					slotData.y = slotScript.Y;
-					slotData.pt = pipeScript.PipeType;
-					slotData.c = pipeScript.AColor;
-					slotData.p = pipeScript.Param;
-					res.Slots.Add(slotData);
-				}
-            }
-        }
-        // queue state
-        res.QueueState = AQueuePanel.GetStateToSave();
-        //
-        res.ReshufflePowerups = PowerUps[GameData.PowerUpType.Reshuffle];
-        res.BreakePowerups = PowerUps[GameData.PowerUpType.Breake];
-        res.ChainPowerups = PowerUps[GameData.PowerUpType.Chain];
-        res.DestroyColorsPowerups = PowerUps[GameData.PowerUpType.DestroyColor];
-        res.AddsViewed = AddsViewed;
-        res.Aims = AAimPanel.GetDataToSave();
-
-        for (int i = 0; i < _possibleColors.Count; ++i)
-        {
-            res.Colors.Add(_possibleColors[i]);
-        }
-        res.AddNewPipes = _addNewPipes;
-        return res;
-    }
+    //protected LevelData GetLevelToSave()
+    //{
+    //    LevelData res = new LevelData();
+    //	res.timePlayed = TimePlayed;
+    //	for (int i = 0; i < Consts.COLORS.Length; ++i)
+    //	{
+    //		res.Resources[i] = GetResourceAmount(i);
+    //	}
+    //    // pipes
+    //    for (int i = 0; i < WIDTH; ++i)
+    //    {
+    //        for (int j = 0; j < HEIGHT; ++j)
+    //        {
+    //            SSlot slotScript = Slots[i, j];
+    //			SPipe pipeScript = slotScript.Pipe;
+    //			if (pipeScript != null)
+    //			{
+    //				SSlotData slotData = new SSlotData();
+    //				slotData.x = slotScript.X;
+    //				slotData.y = slotScript.Y;
+    //				slotData.pt = pipeScript.PipeType;
+    //				slotData.c = pipeScript.AColor;
+    //				slotData.p = pipeScript.Param;
+    //				res.Slots.Add(slotData);
+    //			}
+    //        }
+    //    }
+    //    // queue state
+    //    res.QueueState = AQueuePanel.GetStateToSave();
+    //    //
+    //    res.ReshufflePowerups = PowerUps[GameData.PowerUpType.Reshuffle];
+    //    res.BreakePowerups = PowerUps[GameData.PowerUpType.Breake];
+    //    res.ChainPowerups = PowerUps[GameData.PowerUpType.Chain];
+    //    res.DestroyColorsPowerups = PowerUps[GameData.PowerUpType.DestroyColor];
+    //    res.AddsViewed = AddsViewed;
+    //    res.Aims = AAimPanel.GetDataToSave();
+    //
+    //    for (int i = 0; i < _possibleColors.Count; ++i)
+    //    {
+    //        res.Colors.Add(_possibleColors[i]);
+    //    }
+    //    res.AddNewPipes = _addNewPipes;
+    //    return res;
+    //}
 
 	protected void ShowDarkScreenForce()
     {
@@ -1051,8 +1020,7 @@ public class GameBoard : MonoBehaviour
         if (_startSequenceState > 0 && ( _startTutorHintData.XA != slot.X || _startTutorHintData.YA != slot.Y || _startTutorHintData.XB != slideData.Slot2.X || _startTutorHintData.YB != slideData.Slot2.Y))
         {
             return;
-        }
-        else
+        } else
         {
             if (_startSequenceState > 0)
             {
@@ -1258,20 +1226,12 @@ public class GameBoard : MonoBehaviour
 		{
             // reached max pipe             
             BreakePipeInSlot(slideData.Slot2, (slideData.Pipe as Pipe_Colored).GetExplodeEffectPrefab()); //BreakeEffectPrefab);
-			if (GameType == EGameType.Leveled)
-			{
-				StarsGained += Consts.STAR_PROGRESS;
-			}
-            else
-            //if (GameType == EGameType.Classic)
+            if (Consts.BAD_PIXEL_MACHANIC_IN_CLASSIC_GAME)
             {
-                if (Consts.BAD_PIXEL_MACHANIC_IN_CLASSIC_GAME)
-                {
-                    SPipe bPipe = GetPipeFromPool(EPipeType.Hole).GetComponent<SPipe>();
-                    bPipe.InitPipe(0, -1, false);
-                    slideData.Slot2.SetPipe(bPipe);
-                    bPipe.PlayAddAnimation();
-                }
+                SPipe bPipe = GetPipeFromPool(EPipeType.Hole).GetComponent<SPipe>();
+                bPipe.InitPipe(0, -1, false);
+                slideData.Slot2.SetPipe(bPipe);
+                bPipe.PlayAddAnimation();
             }
             EventData eventData2 = new EventData("OnReachMaxPipeLevelEvent");
             eventData2.Data["x"] = slideData.Pipe.transform.position.x;
@@ -1535,7 +1495,7 @@ public class GameBoard : MonoBehaviour
             }
         }
         // check powerups
-        if (GameBoard.GameType == EGameType.Classic && Consts.WITH_POWERUPS)
+        if (Consts.WITH_POWERUPS)
         {
             for (var powerup = GameData.PowerUpType.Reshuffle; powerup <= GameData.PowerUpType.DestroyColor; ++powerup)
             {
@@ -2130,13 +2090,7 @@ public class GameBoard : MonoBehaviour
 
 	public void RestartGame()
 	{
-		if (GameType == EGameType.Leveled)
-		{
-			PlayLeveledGame();
-		} else
-		{
-			PlayGame();
-		}
+	    PlayGame();
     }
 
 	public void GoHome()
@@ -2152,17 +2106,18 @@ public class GameBoard : MonoBehaviour
 
     public void SaveGame()
     {
-		if (GameType == EGameType.Classic)
-		{
-			if (GameState != EGameState.Loose)
-		  	{
-		  	    GameManager.Instance.Player.SaveLastGame(GetLevelToSave());
-		  	}
-		  	else
-		  	{
-		  	    GameManager.Instance.Player.SavedGame = null;
-		  	}
-		}
+        GameManager.Instance.Player.SavedGame = null; // поки без сейвів (треба реалізація сейва/лоада стану ворогів на полі)
+        //if (GameType == EGameType.Classic)
+        //{
+        //	if (GameState != EGameState.Loose)
+        //  	{
+        //  	    GameManager.Instance.Player.SaveLastGame(GetLevelToSave());
+        //  	}
+        //  	else
+        //  	{
+        //  	    GameManager.Instance.Player.SavedGame = null;
+        //  	}
+        //}
     }
 
     private void CheckIfLoose()
@@ -2325,7 +2280,7 @@ public class GameBoard : MonoBehaviour
 
 	private void TryShowHint()
 	{
-        if (GameType != EGameType.Classic || GameManager.Instance.GameFlow.IsSomeWindow())
+        if (GameManager.Instance.GameFlow.IsSomeWindow())
         {
             return;
         }
@@ -2352,7 +2307,7 @@ public class GameBoard : MonoBehaviour
 
     //TUTOR_2
     private void TryShowTutor2()
-	{
+    {
         if (_tutor2Timer <= 0 || GameManager.Instance.GameFlow.IsSomeWindow())
         {
             return;
@@ -2360,7 +2315,7 @@ public class GameBoard : MonoBehaviour
         _tutor2Timer -= Time.deltaTime;
         if (_tutor2Timer <= 0)
         {
-            if (GameBoard.GameType == EGameType.Classic && !GameManager.Instance.Player.IsTutorialShowed("2"))
+            if (!GameManager.Instance.Player.IsTutorialShowed("2"))
             {
                 for (var powerup = GameData.PowerUpType.Reshuffle; powerup <= GameData.PowerUpType.DestroyColor; ++powerup)
                 {
@@ -2372,14 +2327,10 @@ public class GameBoard : MonoBehaviour
                 }
             }
         }
-	}
+    }
 
-	private void ResetHint(bool resetByTime = false)
+    private void ResetHint(bool resetByTime = false)
 	{
-        if (GameType != EGameType.Classic)
-        {
-            return;
-        }
 		if (_hint != null)
 		{
             HideHint();
@@ -2399,10 +2350,6 @@ public class GameBoard : MonoBehaviour
     //TUTOR_2
     private void ResetTutor2Timer()
     {
-        if (GameType != EGameType.Leveled)
-        {
-            return;
-        }
         if (!GameManager.Instance.Player.IsTutorialShowed("2"))
         {
             _tutor2Timer = Consts.TUTOR_2_DELAY;
@@ -2433,16 +2380,17 @@ public class GameBoard : MonoBehaviour
 		return res;
 	}
 
-	public void OnLeveledGameCompleted()
-	{
-		SetGameState(EGameState.Loose);
-        LeanTween.delayedCall(1.0f, () =>
-        {
-            EventData eventData = new EventData("OnOpenFormNeededEvent");
-            eventData.Data["form"] = UIConsts.FORM_ID.LEVELED_STATISTIC_WINDOW;
-            GameManager.Instance.EventManager.CallOnOpenFormNeededEvent(eventData);
-        });
-	}
+    //public void OnLeveledGameCompleted()
+    //{
+    //	SetGameState(EGameState.Loose);
+    //    LeanTween.delayedCall(1.0f, () =>
+    //    {
+    //        EventData eventData = new EventData("OnOpenFormNeededEvent");
+    //        eventData.Data["form"] = UIConsts.FORM_ID.LEVELED_STATISTIC_WINDOW;
+    //        GameManager.Instance.EventManager.CallOnOpenFormNeededEvent(eventData);
+    //    });
+    //}
+
     private IEnumerator OnCreatureMixGameCompleted()
     {
         SetGameState(EGameState.Loose);
@@ -2865,108 +2813,95 @@ public class GameBoard : MonoBehaviour
     public void OnTurnWasMade(bool wasMatch, bool justAddPipe)
     {
         bool allAimsCompleted = false;
-        if (GameBoard.GameType == EGameType.Leveled)
+        bool aimComplited = false;
+        if (Consts.CHECK_AIM_ON_COMBINE)
         {
-            //if (!justAddPipe)
-            //{
-            ++_allTurns;
-            --MovesLeft;
-            CheckLeveledWinCondition();
-            //}
-        }
-        else
-        {
-            bool aimComplited = false;
-            if (Consts.CHECK_AIM_ON_COMBINE)
+            if (_lastSlotWithMatch.x >= 0)
             {
-                if (_lastSlotWithMatch.x >= 0)
-                {
-                    aimComplited = AAimPanel.CheckSlot(GetSlot(_lastSlotWithMatch));
-                    _lastSlotWithMatch.x = -1;
-                    allAimsCompleted = AAimPanel.IsAllAimsCompleted();
-                }
-            } else
-            {
-                aimComplited = CheckAimsInSpecificSlots();
+                aimComplited = AAimPanel.CheckSlot(GetSlot(_lastSlotWithMatch));
+                _lastSlotWithMatch.x = -1;
                 allAimsCompleted = AAimPanel.IsAllAimsCompleted();
             }
-            bool pipeneeded = false;
-            if (!aimComplited || justAddPipe)
+        } else
+        {
+            aimComplited = CheckAimsInSpecificSlots();
+            allAimsCompleted = AAimPanel.IsAllAimsCompleted();
+        }
+        bool pipeneeded = false;
+        if (!aimComplited || justAddPipe)
+        {
+            if (!justAddPipe && GameBoard.AddingType == EAddingType.EachXMoves)
             {
-                if (!justAddPipe && GameBoard.AddingType == EAddingType.EachXMoves)
-                {
-                    --_movesToNextPipe;
-                    ++_allTurns;
-                } else
-                {
-                    ++_allTurns;
-                }
-                
-                if (justAddPipe)
-                {
-                    pipeneeded = true;
-                } else
-                if (GameBoard.AddingType == EAddingType.EachXMoves)
-                {
-                    if (_movesToNextPipe == 0)
-                    {
-                        pipeneeded = true;
-                    }
-                } else
-                if (GameBoard.AddingType == EAddingType.OnNoMatch)
-                {
-                    if (!wasMatch)
-                    {
-                        pipeneeded = true;
-                    }
-                }
+                --_movesToNextPipe;
+                ++_allTurns;
             } else
             {
                 ++_allTurns;
-                if (GetMovablePipesCount() == 0)
+            }
+            
+            if (justAddPipe)
+            {
+                pipeneeded = true;
+            } else
+            if (GameBoard.AddingType == EAddingType.EachXMoves)
+            {
+                if (_movesToNextPipe == 0)
+                {
+                    pipeneeded = true;
+                }
+            } else
+            if (GameBoard.AddingType == EAddingType.OnNoMatch)
+            {
+                if (!wasMatch)
                 {
                     pipeneeded = true;
                 }
             }
-
-            if (pipeneeded)
+        } else
+        {
+            ++_allTurns;
+            if (GetMovablePipesCount() == 0)
             {
-                if (GameBoard.AddingType == EAddingType.EachXMoves && _movesToNextPipe == 0)
-                {
-                    _movesToNextPipe = Consts.TURNS_TO_NEXT_PIPE;
-                }
-                bool needBlocker = false;
-                if (GameBoard.AddingType != EAddingType.OnNoMatch || Consts.USE_BLOCKERS_ON_NO_MATCH_ADDING)
-                {
-                    needBlocker = _pipesToNextBlocker == 0;
-                    if (needBlocker)
-                    {
-                        _pipesToNextBlocker = Consts.PIPES_TO_NEXT_BLOCKER;
-                    }
-                    else
-                    {
-                        --_pipesToNextBlocker;
-                    }
-                }
-                // add new pipe to queue and create new
-                EPipeType pipeType = EPipeType.Colored;
+                pipeneeded = true;
+            }
+        }
+
+        if (pipeneeded)
+        {
+            if (GameBoard.AddingType == EAddingType.EachXMoves && _movesToNextPipe == 0)
+            {
+                _movesToNextPipe = Consts.TURNS_TO_NEXT_PIPE;
+            }
+            bool needBlocker = false;
+            if (GameBoard.AddingType != EAddingType.OnNoMatch || Consts.USE_BLOCKERS_ON_NO_MATCH_ADDING)
+            {
+                needBlocker = _pipesToNextBlocker == 0;
                 if (needBlocker)
                 {
-                    pipeType = EPipeType.Blocker;
-                }
-                if (_addNewPipes && pipeneeded && (!allAimsCompleted))
+                    _pipesToNextBlocker = Consts.PIPES_TO_NEXT_BLOCKER;
+                } else
                 {
-                    if (pipeneeded && AddRandomPipe(pipeType))
+                    --_pipesToNextBlocker;
+                }
+            }
+            // add new pipe to queue and create new
+            EPipeType pipeType = EPipeType.Colored;
+            if (needBlocker)
+            {
+                pipeType = EPipeType.Blocker;
+            }
+            if (_addNewPipes && pipeneeded && (!allAimsCompleted))
+            {
+                if (pipeneeded && AddRandomPipe(pipeType))
+                {
+                    ++_pipesAdded;
+                }
+                else
+                {
+                    if (pipeType == EPipeType.Blocker)
                     {
-                        ++_pipesAdded;
-                    }
-                    else
-                    {
-                        if (pipeType == EPipeType.Blocker)
-                        {
-                            // add blocker on next turn
-                            _pipesToNextBlocker = 0;
-                        }
+                        // add blocker on next turn
+                        _pipesToNextBlocker = 0;
                     }
                 }
             }
@@ -2988,14 +2923,6 @@ public class GameBoard : MonoBehaviour
     public int GetMovesToNextPipe()
     {
         return _movesToNextPipe;
-    }
-
-    private void CheckLeveledWinCondition()
-    {
-        if (StarsGained >= 3 || MovesLeft <= 0)
-        {
-            OnLeveledGameCompleted();
-        }
     }
 
     public void Reset()
@@ -3043,7 +2970,6 @@ public class GameBoard : MonoBehaviour
 
     public void ClearProgress()
     {
-        GameBoard.GameType = EGameType.Leveled; // тоді при переході в ендлесс гру вона ресетнеться
         //GameManager.Instance.Player.SavedGame = null;
         //GameManager.Instance.Settings.Save();
         GameManager.Instance.Settings.ResetSettings();

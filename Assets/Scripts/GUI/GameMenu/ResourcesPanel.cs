@@ -97,10 +97,6 @@ public class ResourcesPanel : MonoBehaviour
 
     void OnShowAddResourceEffect(EventData e)
     {
-        if (GameBoard.GameType != EGameType.Classic)
-        {
-            return;
-        }
         //if (Consts.SHOW_ADD_POINTS_ANIMATION)
         //{
         //    Vector3 startPos2 = new Vector3((float)e.Data["x"], (float)e.Data["y"], 0);

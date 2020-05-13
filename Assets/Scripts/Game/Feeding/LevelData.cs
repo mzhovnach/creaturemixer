@@ -38,7 +38,7 @@ public class LevelData
 {
     public List<long>      	Resources;
 	public List<SSlotData>  Slots;
-public List<Vector3Int> Aims; // x - chip type, y - level of chip, z - completed or not(0 or 1)
+    public List<Vector3Int> Aims; // x - chip type, y - level of chip, z - completed or not(0 or 1)
     [Range(0, 2)] public int CreatureId;
     public int              ReshufflePowerups;
     public int              BreakePowerups;
@@ -46,13 +46,16 @@ public List<Vector3Int> Aims; // x - chip type, y - level of chip, z - completed
     public int              DestroyColorsPowerups;
     public int              SwapPowerups;
     public bool             AddsViewed; // for getting Chain Powerup
-    public List<int>        QueueState;
+    public List<int>        QueueState; // states of queue with pipes
     public List<int>        Colors;
-    public bool                    AddNewPipes;
+    public bool             AddNewPipes;
     // statistic
     public float			timePlayed;
 
-	public LevelData() 
+    public List<QueueElement> EnemiesQueue;
+    //TODO  List<EnemyData> Enemies; збереження стану ворогів на полі (життя, мана, ходів до атаки,...) Доробити якщо треба зберігати гру
+
+    public LevelData() 
     {
 		Slots = new List<SSlotData>();
 		Resources = new List<long>();

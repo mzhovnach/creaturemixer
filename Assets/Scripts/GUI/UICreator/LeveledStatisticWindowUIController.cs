@@ -27,7 +27,7 @@ public class LeveledStatisticWindowUIController : BaseUIController
 
 		float atime = 0.3f;
 		LevelText.text = Localer.GetText("Level") + " " + (GameManager.Instance.Player.CurrentLevel + 1).ToString();
-		int starsAmount = (int)GameManager.Instance.Game.StarsGained;
+		int starsAmount = 3; //(int)GameManager.Instance.Game.StarsGained;
 		int moves = GameManager.Instance.Game._allTurns;
 
 		for (int i = 0; i < Stars.Count; ++i)
@@ -161,13 +161,13 @@ public class LeveledStatisticWindowUIController : BaseUIController
             return;
         }
         Hide();
-		int nextLevel = GameManager.Instance.Player.CurrentLevel + 1;
-		if (nextLevel < GameManager.Instance.Player.LevelsStates.Count)
-		{
-			GameManager.Instance.Player.CurrentLevel = nextLevel;
-		}
+		//int nextLevel = GameManager.Instance.Player.CurrentLevel + 1;
+		//if (nextLevel < GameManager.Instance.Player.LevelsStates.Count)
+		//{
+		//	GameManager.Instance.Player.CurrentLevel = nextLevel;
+		//}
 
-        GameManager.Instance.Game.PlayLeveledGame();
+        // GameManager.Instance.Game.PlayLeveledGame();
 	}
 
 	protected override void Awake()
