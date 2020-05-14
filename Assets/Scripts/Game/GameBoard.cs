@@ -92,6 +92,9 @@ public class GameBoard : MonoBehaviour
 	public StarsPanel							AStarsPanel;
 	public LevelPanel							ALevelPanel;
 
+    public Enemies                              AEnemies;
+    public EnemiesQueue                         AEnemiesQueue;
+
     // sprites
     private Dictionary<string, Sprite>          _sprites = new Dictionary<string, Sprite>();
     public List<Sprite>                         Sprites;
@@ -501,6 +504,7 @@ public class GameBoard : MonoBehaviour
         //
         AQueuePanel.LoadPanel(levelData.QueueState);
         AAimPanel.InitPanel(levelData);
+        AEnemiesQueue.InitQueue(levelData.EnemiesQueue);
         for (int i = 0; i < WIDTH; ++i)
 		{
 			for (int j = 0; j < HEIGHT; ++j)
