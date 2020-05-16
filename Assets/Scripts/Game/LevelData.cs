@@ -129,6 +129,13 @@ public class LevelData
             }
         }
         res.AddNewPipes = cmLevelData.AddNewPipes;
+        // enemies
+        res.EnemiesQueue = new List<QueueElement>();
+        for (int i = 0; i < cmLevelData.Queue.Count; ++i)
+        {
+            res.EnemiesQueue.Add(cmLevelData.Queue[i]);
+        }
+        //
         return res;
     }
 
@@ -186,6 +193,16 @@ public class LevelData
                 }
             }
         }
+        // enemies
+        res.EnemiesQueue = new List<QueueElement>();
+        QueueElement startElement = new QueueElement("enemy_1", 0, "");
+        res.EnemiesQueue.Add(startElement);
+        for (int i = 0; i < 5; ++i)
+        {
+            QueueElement element = new QueueElement("enemy_1", i * 2, "");
+            res.EnemiesQueue.Add(element);
+        }
+        //
         return res;
     }
 }

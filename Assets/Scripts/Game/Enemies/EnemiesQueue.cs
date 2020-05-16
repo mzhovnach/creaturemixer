@@ -12,19 +12,20 @@ public class EnemiesQueue : MonoBehaviour
     public Image NextColorImage;            // колір наступного ворога
     public CanvasGroup AGroup;              // ховати панель через альфу коли вже немає ворогів в черзі
     private List<QueueElement>  _queue;     // черга
+    private Enemies _enemies;
 
     public void InitQueue(List<QueueElement> elements)
     {
+        _enemies = GameManager.Instance.Game.AEnemies;
         _queue = elements;
+        CreateNextEnemies(true);
         if (_queue.Count == 0)
         {
             HideQueue(true);
         } else
         {
-            if (!CreateNextEnemies(true))
-            {
-                SetNextEnemyAtStart();
-            }
+            ShowQueueForce();
+            SetNextEnemyAtStart();
         }
     }
 
@@ -56,11 +57,7 @@ public class EnemiesQueue : MonoBehaviour
     private bool CreateNextEnemies(bool atStart)
     {
         //TODO намагаємось заспавнити ворогів на поле (Enemies.cs) якщо ділей = 0 і є вільні слоти
-        //...
-        if (_queue.Count == 0)
-        {
-            HideQueue(atStart);
-        }
+        ...
         return false;
     }
 }

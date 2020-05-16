@@ -452,6 +452,7 @@ public class GameBoard : MonoBehaviour
                 if (pipe) pipe.gameObject.SetActive(false);
             }
         }
+        AEnemies.ClearEnemiesForce();
     }
 
     private void ClearBoardQuick()
@@ -474,7 +475,9 @@ public class GameBoard : MonoBehaviour
     protected IEnumerator ClearBoard()
     {
         if (Slots == null) yield return null;
-
+        float waitTime = AEnemies.ClearEnemies();
+        float waitedTime = 0;
+        float waitOnEachPipe = 0.05f;
         for (int i = 0; i < WIDTH; ++i)
         {
             for (int j = 0; j < HEIGHT; ++j)
@@ -483,9 +486,15 @@ public class GameBoard : MonoBehaviour
                 if (pipe)
                 {
                     pipe.PlayHideAnimation();
-                    yield return new WaitForSeconds(0.05f);
+                    waitedTime += waitOnEachPipe;
+                    yield return new WaitForSeconds(waitOnEachPipe);
                 }
             }
+        }
+        waitTime -= waitedTime;
+        if (waitTime > 0)
+        {
+            yield return new WaitForSeconds(waitTime);
         }
     }
 
