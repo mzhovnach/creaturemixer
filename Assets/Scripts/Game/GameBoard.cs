@@ -99,7 +99,7 @@ public class GameBoard : MonoBehaviour
     private Dictionary<string, Sprite>          _sprites = new Dictionary<string, Sprite>();
     public List<Sprite>                         Sprites;
     
-
+    public List<Color>                          Colors; // colors of pipes and enemiesб use GetPipeColor() to get!
 
     public List<GameObject>               		PipesPrefabs;														// prefabs for pipes
 	public List<GameObject>						ColoredPipesPrefabs;
@@ -513,7 +513,6 @@ public class GameBoard : MonoBehaviour
         //
         AQueuePanel.LoadPanel(levelData.QueueState);
         AAimPanel.InitPanel(levelData);
-        AEnemiesQueue.InitQueue(levelData.EnemiesQueue);
         for (int i = 0; i < WIDTH; ++i)
 		{
 			for (int j = 0; j < HEIGHT; ++j)
@@ -544,6 +543,7 @@ public class GameBoard : MonoBehaviour
 
         yield return new WaitForSeconds(Consts.DARK_SCREEN_SHOW_HIDE_TIME);
         yield return StartCoroutine(ClearBoard());
+        AEnemiesQueue.InitQueue(levelData.EnemiesQueue);
         // create pipes force
         for (int i = 0; i < levelData.Slots.Count; ++i)
         {
@@ -638,7 +638,7 @@ public class GameBoard : MonoBehaviour
 		//if (levelData == null || levelData.Slots.Count == 0)
 		//{
             //levelData = GameManager.Instance.GameData.StartLevelData;
-            int level = GameManager.Instance.Player.CreatureMixLevel;
+            int level = 0; //TODO uncomment GameManager.Instance.Player.CreatureMixLevel;
             string path = "CreatureMixLevels/cmlevel_" + level.ToString();
             CreatureMixLevelData cmlevelData = (CreatureMixLevelData)Resources.Load<CreatureMixLevelData>(path);
             if (cmlevelData)
@@ -1994,7 +1994,7 @@ public class GameBoard : MonoBehaviour
                 // if no pipes left - add new pipe on board without move counting
                 if (GetMovablePipesCount() == 0)
                 {
-                    OnTurnWasMade(false, true);
+                     OnTurnWasMade(false, true);
                 }
                 //
                 UnsetPause();
@@ -2825,6 +2825,11 @@ public class GameBoard : MonoBehaviour
 
     public void OnTurnWasMade(bool wasMatch, bool justAddPipe)
     {
+        StartCoroutine(OnTurnWasMadeCoroutine(wasMatch, justAddPipe));
+    }
+
+    private IEnumerator OnTurnWasMadeCoroutine(bool wasMatch, bool justAddPipe)
+    {
         bool allAimsCompleted = false;
         bool aimComplited = false;
         if (Consts.CHECK_AIM_ON_COMBINE)
@@ -2835,7 +2840,8 @@ public class GameBoard : MonoBehaviour
                 _lastSlotWithMatch.x = -1;
                 allAimsCompleted = AAimPanel.IsAllAimsCompleted();
             }
-        } else
+        }
+        else
         {
             aimComplited = CheckAimsInSpecificSlots();
             allAimsCompleted = AAimPanel.IsAllAimsCompleted();
@@ -2847,22 +2853,25 @@ public class GameBoard : MonoBehaviour
             {
                 --_movesToNextPipe;
                 ++_allTurns;
-            } else
+            }
+            else
             {
                 ++_allTurns;
             }
-            
+
             if (justAddPipe)
             {
                 pipeneeded = true;
-            } else
+            }
+            else
             if (GameBoard.AddingType == EAddingType.EachXMoves)
             {
                 if (_movesToNextPipe == 0)
                 {
                     pipeneeded = true;
                 }
-            } else
+            }
+            else
             if (GameBoard.AddingType == EAddingType.OnNoMatch)
             {
                 if (!wasMatch)
@@ -2870,7 +2879,8 @@ public class GameBoard : MonoBehaviour
                     pipeneeded = true;
                 }
             }
-        } else
+        }
+        else
         {
             ++_allTurns;
             if (GetMovablePipesCount() == 0)
@@ -2892,7 +2902,8 @@ public class GameBoard : MonoBehaviour
                 if (needBlocker)
                 {
                     _pipesToNextBlocker = Consts.PIPES_TO_NEXT_BLOCKER;
-                } else
+                }
+                else
                 {
                     --_pipesToNextBlocker;
                 }
@@ -2925,12 +2936,36 @@ public class GameBoard : MonoBehaviour
         eventData.Data["pipesadded"] = _pipesAdded;
         GameManager.Instance.EventManager.CallOnTurnWasMadeEvent(eventData);
 
+        // wait for attack phase ends and enemies died
+        ...... TODO змінити логіку. Зараз під час гри є стейт Play, Pause і Loose.
+            Зробити стейт машину і стейти для кожної фази по типу:
+            PlayersTurn - гравець юзає паверапи і робить 1 хід
+            PlayersUsedPowerup - гравець використав паверап, пауза після якої перевіряєм на виграш і знову в фазу PlayersTurn
+            PlayersAttack - гравець зматчив фішку, атакуємо ворогів, після цього перевіряєм на виграш і якщо ні перехід в фазу атакі ворогів
+            EnemiesAttack - вороги атакують (якщо ходи підійшли), після перевіряєм на програш рівня
+            EnemiesAppear -  намагаємось додати на поле ворога з черги (якщо є вільні слоти і час настав). Викликати треба AEnemiesQueue.OnTurnWasMade()
+
+            Також окремий стейт на виграш і програш (зараз лише Loose)
+        // enemies attack phase
+        ...... TODO
+
+        // adding new enemies
+        if (!justAddPipe)
+        {
+            if (AEnemiesQueue.OnTurnWasMade())
+            {
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+        //
+
         if (allAimsCompleted)
         {
             SetGameState(EGameState.Loose);
             ClearBoardQuick();
             StartCoroutine(OnCreatureMixGameCompleted());
         }
+
     }
 
     public int GetMovesToNextPipe()
@@ -2989,5 +3024,10 @@ public class GameBoard : MonoBehaviour
         ClearBoardForce();
         _upgradesManager.Reset();
         _creaturesManager.Reset();
+    }
+
+    public Color GetPipeColor(int acolor)
+    {
+        return Colors[acolor + 1]; // зміщення через дефолтний нейтральний колір
     }
 }

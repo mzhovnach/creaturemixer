@@ -152,7 +152,7 @@ public class GameMenuUIController : BaseUIController
                 //script.ResetPowerup();
             }
         }
-        GameManager.Instance.Game.PlayGame();
+        //GameManager.Instance.Game.PlayGame();
     }
 
     protected override void Awake()

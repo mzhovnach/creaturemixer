@@ -19,13 +19,9 @@ public class EnemiesQueue : MonoBehaviour
         _enemies = GameManager.Instance.Game.AEnemies;
         _queue = elements;
         CreateNextEnemies(true);
-        if (_queue.Count == 0)
-        {
-            HideQueue(true);
-        } else
+        if (_queue.Count > 0)
         {
             ShowQueueForce();
-            SetNextEnemyAtStart();
         }
     }
 
@@ -48,16 +44,89 @@ public class EnemiesQueue : MonoBehaviour
         AGroup.alpha = 1;
     }
 
-    private void SetNextEnemyAtStart()
+    private void SetNextEnemy(bool atStart)
     {
         TurnesText.text = _queue[0].Delay.ToString();
-        //TODO color
+        Color nextColor = _enemies.GetEnemyColor(_queue[0].Name);
+        if (atStart)
+        {
+            NextColorImage.color = nextColor;
+        } else
+        {
+            LeanTween.cancel(NextColorImage.gameObject);
+            LeanTween.value(NextColorImage.gameObject, NextColorImage.color, nextColor, 0.5f)
+                .setOnUpdate((Color val)=>
+            {
+                NextColorImage.color = val;
+            });
+        }
     }
 
     private bool CreateNextEnemies(bool atStart)
     {
+        if (_queue.Count == 0) { 
+            return false; 
+        }
         //TODO намагаємось заспавнити ворогів на поле (Enemies.cs) якщо ділей = 0 і є вільні слоти
-        ...
-        return false;
+        bool added = false;
+        bool continueAdding = true;
+        // TODO можливо якщо жодного ворога немає - пришвидшуєм чергу, щоб не втикати довго
+        if (_enemies.NoEnemiesLeft())
+        {
+            QueueElement element = _queue[0];
+            element.Delay = 0;
+            _queue[0] = element;
+        }
+        // намагаємось додати
+        do
+        {
+            if (_queue.Count == 0) { break; }
+            if (_queue[0].Delay <= 0)
+            {
+                continueAdding = _queue[0].Delay < 0; // якщо < 0 (-1), то продовжуєм додавати (на старті так треба ставити), якщо 0 - стоп, один новий ворог за хід
+                if (_enemies.TryToAddEnemy(_queue[0]))
+                {
+                    // додали вдало
+                    added = true;
+                    _queue.RemoveAt(0);
+                } else
+                {
+                    // не було слота
+                    continueAdding = false;
+                }
+            } else
+            {
+                // ще не час додавати
+                continueAdding = false;
+            }
+        } while (continueAdding);
+
+        //
+        if (_queue.Count == 0)
+        {
+            HideQueue(atStart);
+        } else
+        {
+            SetNextEnemy(atStart);
+        }
+        //
+
+        return added;
+    }
+
+    public bool OnTurnWasMade()
+    {
+        //returnes true if some enemy was added
+        if (_queue.Count == 0) {
+            return false;
+        }
+        //
+        if (_queue[0].Delay > 0)
+        {
+            QueueElement element = _queue[0];
+            element.Delay -= 1;
+            _queue[0] = element;
+        }
+        return CreateNextEnemies(false);
     }
 }

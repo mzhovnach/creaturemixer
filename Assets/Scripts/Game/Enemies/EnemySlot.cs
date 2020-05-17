@@ -23,4 +23,9 @@ public class EnemySlot : MonoBehaviour
     {
         _enemy = enemy;
     }
+
+    public bool IsEmpty()
+    {
+        return _enemy == null;
+    }
 }

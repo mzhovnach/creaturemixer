@@ -1432,6 +1432,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 758e27f6f86d1f54aa1f4a5f190f233f, type: 3}
   - {fileID: 21300000, guid: ce2a9e160a6faa2438f7275a5034de92, type: 3}
   - {fileID: 21300000, guid: 3bf156c24e16dee4da581516f9b7a7c4, type: 3}
+  Colors:
+  - {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
+  - {r: 0, g: 1, b: 0.10895181, a: 1}
+  - {r: 1, g: 0.75323707, b: 0, a: 1}
+  - {r: 0, g: 0.86945295, b: 1, a: 1}
+  - {r: 0.98765564, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0, b: 0, a: 1}
   PipesPrefabs:
   - {fileID: 0}
   - {fileID: 0}
@@ -2748,6 +2755,23 @@ MonoBehaviour:
   - {fileID: 865632064}
   - {fileID: 283678743}
   - {fileID: 1851506848}
+  EnemiesDefaultParams:
+  - Name: enemy_1
+    Size: 1
+    Lives: 10
+    Damage: 5
+    Color: -1
+  - Name: enemy_2
+    Size: 1
+    Lives: 15
+    Damage: 7
+    Color: -1
+  - Name: enemy_3
+    Size: 2
+    Lives: 20
+    Damage: 10
+    Color: -1
+  ObjectsContainer: {fileID: 1986463815}
 --- !u!4 &1986463815
 Transform:
   m_ObjectHideFlags: 0

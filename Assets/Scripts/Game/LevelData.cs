@@ -195,11 +195,11 @@ public class LevelData
         }
         // enemies
         res.EnemiesQueue = new List<QueueElement>();
-        QueueElement startElement = new QueueElement("enemy_1", 0, "");
+        QueueElement startElement = new QueueElement("enemy_1", 0, 0, "");
         res.EnemiesQueue.Add(startElement);
         for (int i = 0; i < 5; ++i)
         {
-            QueueElement element = new QueueElement("enemy_1", i * 2, "");
+            QueueElement element = new QueueElement("enemy_1", i * 2, 0, "");
             res.EnemiesQueue.Add(element);
         }
         //

@@ -2,6 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public struct EnemyParams
+{
+    public string Name;
+    public int Size;
+    public int Lives;
+    public int Damage;
+    public int Color;
+
+    public void Init(string name, Enemy enemy)
+    {
+        Name = name;
+        Size = enemy.Size;
+        Lives = enemy.MaxLives;
+        Damage = enemy.MaxDamage;
+        Color = enemy.Color;
+    }
+}
+
 public class Enemy : MonoBehaviour
 {
     //TODO
@@ -18,6 +37,18 @@ public class Enemy : MonoBehaviour
     protected int _lives = 0;
     protected bool _dead = false;
 
+    public virtual void InitEnemy()
+    {
+        _dead = false;
+        _lives = MaxLives;
+        LeanTween.cancel(ShakeObject);
+        ShakeObject.transform.localPosition = Vector3.zero;
+        //LeanTween.cancel(ScaleObject);
+        //ScaleObject.transform.localScale = Vector3.one;
+        UpdateLivesView();
+        PlayAppearAnimation();
+    }
+
     public virtual float GainDamage(int damage, int color)
     {
         if (_dead)
@@ -33,6 +64,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual float PlayGainDamageAnimation()
     {
+        UpdateLivesView();
         float time = 0.25f;
         LeanTween.cancel(ShakeObject);
         float shakePower = 0.2f;
@@ -97,9 +129,26 @@ public class Enemy : MonoBehaviour
         return time;
     }
 
+    public virtual float PlayAppearAnimation()
+    {
+        float time = 0.15f;
+        LeanTween.cancel(ScaleObject);
+        ScaleObject.transform.localScale = new Vector3(0, 0, 1);
+        float scaleMax = 1f;
+        LeanTween.scale(ScaleObject, new Vector3(scaleMax, scaleMax, 1), time)
+            .setEaseInOutSine();
+        return time;
+    }
+
     public virtual int GetDamage()
     {
         // можливі варіанти, наприклад урон деяких монстрів залежитиме від ситуації на полі (к-сть певних фішок)
         return MaxDamage;
+    }
+
+    public virtual void UpdateLivesView()
+    {
+        //TODO change art according to lives
+        //TODO прогресс-бар здоров"я як мінімум, так само для мани ворогів-кастерів
     }
 }

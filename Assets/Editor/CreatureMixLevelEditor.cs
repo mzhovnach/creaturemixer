@@ -270,7 +270,7 @@ public class CreatureMixLevelEditor : Editor
                 }
                 if (GUILayout.Button("INSERT ELEMENT"))
                 {
-                    _queue.Insert(_queueIndex, new QueueElement("HZ", 0, ""));
+                    _queue.Insert(_queueIndex, new QueueElement("HZ", 0, 0, ""));
                 }
                 // applying
                 GUILayout.BeginVertical();
@@ -382,6 +382,24 @@ public class CreatureMixLevelEditor : Editor
                     {
                         QueueElement qElement = _queue[aid];
                         qElement.Delay = newIdelay;
+                        _queue[aid] = qElement;
+                    }
+                }
+                //
+                GUILayout.Label("slot");
+                string prevSlot = _queue[aid].Slot.ToString();
+                string newSlot = GUILayout.TextField(prevSlot, 1, guiStyleRed);
+                if (newSlot != prevSlot)
+                {
+                    int newIslot = 0;
+                    if (int.TryParse(newSlot, out newIslot))
+                    {
+                        if (newIslot < 0 || newIslot > Enemies.SLOTS_COUNT)
+                        {
+                            newIslot = 0;
+                        }
+                        QueueElement qElement = _queue[aid];
+                        qElement.Slot = newIslot;
                         _queue[aid] = qElement;
                     }
                 }
@@ -676,7 +694,7 @@ public class CreatureMixLevelEditor : Editor
 
     private void AddElementToQueue()
     {
-        QueueElement element = new QueueElement("HZ", 0, "");
+        QueueElement element = new QueueElement("HZ", 0, 0, "");
         _queue.Add(element);
     }
 
