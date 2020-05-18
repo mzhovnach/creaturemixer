@@ -11,9 +11,14 @@ public enum EAddingType
 }
 public enum EGameState
 {
-    Pause = 0,
-    Play = 1,
-    Loose = 2
+    Pause = -1,
+    Loose = 0,
+    Win = 1,
+    PlayersTurn = 2,
+    PlayerUsedPowerup = 3,
+    PlayersAttack = 4, // match was made or powerup used that made match
+    EnemiesAttack = 5,
+    EnemyAppear = 6
 }
 
 public enum ESlideType
@@ -185,6 +190,8 @@ public class GameBoard : MonoBehaviour
     BoardPos _lastSlotWithMatch = new BoardPos(-1, -1);
     private List<int> _possibleColors = new List<int>();
     bool _addNewPipes = false;
+
+    private bool _powerupUsed = false;
 
     void Awake()
     {
@@ -562,7 +569,7 @@ public class GameBoard : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(0.15f);
-        UnsetPause();
+        StartPlayersTurn();
     }
 
 	//protected IEnumerator CreateLeveledLevel(ScriptableLevelData levelData) 
@@ -632,7 +639,9 @@ public class GameBoard : MonoBehaviour
 		_camera.transform.position = _cameraPos;
 		ShowDarkScreenForce();
 		Selection.SetActive(false);
-		SetGameState(EGameState.Pause);
+        _powerupUsed = false;
+
+        SetGameState(EGameState.Pause);
 
         LevelData levelData = null; //GameManager.Instance.Player.SavedGame; поки без сейва, бо треба сейвити інфу про ворогів на полі і чергу ворогів
 		//if (levelData == null || levelData.Slots.Count == 0)
@@ -666,11 +675,6 @@ public class GameBoard : MonoBehaviour
         //
         StartCoroutine(CreateLevel(levelData));
     }
-
-    public void UnsetPause()
-	{
-		SetGameState(EGameState.Play);
-	}
 
     //protected LevelData GetLevelToSave()
     //{
@@ -1456,7 +1460,7 @@ public class GameBoard : MonoBehaviour
                 cPipe.PlayAddAnimation();
             }
         }
-        CheckIfLoose();
+        CheckIfOutOfMoves();
         return true;
     }
 
@@ -1639,7 +1643,7 @@ public class GameBoard : MonoBehaviour
 		
 	public void OnPowerUpClicked(GameData.PowerUpType type)
 	{
-        if (!IsPlay())
+        if (GameState != EGameState.PlayersTurn)
         {
             return;
         }
@@ -1799,7 +1803,7 @@ public class GameBoard : MonoBehaviour
 			BreakePowerup = false;
             DestroyColorPowerup = false;
             //
-            Invoke("CheckIfLoose", maxTime);
+            Invoke("CheckIfOutOfMoves", maxTime);
         }
         else
         {
@@ -1824,6 +1828,7 @@ public class GameBoard : MonoBehaviour
     public void OnBreakePowerupUsed(SSlot slot)
     {
 		BreakePowerup = false;
+        _powerupUsed = true;
         BreakePipeInSlot(slot, (slot.Pipe as Pipe_Colored).GetExplodeEffectPrefab()); //BreakePipeInSlot(slot, BreakeEffectPrefab);
         int current = PowerUps[GameData.PowerUpType.Breake];
         --current;
@@ -1859,6 +1864,7 @@ public class GameBoard : MonoBehaviour
     public void OnChainPowerupUsed(SSlot slot)
     {
 		ChainPowerup = false;
+        _powerupUsed = true;
         SetGameState(EGameState.Pause);
         int current = PowerUps[GameData.PowerUpType.Chain];
         --current;
@@ -1942,7 +1948,6 @@ public class GameBoard : MonoBehaviour
             {
                 OnTurnWasMade(false, true);
             }
-			UnsetPause();
         } else
         {
             Invoke("RemoveChainIteration", Consts.PU__CHAIN_TIME_PER_ITERATION);
@@ -1966,6 +1971,7 @@ public class GameBoard : MonoBehaviour
     public void OnDestroyColorPowerupUsed(SSlot slot)
     {
         DestroyColorPowerup = false;
+        _powerupUsed = true;
         SetGameState(EGameState.Pause);
         // find all pipes with this color
         int colorToDestroy = slot.Pipe.AColor;
@@ -1997,7 +2003,6 @@ public class GameBoard : MonoBehaviour
                      OnTurnWasMade(false, true);
                 }
                 //
-                UnsetPause();
             });
         slots.Clear();
         //
@@ -2008,11 +2013,6 @@ public class GameBoard : MonoBehaviour
         EventData eventData = new EventData("OnPowerUpUsedEvent");
         eventData.Data["type"] = GameData.PowerUpType.DestroyColor;
         GameManager.Instance.EventManager.CallOnPowerUpUsedEvent(eventData);
-    }
-
-    public bool IsPlay()
-    {
-        return GameState == EGameState.Play;
     }
 
     public int GetPipesCount()
@@ -2133,7 +2133,7 @@ public class GameBoard : MonoBehaviour
         //}
     }
 
-    private void CheckIfLoose()
+    private void CheckIfOutOfMoves()
     {
         List<SSlot> slots = GetEmptySSlots();
         if (slots.Count == 0)
@@ -2145,7 +2145,6 @@ public class GameBoard : MonoBehaviour
                 return;
             }
         }
-        UnsetPause();
     }
 
     public void OnLoose()
@@ -2622,7 +2621,7 @@ public class GameBoard : MonoBehaviour
 		{
 			return;
 		}
-		if (GameState != EGameState.Play || DragSlot != null)
+		if (GameState != EGameState.PlayersTurn || DragSlot != null)
 		{
 			// can't drag
 			return;
@@ -2823,12 +2822,7 @@ public class GameBoard : MonoBehaviour
         return Consts.MAX_COLORED_LEVELS;
     }
 
-    public void OnTurnWasMade(bool wasMatch, bool justAddPipe)
-    {
-        StartCoroutine(OnTurnWasMadeCoroutine(wasMatch, justAddPipe));
-    }
-
-    private IEnumerator OnTurnWasMadeCoroutine(bool wasMatch, bool justAddPipe)
+    private void AddPipesAfterTurn(bool wasMatch, bool justAddPipe)
     {
         bool allAimsCompleted = false;
         bool aimComplited = false;
@@ -2840,8 +2834,7 @@ public class GameBoard : MonoBehaviour
                 _lastSlotWithMatch.x = -1;
                 allAimsCompleted = AAimPanel.IsAllAimsCompleted();
             }
-        }
-        else
+        } else
         {
             aimComplited = CheckAimsInSpecificSlots();
             allAimsCompleted = AAimPanel.IsAllAimsCompleted();
@@ -2914,7 +2907,7 @@ public class GameBoard : MonoBehaviour
             {
                 pipeType = EPipeType.Blocker;
             }
-            if (_addNewPipes && pipeneeded && (!allAimsCompleted))
+            if (_addNewPipes && pipeneeded) // && (!allAimsCompleted)) поки все одно додаємо пайп
             {
                 if (pipeneeded && AddRandomPipe(pipeType))
                 {
@@ -2936,36 +2929,71 @@ public class GameBoard : MonoBehaviour
         eventData.Data["pipesadded"] = _pipesAdded;
         GameManager.Instance.EventManager.CallOnTurnWasMadeEvent(eventData);
 
-        // wait for attack phase ends and enemies died
-        //...... TODO змінити логіку. Зараз під час гри є стейт Play, Pause і Loose.
-        //    Зробити стейт машину і стейти для кожної фази по типу:
-        //    PlayersTurn - гравець юзає паверапи і робить 1 хід
-        //    PlayersUsedPowerup - гравець використав паверап, пауза після якої перевіряєм на виграш і знову в фазу PlayersTurn
-        //    PlayersAttack - гравець зматчив фішку, атакуємо ворогів, після цього перевіряєм на виграш і якщо ні перехід в фазу атакі ворогів
-        //    EnemiesAttack - вороги атакують (якщо ходи підійшли), після перевіряєм на програш рівня
-        //    EnemiesAppear -  намагаємось додати на поле ворога з черги (якщо є вільні слоти і час настав). Викликати треба AEnemiesQueue.OnTurnWasMade()
-        //
-        //    Також окремий стейт на виграш і програш (зараз лише Loose)
-        // enemies attack phase
-        //...... TODO
+        // Можливо панель сіквенсів теж можна заюзати, поки виграєм лише перемігши ворогів
+        //if (allAimsCompleted)
+        //{
+        //    OnLevelCompleted();
+        //}
+    }
 
-        // adding new enemies
-        if (!justAddPipe)
+    public void OnTurnWasMade(bool wasMatch, bool justAddPipe)
+    {
+        GameState = EGameState.PlayersAttack;
+        AddPipesAfterTurn(wasMatch, justAddPipe);
+        if (GameState != EGameState.Loose && GameState != EGameState.Win)
         {
-            if (AEnemiesQueue.OnTurnWasMade())
+            if (!justAddPipe)
             {
-                yield return new WaitForSeconds(0.5f);
+                StartCoroutine(OnTurnWasMadeCoroutine());
+            } else
+            {
+                StartPlayersTurn();
             }
         }
-        //
+    }
 
-        if (allAimsCompleted)
+    private IEnumerator OnTurnWasMadeCoroutine()
+    {
+        yield return StartCoroutine(PlayersAttackCoroutine());
+        if (!CheckWinConditions())
         {
-            SetGameState(EGameState.Loose);
-            ClearBoardQuick();
-            StartCoroutine(OnCreatureMixGameCompleted());
+            if (_powerupUsed)
+            {
+                _powerupUsed = false;
+                GameState = EGameState.PlayersTurn; // users turn
+            } else
+            {
+                //TODO yield return StartCoroutine(EnemiesAttackCoroutine());
+                if (!CheckLooseConditions())
+                {
+                    // adding new enemies
+                    if (AEnemiesQueue.OnTurnWasMade())
+                    {
+                        yield return new WaitForSeconds(0.5f);
+                    }
+                    StartPlayersTurn();
+                }
+            }
         }
+    }
 
+    private IEnumerator PlayersAttackCoroutine()
+    {
+        do
+        {
+            yield return new WaitForSeconds(0.01f);
+        } while (!IsAttackOver());
+    }
+
+    private bool IsAttackOver()
+    {
+        //TODO список атак кожна зі своєю затримкою. Наприклад після паверапа, коли знищаться багато фішок, непогано було б не атакувати одночасно всіма, а по черзі
+        return true;
+    }
+
+    private void StartPlayersTurn()
+    {
+        GameState = EGameState.PlayersTurn;
     }
 
     public int GetMovesToNextPipe()
@@ -3029,5 +3057,32 @@ public class GameBoard : MonoBehaviour
     public Color GetPipeColor(int acolor)
     {
         return Colors[acolor + 1]; // зміщення через дефолтний нейтральний колір
+    }
+
+    public bool CheckLooseConditions()
+    {
+        return false;
+        //if (player died)
+        //{
+        //    OnLoose();
+        //    return true;
+        //}
+    }
+
+    private bool CheckWinConditions()
+    {
+        if (AEnemies.NoEnemiesLeft())
+        {
+            OnLevelCompleted();
+            return true;
+        }
+        return false;
+    }
+
+    private void OnLevelCompleted()
+    {
+        SetGameState(EGameState.Win);
+        ClearBoardQuick();
+        StartCoroutine(OnCreatureMixGameCompleted());
     }
 }

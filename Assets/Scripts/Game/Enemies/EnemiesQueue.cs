@@ -34,7 +34,11 @@ public class EnemiesQueue : MonoBehaviour
         } else
         {
             LeanTween.value(AGroup.gameObject, AGroup.alpha, 0, 0.5f)
-                .setEaseInOutSine();
+                .setEaseInOutSine()
+                .setOnUpdate((float val)=>
+                {
+                    AGroup.alpha = val;
+                });
         }
     }
 
