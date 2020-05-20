@@ -10,6 +10,7 @@ public class Enemies : MonoBehaviour
     // якщо немає місця, то новий ворог з черги не з"являється
     public static int                       SLOTS_COUNT = 5;
     public static float                     ENEMIES_Z = -2f;
+    public const float                      ATTACK_BEAM_FLY_TIME = 0.25f;
     public List<EnemySlot>                  Slots; // для простоти зараз 5 слотів в ряд
     [HideInInspector]
     public List<EnemyParams>                EnemiesDefaultParams;
@@ -18,7 +19,6 @@ public class Enemies : MonoBehaviour
     private SuperSimplePool                 _pool;
     private List<Enemy>                     _enemies = new List<Enemy>();
     private Dictionary<string, EnemyParams> _enemiesDefaultParams;
-
 
     private void Awake()
     {
@@ -179,4 +179,33 @@ public class Enemies : MonoBehaviour
         return _enemiesDefaultParams[enemyName].Color;
     }
 
+
+    public float ApplyAttack(Attack attack)
+    {
+        float delay = 0;
+        Enemy enemy = null;
+        if (attack.TargetType == EAttackTarget.EnemySlot)
+        {
+            EnemySlot slot = attack.TargetObject.GetComponent<EnemySlot>();
+            enemy = slot.GetEnemy();
+        } else
+        {
+            enemy = attack.TargetObject.GetComponent<Enemy>();
+        }
+
+        if (!enemy || enemy.IsDead())
+        {
+            // no enemy to attack
+            return 0;
+        }
+
+        delay = enemy.GainDamage(attack.Power, attack.Color);
+        if (enemy.IsDead())
+        {
+            FreeSlotsFromEnemy(enemy);
+            _enemies.Remove(enemy);
+        }
+
+        return delay;
+    }
 }

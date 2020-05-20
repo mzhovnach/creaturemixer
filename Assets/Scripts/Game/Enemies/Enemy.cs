@@ -80,6 +80,9 @@ public class Enemy : MonoBehaviour
                 if (_dead)
                 {
                     PlayDeathAnimation();
+                } else
+                {
+                    GameManager.Instance.Game.AAttacks.DecreaseAttacksCount();
                 }
             });
         return time;
@@ -88,7 +91,16 @@ public class Enemy : MonoBehaviour
     protected virtual void PlayDeathAnimation()
     {
         //TODO through alpha or other animation + sound
-        PlayHideAnimation();
+        float time = 0.15f;
+        LeanTween.cancel(ScaleObject);
+        float scaleMin = 0f;
+        LeanTween.scale(ScaleObject, new Vector3(scaleMin, scaleMin, 1), time)
+            .setEaseInOutSine()
+            .setOnComplete(() =>
+            {
+                GameManager.Instance.Game.AAttacks.DecreaseAttacksCount();
+                HideForce();
+            });
     }
 
     protected virtual float PlayAttackAnimation() // returnes time of animation
@@ -150,5 +162,10 @@ public class Enemy : MonoBehaviour
     {
         //TODO change art according to lives
         //TODO прогресс-бар здоров"я як мінімум, так само для мани ворогів-кастерів
+    }
+
+    public bool IsDead()
+    {
+        return _dead;
     }
 }

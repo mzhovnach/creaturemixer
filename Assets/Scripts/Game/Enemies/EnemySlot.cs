@@ -28,4 +28,9 @@ public class EnemySlot : MonoBehaviour
     {
         return _enemy == null;
     }
+
+    public Enemy GetEnemy()
+    {
+        return _enemy;
+    }
 }

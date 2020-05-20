@@ -99,6 +99,7 @@ public class GameBoard : MonoBehaviour
 
     public Enemies                              AEnemies;
     public EnemiesQueue                         AEnemiesQueue;
+    public Attacks                              AAttacks;
 
     // sprites
     private Dictionary<string, Sprite>          _sprites = new Dictionary<string, Sprite>();
@@ -289,13 +290,6 @@ public class GameBoard : MonoBehaviour
     // Update is called once per frame
     void Update () 
 	{
-        // limiting FPS
-        if (Application.targetFrameRate != Consts.MAX_FPS)
-        {
-            Application.targetFrameRate = Consts.MAX_FPS;
-            //Debug.LogError("!!!!!");
-        }
-        //
         if (GameManager.Instance.CurrentMenu != UISetType.ClassicGame && GameManager.Instance.CurrentMenu != UISetType.LeveledGame)
 		{
 			return;
@@ -520,6 +514,7 @@ public class GameBoard : MonoBehaviour
         //
         AQueuePanel.LoadPanel(levelData.QueueState);
         AAimPanel.InitPanel(levelData);
+        AAttacks.ClearAllAttacks();
         for (int i = 0; i < WIDTH; ++i)
 		{
 			for (int j = 0; j < HEIGHT; ++j)
@@ -1265,13 +1260,16 @@ public class GameBoard : MonoBehaviour
             //
         } else
 		{
-			//GameObject effect = (GameObject)GameObject.Instantiate(MatchEffectPrefab, Vector3.zero, Quaternion.identity);
-			//effect.transform.SetParent(SlotsContainer, false);
-			//Vector3 pos = slideData.Slot2.transform.position;
-			//pos.z = PipeZ + 0.05f;
-			//effect.transform.position = pos;
-			//GameObject.Destroy(effect, effect.GetComponent<ParticleSystem>().main.duration);
-		}
+            // players simple attack
+            CreateSimpleAttack(slideData.Slot2, slideData.Pipe.AColor, slideData.Pipe.Param);
+
+            //GameObject effect = (GameObject)GameObject.Instantiate(MatchEffectPrefab, Vector3.zero, Quaternion.identity);
+            //effect.transform.SetParent(SlotsContainer, false);
+            //Vector3 pos = slideData.Slot2.transform.position;
+            //pos.z = PipeZ + 0.05f;
+            //effect.transform.position = pos;
+            //GameObject.Destroy(effect, effect.GetComponent<ParticleSystem>().main.duration);
+        }
 		GameManager.Instance.EventManager.CallOnCombineWasMadeEvent(eventData);
 		//
 		slideData.Slot2.WaitForPipe = false;
@@ -2830,9 +2828,12 @@ public class GameBoard : MonoBehaviour
         {
             if (_lastSlotWithMatch.x >= 0)
             {
-                aimComplited = AAimPanel.CheckSlot(GetSlot(_lastSlotWithMatch));
+                //// variant with aims panels
+                ////aimComplited = AAimPanel.CheckSlot(GetSlot(_lastSlotWithMatch));
+                ////_lastSlotWithMatch.x = -1;
+                ////allAimsCompleted = AAimPanel.IsAllAimsCompleted();
+                TryCreateFinalAttack(GetSlot(_lastSlotWithMatch));
                 _lastSlotWithMatch.x = -1;
-                allAimsCompleted = AAimPanel.IsAllAimsCompleted();
             }
         } else
         {
@@ -2982,7 +2983,7 @@ public class GameBoard : MonoBehaviour
         do
         {
             yield return new WaitForSeconds(0.01f);
-        } while (!IsAttackOver());
+        } while (AAttacks.IsAttacking());
     }
 
     private bool IsAttackOver()
@@ -3084,5 +3085,18 @@ public class GameBoard : MonoBehaviour
         SetGameState(EGameState.Win);
         ClearBoardQuick();
         StartCoroutine(OnCreatureMixGameCompleted());
+    }
+
+    public void CreateSimpleAttack(SSlot slot, int pipeColor, int pipeParam)
+    {
+        AAttacks.CreateSimpleAttack(slot, pipeColor, pipeParam * 3); // TODO correct power of strike according to upgrades and balance
+    }
+
+    public void TryCreateFinalAttack(SSlot slot)
+    {
+        if (slot.Pipe.Param == _maxColoredLevels - 1)
+        {
+            AAttacks.CreateFinalAttack(slot, slot.Pipe.AColor, slot.Pipe.Param * 3); // TODO correct power of strike according to upgrades and balance
+        }
     }
 }

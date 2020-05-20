@@ -61,9 +61,9 @@ public class Consts
         9
 	};
 
-    public static int MAX_COLORED_LEVELS = 5; // on 5 level pipe will be removed
+    public static int MAX_COLORED_LEVELS = 3; // 5, on this level pipe will be destroyed if MAX_COLORED_LEVEL_REMOVES == true
     public static bool BAD_PIXEL_MACHANIC_IN_CLASSIC_GAME = false;
-    public static bool MAX_COLORED_LEVEL_REMOVES = true;
+    public static bool MAX_COLORED_LEVEL_REMOVES = false;
     public static bool MAX_COLORED_LEVEL_GIVES_POWERUP = false;
     public static GameData.PowerUpType MAX_COLORED_LEVEL_GIVES_POWERUP_TYPE = GameData.PowerUpType.Reshuffle; // when pipe reached MAX_COLORED_LEVELS it blast off and gives powerup
     public static float DARK_SCREEN_SHOW_HIDE_TIME = 0.5f;
@@ -137,4 +137,6 @@ public class Consts
     public static int MAX_FPS = 60;
     public static bool CHECK_AIM_ON_COMBINE = true; // if false - will check only in _slotsToCheckAims slots
     public static bool WITH_POWERUPS = false;
+
+    public static float FINAL_ATTACK_TIME = 0.5f;
 }
