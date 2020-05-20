@@ -1,0 +1,86 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class LivesPanel : MonoBehaviour
+{
+    const float         CHANGE_SPEED = 0.025f;
+    const float         MAX_TIME = 3.0f;
+    const float         RESOURCES_EFFECT_OFFSET = 100.0f;
+    public Text         AmountText;
+    public GameObject   AGameObject;
+    private int         AmountCurrent;
+    private int         Amount;
+    private int         MaxAmount;
+
+    void Awake()
+    {
+        AmountCurrent = 0;
+        Amount = 0;
+        AmountText.text = "0";
+    }
+
+    public void InitPanel(int lives, int maxLives)
+    {
+        MaxAmount = maxLives;
+        SetAmountForce(lives);
+    }
+
+    void SetAmountForce(int amount)
+    {
+        LeanTween.cancel(AGameObject);
+        Amount = amount;
+        AmountCurrent = amount;
+        AmountText.text = amount.ToString();
+    }
+
+    void SetAmount(int amount)
+    {
+        LeanTween.cancel(AGameObject);
+        Amount = amount;
+
+        float time = CHANGE_SPEED * Mathf.Abs(Amount - AmountCurrent);
+        if (time > MAX_TIME)
+        {
+            time = MAX_TIME;
+        }
+        LeanTween.value(AGameObject, (float)AmountCurrent, (float)Amount, time)
+            //.setEase(LeanTweenType.easeInOutSine)
+            //	.setDelay(UIConsts.SHOW_DELAY_TIME)
+            .setOnUpdate
+                (
+                    (float val) =>
+                    {
+                        int ival = (int)val;
+                        if (ival != AmountCurrent)
+                        {
+                            AmountCurrent = ival;
+                            AmountText.text = ival.ToString();
+                        }
+                    }
+                );
+    }
+
+    public bool RemoveLives(int livesToRemove)
+    {
+        int lives = Amount - livesToRemove;
+        lives = Mathf.Max(0, lives);
+        lives = Mathf.Min(lives, MaxAmount);
+        SetAmount(lives);
+        return IsDead();
+    }
+
+    public bool AddLives(int livesToAdd)
+    {
+        int lives = Amount + livesToAdd;
+        lives = Mathf.Max(0, lives);
+        lives = Mathf.Min(lives, MaxAmount);
+        SetAmount(lives);
+        return IsDead();
+    }
+
+    public bool IsDead()
+    {
+        return Amount <= 0;
+    }
+}

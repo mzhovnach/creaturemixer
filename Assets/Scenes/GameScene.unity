@@ -1370,6 +1370,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 528546b6a59702348832533734855f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &612422772 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2119669460373828228, guid: d7125060805d95a498ffa58f879024fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 612422769}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a71e42f545833794a889f0524606974f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &617416467 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1896693767157738, guid: d7125060805d95a498ffa58f879024fc,
@@ -1418,6 +1430,7 @@ MonoBehaviour:
   AMovesPanel: {fileID: 789725384}
   AStarsPanel: {fileID: 1431302026}
   ALevelPanel: {fileID: 789725385}
+  ALivesPanel: {fileID: 612422772}
   AEnemies: {fileID: 1986463814}
   AEnemiesQueue: {fileID: 612422770}
   AAttacks: {fileID: 1530506155}

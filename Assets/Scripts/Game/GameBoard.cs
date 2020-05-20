@@ -96,6 +96,7 @@ public class GameBoard : MonoBehaviour
 	public MovesPanel							AMovesPanel;
 	public StarsPanel							AStarsPanel;
 	public LevelPanel							ALevelPanel;
+    public LivesPanel                           ALivesPanel;
 
     public Enemies                              AEnemies;
     public EnemiesQueue                         AEnemiesQueue;
@@ -515,6 +516,7 @@ public class GameBoard : MonoBehaviour
         AQueuePanel.LoadPanel(levelData.QueueState);
         AAimPanel.InitPanel(levelData);
         AAttacks.ClearAllAttacks();
+        ALivesPanel.InitPanel(20, 20);
         for (int i = 0; i < WIDTH; ++i)
 		{
 			for (int j = 0; j < HEIGHT; ++j)
