@@ -20,6 +20,8 @@ public class Enemies : MonoBehaviour
     private List<Enemy>                     _enemies = new List<Enemy>();
     private Dictionary<string, EnemyParams> _enemiesDefaultParams;
 
+    private int                             _incompletedAttacksCount = 0;
+
     private void Awake()
     {
         _pool = GetComponent<SuperSimplePool>();
@@ -207,5 +209,80 @@ public class Enemies : MonoBehaviour
         }
 
         return delay;
+    }
+
+    public IEnumerator EnemiesAttackCoroutine()
+    {
+        // find enemies to attack with
+        List<Enemy> attackingEnemies = new List<Enemy>();
+        for (int i = 0; i < _enemies.Count; ++i)
+        {
+            if (_enemies[i].IsDead())
+            {
+                Debug.LogError("EnemyIsDEAD!");
+            }
+            _enemies[i].DecreaseMovesToAttack();
+            if (_enemies[i].IsReadyToAttack())
+            {
+                attackingEnemies.Add(_enemies[i]);
+            }
+        }
+        //reorder from left to right, maybe change to attack in order of appearing at field?
+        for (int i = 0; i < attackingEnemies.Count - 1; ++i)
+        {
+            for (int j = i + 1; j < attackingEnemies.Count; ++j)
+            {
+                if (attackingEnemies[i].transform.position.x > attackingEnemies[j].transform.position.x)
+                {
+                    Enemy temp = attackingEnemies[i];
+                    attackingEnemies[i] = attackingEnemies[j];
+                    attackingEnemies[j] = temp;
+                }
+            }
+        }
+        //
+        for (int i = 0; i < attackingEnemies.Count; ++i)
+        {
+            yield return StartCoroutine(EnemyAttackCoroutine(attackingEnemies[i]));
+        }
+		do
+        {
+            yield return new WaitForSeconds(0.005f);
+        } while (IsAttacking());
+    }
+
+    public IEnumerator EnemyAttackCoroutine(Enemy enemy)
+    {
+
+        //attack player one by one, counter for enemies attacks to awit to end
+        enemy.PlayAttackAnimation();
+        AddAttack();
+        GameManager.Instance.Game.ALivesPanel.AttackByEnemy(enemy);
+        yield return new WaitForSeconds(0.2f);
+        enemy.ResetMovesToAttack();
+    }
+
+    public void ClearAllAttacks()
+    {
+        _incompletedAttacksCount = 0;
+    }
+
+    private void AddAttack()
+    {
+        ++_incompletedAttacksCount;
+    }
+
+    public void DecreaseAttacksCount()
+    {
+        --_incompletedAttacksCount;
+        if (_incompletedAttacksCount < 0)
+        {
+            Debug.LogError("enemies _incompletedAttacksCount = " + _incompletedAttacksCount);
+        }
+    }
+
+    public bool IsAttacking()
+    {
+        return _incompletedAttacksCount > 0;
     }
 }

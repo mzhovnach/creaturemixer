@@ -2284,6 +2284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2e444edec6b0e2488f80e622736c6bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ObjectsContainer: {fileID: 1530506157}
 --- !u!114 &1530506156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2297,7 +2298,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FolderToScan: Attacks
-  Prefabs: []
+  Prefabs:
+  - {fileID: 2814619795720426572, guid: 290c37c42b283db4cbb9f644a64e8e85, type: 3}
+  - {fileID: 7795883488938450998, guid: d5118c301372d504c8ba9e5b8878a5b5, type: 3}
+  - {fileID: 7573903373894574146, guid: 9299c5e11dfcb904f954f1a4e1998df3, type: 3}
+  - {fileID: 4351725374069607229, guid: 24ec1b0cf1121a94a9a8b4c18fc9be47, type: 3}
+  - {fileID: 273854620749112449, guid: 15e1d028884547a45b01d4e7154beb48, type: 3}
+  - {fileID: 3673555085155186262, guid: 5d63f842494bc6942abd4999dce564af, type: 3}
 --- !u!4 &1530506157
 Transform:
   m_ObjectHideFlags: 0
@@ -2834,16 +2841,19 @@ MonoBehaviour:
     Lives: 10
     Damage: 5
     Color: -1
+    AttackInterval: 0
   - Name: enemy_2
     Size: 1
     Lives: 15
     Damage: 7
     Color: -1
+    AttackInterval: 0
   - Name: enemy_3
     Size: 2
     Lives: 20
     Damage: 10
     Color: -1
+    AttackInterval: 0
   ObjectsContainer: {fileID: 1986463815}
 --- !u!4 &1986463815
 Transform:

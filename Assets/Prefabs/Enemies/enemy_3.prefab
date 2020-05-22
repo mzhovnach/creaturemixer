@@ -49,6 +49,7 @@ MonoBehaviour:
   ShakeObject: {fileID: 4998176551254485671}
   MaxLives: 20
   MaxDamage: 10
+  AttackInterval: 5
   Color: -1
 --- !u!1 &2413547271663166371
 GameObject:

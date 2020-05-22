@@ -17,8 +17,13 @@ public class SuperSimplePool : MonoBehaviour
             _pool.Add(Prefabs[i].name, new List<GameObject>());
         }
     }
+	
+	public GameObject GetObjectFromPool(string objectName, Transform aparent)
+    {
+        return GetObjectFromPool(objectName, aparent, Vector3.zero);
+    }
 
-    public GameObject GetObjectFromPool(string objectName, Transform aparent)
+    public GameObject GetObjectFromPool(string objectName, Transform aparent, Vector3 pos)
     {
         Debug.Log(objectName + " ! ");
         List<GameObject> objects = null;
@@ -31,10 +36,23 @@ public class SuperSimplePool : MonoBehaviour
                 return objects[i];
             }
         }
-        GameObject obj = (GameObject)GameObject.Instantiate(_prefabs[objectName], Vector3.zero, Quaternion.identity);
+        GameObject obj = (GameObject)GameObject.Instantiate(_prefabs[objectName], pos, Quaternion.identity, aparent);
         obj.name = objectName;
-        obj.transform.SetParent(aparent, false);
+        //obj.transform.SetParent(aparent, false);
         objects.Add(obj);
         return obj;
     }
+	
+	public GameObject InstantiateObject(string objectName, Transform aparent)
+	{
+        return InstantiateObject(objectName, aparent, Vector3.zero);
+	}
+	
+	public GameObject InstantiateObject(string objectName, Transform aparent, Vector3 pos)
+	{
+		GameObject obj = (GameObject)GameObject.Instantiate(_prefabs[objectName], pos, Quaternion.identity, aparent);
+        obj.name = objectName;
+        //obj.transform.SetParent(aparent, false);
+        return obj;
+	}
 }

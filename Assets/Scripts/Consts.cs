@@ -139,4 +139,5 @@ public class Consts
     public static bool WITH_POWERUPS = false;
 
     public static float FINAL_ATTACK_TIME = 0.5f;
+    public static bool ENEMIES_TURN_ON_EVERY_MATCH = false; // if false moves only on no match from player
 }

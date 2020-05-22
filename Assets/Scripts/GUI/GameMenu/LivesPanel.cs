@@ -13,6 +13,8 @@ public class LivesPanel : MonoBehaviour
     private int         Amount;
     private int         MaxAmount;
 
+    public Image    Filler;
+
     void Awake()
     {
         AmountCurrent = 0;
@@ -32,6 +34,7 @@ public class LivesPanel : MonoBehaviour
         Amount = amount;
         AmountCurrent = amount;
         AmountText.text = amount.ToString();
+        Filler.fillAmount = (float)amount / MaxAmount;
     }
 
     void SetAmount(int amount)
@@ -56,6 +59,7 @@ public class LivesPanel : MonoBehaviour
                         {
                             AmountCurrent = ival;
                             AmountText.text = ival.ToString();
+                            Filler.fillAmount = val / MaxAmount;
                         }
                     }
                 );
@@ -83,4 +87,9 @@ public class LivesPanel : MonoBehaviour
     {
         return Amount <= 0;
     }
+	
+	public bool AttackByEnemy(Enemy enemy)
+	{
+		return RemoveLives(enemy.GetDamage());
+	}
 }

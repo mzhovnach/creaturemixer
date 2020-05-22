@@ -10,6 +10,7 @@ public struct EnemyParams
     public int Lives;
     public int Damage;
     public int Color;
+    public int AttackInterval;
 
     public void Init(string name, Enemy enemy)
     {
@@ -18,6 +19,7 @@ public struct EnemyParams
         Lives = enemy.MaxLives;
         Damage = enemy.MaxDamage;
         Color = enemy.Color;
+        AttackInterval = enemy.AttackInterval;
     }
 }
 
@@ -31,11 +33,13 @@ public class Enemy : MonoBehaviour
     public GameObject ShakeObject; // should has local position = (0, 0, 0)
     public int MaxLives = 1;
     public int MaxDamage = 1;
+    public int AttackInterval = 1;
     [Range(-1, 4)]
     public int Color = -1; // default color
 
     protected int _lives = 0;
     protected bool _dead = false;
+    protected int _movesToAttack; //TODO set this parameter to 1, 2, 3 for each enemy at start of level?
 
     public virtual void InitEnemy()
     {
@@ -46,6 +50,7 @@ public class Enemy : MonoBehaviour
         //LeanTween.cancel(ScaleObject);
         //ScaleObject.transform.localScale = Vector3.one;
         UpdateLivesView();
+        UpdateMovesToAttackView();
         PlayAppearAnimation();
     }
 
@@ -103,11 +108,11 @@ public class Enemy : MonoBehaviour
             });
     }
 
-    protected virtual float PlayAttackAnimation() // returnes time of animation
+    public virtual float PlayAttackAnimation() // returnes time of animation
     {
         float time = 0.25f;
         LeanTween.cancel(ScaleObject);
-        float scaleMax = 1.1f;
+        float scaleMax = 1.2f;
         LeanTween.scale(ScaleObject, new Vector3(scaleMax, scaleMax, 1), time / 2.0f)
             .setEaseInOutSine()
             .setOnComplete(() =>
@@ -117,6 +122,9 @@ public class Enemy : MonoBehaviour
                     .setOnUpdate((Vector3 val) =>
                     {
                         ScaleObject.transform.localScale = val;
+                    })
+                    .setOnComplete(()=>{
+                        GameManager.Instance.Game.AEnemies.DecreaseAttacksCount();
                     });
             });
         return time;
@@ -167,5 +175,43 @@ public class Enemy : MonoBehaviour
     public bool IsDead()
     {
         return _dead;
+    }
+
+    public bool IsReadyToAttack()
+    {
+        return _movesToAttack <= 0;
+    }
+
+    public int GetMovesToAttack()
+    {
+        return _movesToAttack;
+    }
+
+    public void DecreaseMovesToAttack()
+    {
+        if (_movesToAttack > 0)
+        {
+            --_movesToAttack;
+            UpdateMovesToAttackView();
+        }
+    }
+
+    public void ResetMovesToAttack()
+    {
+        _movesToAttack = AttackInterval;
+        UpdateMovesToAttackView();
+    }
+
+    public void UpdateMovesToAttackView()
+    {
+        //TODO show digit near enemy
+        if (_movesToAttack == 1)
+        {
+            //TODO highlight if ready to attack
+        } else
+        if (_movesToAttack == 0)
+        {
+            //TODO hide - time to attack now
+        }
     }
 }

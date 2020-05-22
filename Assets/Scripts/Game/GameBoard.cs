@@ -176,7 +176,7 @@ public class GameBoard : MonoBehaviour
     // GameData
     private List<long> _resources;
     private long _pointsForSequences;
-    public EGameState GameState = EGameState.Pause;
+    private EGameState _gameState = EGameState.Pause;
     public float TimePlayed;
     public SSlot DragSlot;
     public Dictionary<GameData.PowerUpType, int> PowerUps;
@@ -219,7 +219,7 @@ public class GameBoard : MonoBehaviour
             //SetResourceForce(0, i);
         }
         AddsViewed = false;
-        GameState = EGameState.Pause;
+        SetGameState(EGameState.Pause);
         TimePlayed = 0;
         DragSlot = null;
         PowerUps = new Dictionary<GameData.PowerUpType, int>();
@@ -514,9 +514,9 @@ public class GameBoard : MonoBehaviour
         }
         //
         AQueuePanel.LoadPanel(levelData.QueueState);
-        AAimPanel.InitPanel(levelData);
+        //AAimPanel.InitPanel(levelData);
         AAttacks.ClearAllAttacks();
-        ALivesPanel.InitPanel(20, 20);
+        ALivesPanel.InitPanel(100, 100);
         for (int i = 0; i < WIDTH; ++i)
 		{
 			for (int j = 0; j < HEIGHT; ++j)
@@ -1643,7 +1643,7 @@ public class GameBoard : MonoBehaviour
 		
 	public void OnPowerUpClicked(GameData.PowerUpType type)
 	{
-        if (GameState != EGameState.PlayersTurn)
+        if (_gameState != EGameState.PlayersTurn)
         {
             return;
         }
@@ -2621,7 +2621,7 @@ public class GameBoard : MonoBehaviour
 		{
 			return;
 		}
-		if (GameState != EGameState.PlayersTurn || DragSlot != null)
+		if (_gameState != EGameState.PlayersTurn || DragSlot != null)
 		{
 			// can't drag
 			return;
@@ -2764,20 +2764,25 @@ public class GameBoard : MonoBehaviour
         GameManager.Instance.EventManager.CallOnResourcesChangedEvent(eventData);
     }
 
-    public void SetGameState(EGameState astate)
+    public void SetGameState(EGameState gameState, string reason)
     {
-        GameState = astate;
+        Debug.Log("GS: " + _gameState + " -> " + _gameState);
+        _gameState = gameState;
     }
 
+    public EGameState GetGameState()
+    {
+        return _gameState;
+    }
 
     public bool IsLoose()
     {
-        return GameState == EGameState.Loose;
+        return _gameState == EGameState.Loose;
     }
 
     public bool IsPause()
     {
-        return GameState == EGameState.Pause;
+        return _gameState == EGameState.Pause;
     }
 
     public int GetRandomColor()
@@ -2824,7 +2829,7 @@ public class GameBoard : MonoBehaviour
 
     private void AddPipesAfterTurn(bool wasMatch, bool justAddPipe)
     {
-        bool allAimsCompleted = false;
+        //bool allAimsCompleted = false;
         bool aimComplited = false;
         if (Consts.CHECK_AIM_ON_COMBINE)
         {
@@ -2839,8 +2844,8 @@ public class GameBoard : MonoBehaviour
             }
         } else
         {
-            aimComplited = CheckAimsInSpecificSlots();
-            allAimsCompleted = AAimPanel.IsAllAimsCompleted();
+            //aimComplited = CheckAimsInSpecificSlots();
+            //allAimsCompleted = AAimPanel.IsAllAimsCompleted();
         }
         bool pipeneeded = false;
         if (!aimComplited || justAddPipe)
@@ -2941,13 +2946,13 @@ public class GameBoard : MonoBehaviour
 
     public void OnTurnWasMade(bool wasMatch, bool justAddPipe)
     {
-        GameState = EGameState.PlayersAttack;
+        SetGameState(EGameState.PlayersAttack);
         AddPipesAfterTurn(wasMatch, justAddPipe);
-        if (GameState != EGameState.Loose && GameState != EGameState.Win)
+        if (_gameState != EGameState.Loose && _gameState != EGameState.Win)
         {
             if (!justAddPipe)
             {
-                StartCoroutine(OnTurnWasMadeCoroutine());
+                StartCoroutine(OnTurnWasMadeCoroutine(wasMatch));
             } else
             {
                 StartPlayersTurn();
@@ -2955,18 +2960,21 @@ public class GameBoard : MonoBehaviour
         }
     }
 
-    private IEnumerator OnTurnWasMadeCoroutine()
+    private IEnumerator OnTurnWasMadeCoroutine(bool wasMatch)
     {
-        yield return StartCoroutine(PlayersAttackCoroutine());
+        yield return StartCoroutine(AAttacks.PlayersAttackCoroutine());
         if (!CheckWinConditions())
         {
             if (_powerupUsed)
             {
                 _powerupUsed = false;
-                GameState = EGameState.PlayersTurn; // users turn
+                SetGameState(EGameState.PlayersTurn); // users turn
             } else
             {
-                //TODO yield return StartCoroutine(EnemiesAttackCoroutine());
+                if (Consts.ENEMIES_TURN_ON_EVERY_MATCH || !wasMatch)
+                {
+                    yield return StartCoroutine(AEnemies.EnemiesAttackCoroutine());
+                }
                 if (!CheckLooseConditions())
                 {
                     // adding new enemies
@@ -2980,14 +2988,6 @@ public class GameBoard : MonoBehaviour
         }
     }
 
-    private IEnumerator PlayersAttackCoroutine()
-    {
-        do
-        {
-            yield return new WaitForSeconds(0.01f);
-        } while (AAttacks.IsAttacking());
-    }
-
     private bool IsAttackOver()
     {
         //TODO список атак кожна зі своєю затримкою. Наприклад після паверапа, коли знищаться багато фішок, непогано було б не атакувати одночасно всіма, а по черзі
@@ -2996,7 +2996,7 @@ public class GameBoard : MonoBehaviour
 
     private void StartPlayersTurn()
     {
-        GameState = EGameState.PlayersTurn;
+        SetGameState(EGameState.PlayersTurn);
     }
 
     public int GetMovesToNextPipe()
@@ -3015,7 +3015,7 @@ public class GameBoard : MonoBehaviour
         {
             _resources[i] = 0;
         }
-        GameState = EGameState.Pause;
+        SetGameState(EGameState.Pause);
         TimePlayed = 0;
         DragSlot = null;
         AddsViewed = false;
@@ -3064,12 +3064,12 @@ public class GameBoard : MonoBehaviour
 
     public bool CheckLooseConditions()
     {
+        if (ALivesPanel.IsDead())
+        {
+            OnLoose();
+            return true;
+        }
         return false;
-        //if (player died)
-        //{
-        //    OnLoose();
-        //    return true;
-        //}
     }
 
     private bool CheckWinConditions()

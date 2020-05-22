@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Attacks : MonoBehaviour
 {
+	private const float			SIMPLE_ATTACK_SPEED = 0.05f; // per unit
     private List<Attack>        _attacks = new List<Attack>();
     private SuperSimplePool     _pool;
     private Enemies             _enemies;
     private int                 _incompletedAttacksCount = 0;
+	public Transform 			ObjectsContainer;
 
     private void Awake()
     {
@@ -49,29 +51,40 @@ public class Attacks : MonoBehaviour
         return _incompletedAttacksCount > 0; //_attacks.Count > 0;
     }
 
-    public void CreateSimpleAttack(SSlot slot, int pipeColor, int attackPower)
+    public IEnumerator PlayersAttackCoroutine()
     {
-        //TODO if needed attack after each match
-        //// find enemies slot in front of slot
-        //EnemySlot enemySlot = Slots[slot.X];
-        //// instantiate attack beam
-        //GameObject attackObject = ....;
-        //Attack attack = attackObject.AddComponent<Attack>();
-        //attack.DestroyOnComplete = true;
-        //attack.Color = pipeColor;
-        //attack.Power = attackPower;
-        //attack.TargetType = EAttackTarget.EnemySlot;
-        //attack.TargetObject = enemySlot.gameObject;
-        //AddAttack(attack);
-        //// fly to slot
-        //Vector3 pos = enemySlot.transform.position;
-        //pos.z -= 3;
-        //LeanTween.move(beamObject,pos, ATTACK_BEAM_FLY_TIME)
-        //    .setEaseOutSine()
-        //    .setOnComplete(() => {
-        //        ApplyAttack(attack);
-        //    });
-        //// 
+        do
+        {
+            yield return new WaitForSeconds(0.005f);
+        } while (IsAttacking());
+    }
+
+    public void CreateSimpleAttack(SSlot slot, int pipeColor, int attackPower) // attack after each match to opposite enemy slot
+    {
+        // find enemies slot in front of slot
+        EnemySlot enemySlot = _enemies.Slots[slot.X];
+        // instantiate attack beam
+		Vector3 pos = slot.transform.position;
+		pos.z = -7;
+        GameObject attackObject = _pool.InstantiateObject("simple_attack_" + pipeColor.ToString(), ObjectsContainer, pos);
+        Attack attack = attackObject.AddComponent<Attack>();
+        attack.DestroyOnComplete = true;
+        attack.Color = pipeColor;
+        attack.Power = attackPower;
+        attack.TargetType = EAttackTarget.EnemySlot;
+        attack.TargetObject = enemySlot.gameObject;
+        AddAttack(attack);
+        // fly to slot
+        Vector3 finalPos = enemySlot.transform.position;
+        finalPos.z = -7;
+        float distance = Mathf.Abs(finalPos.y - pos.y);
+		float flyTime = distance * SIMPLE_ATTACK_SPEED;
+        LeanTween.move(attackObject, finalPos, flyTime)
+            .setEaseOutSine()
+            .setOnComplete(() => {
+                ApplyAttack(attack);
+            });
+        // 
     }
 
     public void CreateFinalAttack(SSlot slot, int pipeColor, int attackPower)
