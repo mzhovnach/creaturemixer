@@ -10,7 +10,8 @@ public class UIButton : MonoBehaviour
 	private Button _btn;
 	private Text _txt;
 	public bool ClickSound = true;
-	public int CascadeLevel = 1;
+	public int CascadeLevel = 0;
+    public Transform Parent = null;
 
 	public string Label
 	{
@@ -61,25 +62,24 @@ public class UIButton : MonoBehaviour
 		{
 			if (ClickSound)
 			{
-				MusicManager.playSound("button_click");
+                MusicManager.playSound("button_click");
 			}
 			_active = false;
 			if(UIConsts.ENABLED_INTERACTABLE){ _btn.interactable = _active; }
             //Invoke("antiMuliClick", UIConsts.ANTI_MULTI_CKLICK_TIMEOUT);
             antiMuliClick();
 
+            Transform buttonParent = Parent;
+            if (!buttonParent)
+            {
+                buttonParent = transform;
+                for (int i = 0; i < CascadeLevel; ++i)
+                {
+                    buttonParent = buttonParent.parent;
+                }
+            }
 
-
-            Transform buttonParent = transform.parent;
-			if (CascadeLevel > 1)
-			{
-				for (int i = 1; i < CascadeLevel; ++i)
-				{
-					buttonParent = buttonParent.parent;
-				}
-			}
-
-			buttonParent.SendMessage(name + "OnClick", null, SendMessageOptions.RequireReceiver);
+			buttonParent.SendMessage(name + "OnClick", this, SendMessageOptions.RequireReceiver);
 		}
 	}
 

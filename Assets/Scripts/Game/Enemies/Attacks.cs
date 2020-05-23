@@ -31,11 +31,13 @@ public class Attacks : MonoBehaviour
     {
         ++_incompletedAttacksCount;
         _attacks.Add(attack);
+        Debug.Log("AddAttack " + attack.name + " / " + _incompletedAttacksCount);
     }
 
     public void DecreaseAttacksCount()
     {
         --_incompletedAttacksCount;
+        Debug.Log("DecreaseAttacksCount, left " + _incompletedAttacksCount);
         if (_incompletedAttacksCount < 0)
         {
             Debug.LogError("_incompletedAttacksCount = " + _incompletedAttacksCount);
@@ -187,10 +189,12 @@ public class Attacks : MonoBehaviour
         if (attack.DestroyOnComplete)
         {
             // destroy attack object
+            Debug.Log("RemoveAttackObject " + attack.name + " with Object");
             GameObject.Destroy(attack.gameObject);
         } else
         {
             // just remove Attack component from attack object
+            Debug.Log("RemoveAttackObject " + attack.name + " with Component");
             GameObject.Destroy(attack);
         }
     }

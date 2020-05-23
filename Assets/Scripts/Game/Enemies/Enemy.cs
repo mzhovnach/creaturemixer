@@ -23,6 +23,14 @@ public struct EnemyParams
     }
 }
 
+public enum EEnemyAnimState
+{
+    Normal = 0,
+    GainDamage = 1,
+    Death = 2,
+    Attack = 3
+}
+
 public class Enemy : MonoBehaviour
 {
     //TODO
@@ -41,9 +49,12 @@ public class Enemy : MonoBehaviour
     protected bool _dead = false;
     protected int _movesToAttack; //TODO set this parameter to 1, 2, 3 for each enemy at start of level?
 
+    EEnemyAnimState _animState = EEnemyAnimState.Normal;
+
     public virtual void InitEnemy()
     {
         _dead = false;
+        _animState = EEnemyAnimState.Normal;
         _lives = MaxLives;
         LeanTween.cancel(ShakeObject);
         ShakeObject.transform.localPosition = Vector3.zero;
@@ -69,6 +80,11 @@ public class Enemy : MonoBehaviour
 
     protected virtual float PlayGainDamageAnimation()
     {
+        if (_animState == EEnemyAnimState.GainDamage)
+        {
+            GameManager.Instance.Game.AAttacks.DecreaseAttacksCount(); // decrease from previous attack
+        }
+        _animState = EEnemyAnimState.GainDamage;
         UpdateLivesView();
         float time = 0.25f;
         LeanTween.cancel(ShakeObject);
@@ -88,6 +104,7 @@ public class Enemy : MonoBehaviour
                 } else
                 {
                     GameManager.Instance.Game.AAttacks.DecreaseAttacksCount();
+                    _animState = EEnemyAnimState.Normal;
                 }
             });
         return time;
@@ -96,6 +113,7 @@ public class Enemy : MonoBehaviour
     protected virtual void PlayDeathAnimation()
     {
         //TODO through alpha or other animation + sound
+        _animState = EEnemyAnimState.Death;
         float time = 0.15f;
         LeanTween.cancel(ScaleObject);
         float scaleMin = 0f;
@@ -111,6 +129,7 @@ public class Enemy : MonoBehaviour
     public virtual float PlayAttackAnimation() // returnes time of animation
     {
         float time = 0.25f;
+        _animState = EEnemyAnimState.Attack;
         LeanTween.cancel(ScaleObject);
         float scaleMax = 1.2f;
         LeanTween.scale(ScaleObject, new Vector3(scaleMax, scaleMax, 1), time / 2.0f)
@@ -125,6 +144,7 @@ public class Enemy : MonoBehaviour
                     })
                     .setOnComplete(()=>{
                         GameManager.Instance.Game.AEnemies.DecreaseAttacksCount();
+                        _animState = EEnemyAnimState.Normal;
                     });
             });
         return time;

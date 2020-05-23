@@ -97,6 +97,7 @@ public class GameBoard : MonoBehaviour
 	public StarsPanel							AStarsPanel;
 	public LevelPanel							ALevelPanel;
     public LivesPanel                           ALivesPanel;
+    public PowerupsPanel                        APowerupsPanel;
 
     public Enemies                              AEnemies;
     public EnemiesQueue                         AEnemiesQueue;
@@ -130,10 +131,6 @@ public class GameBoard : MonoBehaviour
 	public GameObject                           BreakeEffectPrefab;
     public GameObject                           ChainEffectPrefab;
 	public GameObject							MatchEffectPrefab;
-
-    public bool                                 BreakePowerup { get; set; }
-    public bool                                 ChainPowerup { get; set; }
-    public bool                                 DestroyColorPowerup { get; set; }
 
     private Dictionary<int, ChainInfo>          _chainInfos = new Dictionary<int, ChainInfo>();
     private Dictionary<int, ChainInfo>          _checkedChainInfos = new Dictionary<int, ChainInfo>();
@@ -179,8 +176,6 @@ public class GameBoard : MonoBehaviour
     private EGameState _gameState = EGameState.Pause;
     public float TimePlayed;
     public SSlot DragSlot;
-    public Dictionary<GameData.PowerUpType, int> PowerUps;
-    public bool AddsViewed;
     private int _movesToNextPipe;           // for turn base game
     public int _allTurns;                   // for all game types
     private int _pipesAdded;
@@ -192,8 +187,6 @@ public class GameBoard : MonoBehaviour
     BoardPos _lastSlotWithMatch = new BoardPos(-1, -1);
     private List<int> _possibleColors = new List<int>();
     bool _addNewPipes = false;
-
-    private bool _powerupUsed = false;
 
     void Awake()
     {
@@ -218,15 +211,9 @@ public class GameBoard : MonoBehaviour
             _resources.Add(0);
             //SetResourceForce(0, i);
         }
-        AddsViewed = false;
-        SetGameState(EGameState.Pause);
+        SetGameState(EGameState.Pause, "Awake");
         TimePlayed = 0;
         DragSlot = null;
-        PowerUps = new Dictionary<GameData.PowerUpType, int>();
-        foreach (GameData.PowerUpType powerUp in Enum.GetValues(typeof(GameData.PowerUpType)))
-        {
-            PowerUps.Add(powerUp, 0);
-        }
         GameManager.Instance.Game = this;
         //
         //EventManager.OnTransitToMenu += OnTransitToMenu;
@@ -249,11 +236,6 @@ public class GameBoard : MonoBehaviour
 			Pool.Add("Pipe_" + ((int)i).ToString(), new List<GameObject>());
 		}
         //
-        BreakePowerup = false;
-        ChainPowerup = false;
-        DestroyColorPowerup = false;
-        //
-        SetGameState(EGameState.Pause);
 		CreateSlots();
         // 
         for (int i = 0; i < Sprites.Count; ++i)
@@ -517,6 +499,7 @@ public class GameBoard : MonoBehaviour
         //AAimPanel.InitPanel(levelData);
         AAttacks.ClearAllAttacks();
         ALivesPanel.InitPanel(100, 100);
+        APowerupsPanel.InitPanel(0, 20);
         for (int i = 0; i < WIDTH; ++i)
 		{
 			for (int j = 0; j < HEIGHT; ++j)
@@ -530,20 +513,6 @@ public class GameBoard : MonoBehaviour
 		{
 			SetResourceForce(levelData.Resources[i], i);
 		}
-
-		PowerUps[GameData.PowerUpType.Reshuffle] = levelData.ReshufflePowerups;
-        PowerUps[GameData.PowerUpType.Breake] = levelData.BreakePowerups;
-        PowerUps[GameData.PowerUpType.Chain] = levelData.ChainPowerups;
-        PowerUps[GameData.PowerUpType.DestroyColor] = levelData.DestroyColorsPowerups;
-        AddsViewed = levelData.AddsViewed;
-
-		// powerups
-		EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
-		eventData.Data["isStart"] = true;
-		GameManager.Instance.EventManager.CallOnPowerUpsResetNeededEvent(eventData);
-        BreakePowerup = false;
-        ChainPowerup = false;
-        DestroyColorPowerup = false;
 
         yield return new WaitForSeconds(Consts.DARK_SCREEN_SHOW_HIDE_TIME);
         yield return StartCoroutine(ClearBoard());
@@ -636,9 +605,8 @@ public class GameBoard : MonoBehaviour
 		_camera.transform.position = _cameraPos;
 		ShowDarkScreenForce();
 		Selection.SetActive(false);
-        _powerupUsed = false;
 
-        SetGameState(EGameState.Pause);
+        SetGameState(EGameState.Pause, "PlayGame");
 
         LevelData levelData = null; //GameManager.Instance.Player.SavedGame; поки без сейва, бо треба сейвити інфу про ворогів на полі і чергу ворогів
 		//if (levelData == null || levelData.Slots.Count == 0)
@@ -1307,12 +1275,20 @@ public class GameBoard : MonoBehaviour
 			// horizontal bump
 			float horizontalBump = slideData.DirX * Consts.BUMP_PER_SLOT * slideData.DistX + Consts.BUMP_EXTRA * slideData.DirX;
 			BumpCameraHorizontal(horizontalBump, Consts.BUMP_TIME);
+            if (slideData.Slot2.X == 0 || slideData.Slot2.X == WIDTH - 1)
+            {
+                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.DistX);
+            }
 		} else
 		{
 			// vertical bump
 			float verticalBump = slideData.DirY * Consts.BUMP_PER_SLOT * slideData.DistY + Consts.BUMP_EXTRA * slideData.DirY;
 			BumpCameraVertical(verticalBump, Consts.BUMP_TIME);
-		}
+            if (slideData.Slot2.Y == 0 || slideData.Slot2.Y == HEIGHT - 1)
+            {
+                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.DistY);
+            }
+        }
 	}
 	
 //	protected void DragedPipeToFinger()
@@ -1512,19 +1488,13 @@ public class GameBoard : MonoBehaviour
             }
         }
         // check powerups
-        if (Consts.WITH_POWERUPS)
+        if (APowerupsPanel.IsFull())
         {
-            for (var powerup = GameData.PowerUpType.Reshuffle; powerup <= GameData.PowerUpType.DestroyColor; ++powerup)
-            {
-                if (PowerUps[powerup] > 0) // && GameManager.Instance.Player.PowerUpsState.ContainsKey(powerup) && GameManager.Instance.Player.PowerUpsState[powerup].Level > 0)
-                {
-                    // show notification
-                    EventData eventData = new EventData("OnShowNotificationEvent");
-                    eventData.Data["type"] = GameNotification.NotifyType.UsePowerup;
-                    GameManager.Instance.EventManager.CallOnShowNotificationEvent(eventData);
-                    return true;
-                }
-            }
+            // show notification
+            EventData eventData = new EventData("OnShowNotificationEvent");
+            eventData.Data["type"] = GameNotification.NotifyType.UsePowerup;
+            GameManager.Instance.EventManager.CallOnShowNotificationEvent(eventData);
+            return true;
         }
         return false;
     }
@@ -1641,65 +1611,36 @@ public class GameBoard : MonoBehaviour
 			);
 	}
 		
-	public void OnPowerUpClicked(GameData.PowerUpType type)
-	{
-        if (_gameState != EGameState.PlayersTurn)
-        {
-            return;
-        }
-		ResetHint();
-		if (type == GameData.PowerUpType.Reshuffle)
-        {
-            // reshuffle
-            PowerUp_Reshuffle();
-            return;
-        } else
-		if (type == GameData.PowerUpType.Breake)
-        {
-            // break
-            PowerUp_Breake();
-            return;
-        } else
-		if (type == GameData.PowerUpType.Chain)
-        {
-            // chain booster
-            PowerUp_Chain();
-        } else
-        if (type == GameData.PowerUpType.DestroyColor)
-        {
-            // chain booster
-            PowerUp_DestroyColor();
-        }
-
-
-
-        //List<SSlot> slots = new List<SSlot>();
-        //for (int i = 0; i < WIDTH; ++i)
-        //{
-        //    for (int j = 0; j < HEIGHT; ++j)
-        //    {
-        //        SSlot slot = Slots[i, j];
-        //        SPipe pipe = slot.Pipe;
-        //        if (pipe != null) // && pipe.PipeType == EPipeType.Blocker)
-        //        {
-        //            slots.Add(slot);
-        //        }
-        //    }
-        //}
-        //if (slots.Count > 1) // > 0 if for blockers only!!!
-        //{
-        //    PowerUpsButtons[button].Disable();
-        //    //Vector3 startEffectPos = new Vector3(7, 7, -6); //BoosterButtons[button].transform.position;
-        //                                                    //startEffectPos.z = -6;
-        //    int busterPower = Mathf.Min(GameManager.Instance.Player.BoosterLevel * Consts.PU__POWER_PER_LEVEL_RESHUFFLE, slots.Count);
-        //    busterPower = Mathf.Min(slots.Count - 1, busterPower); //this for destroing not blockers version!!!!
-        //    slots = Helpers.ShuffleList(slots);
-        //    for (int i = 0; i < busterPower; ++i)
-        //    {
-        //        BreakePipeInSlot(slots[i]); //, startEffectPos);
-        //    }
-        //}
-    }
+    //public void OnPowerUpClicked(GameData.PowerUpType type)
+    //{
+    //    if (_gameState != EGameState.PlayersTurn)
+    //    {
+    //        return;
+    //    }
+    //	ResetHint();
+    //	if (type == GameData.PowerUpType.Reshuffle)
+    //    {
+    //        // reshuffle
+    //        PowerUp_Reshuffle();
+    //        return;
+    //    } else
+    //	if (type == GameData.PowerUpType.Breake)
+    //    {
+    //        // break
+    //        PowerUp_Breake();
+    //        return;
+    //    } else
+    //	if (type == GameData.PowerUpType.Chain)
+    //    {
+    //        // chain booster
+    //        PowerUp_Chain();
+    //    } else
+    //    if (type == GameData.PowerUpType.DestroyColor)
+    //    {
+    //        // chain booster
+    //        PowerUp_DestroyColor();
+    //    }
+    //}
 
 	private void BreakePipeInSlot(SSlot slot, GameObject prefab) //, Vector3 startEffectPos)
 	{
@@ -1715,10 +1656,10 @@ public class GameBoard : MonoBehaviour
         pipe.RemoveConsumAnimation();
 	}
 
-    private void PowerUp_Reshuffle()
+    public void PowerUp_Reshuffle()
     {
-        SetGameState(EGameState.Pause);
-        List<SSlot> slots = new List<SSlot>();
+        SetGameState(EGameState.PlayerUsedPowerup, "PowerUp_Reshuffle");
+        List <SSlot> slots = new List<SSlot>();
         for (int i = 0; i < WIDTH; ++i)
         {
             for (int j = 0; j < HEIGHT; ++j)
@@ -1790,49 +1731,31 @@ public class GameBoard : MonoBehaviour
             MusicManager.playSound("reshuffle");
             pipes.Clear();
             freeSlots.Clear();
-			int current = PowerUps[GameData.PowerUpType.Reshuffle];
-			--current;
-			PowerUps[GameData.PowerUpType.Reshuffle] = current;
-
 			//
 			EventData eventData = new EventData("OnPowerUpUsedEvent");
 			eventData.Data["type"] = GameData.PowerUpType.Reshuffle;
 			GameManager.Instance.EventManager.CallOnPowerUpUsedEvent(eventData);
-			//
-			ChainPowerup = false;
-			BreakePowerup = false;
-            DestroyColorPowerup = false;
             //
-            Invoke("CheckIfOutOfMoves", maxTime);
+            LeanTween.delayedCall(maxTime, ()=>
+            {
+                if (!CheckIfOutOfMoves())
+                {
+                    SetGameState(EGameState.PlayersTurn, "Reshuffle powerup completed");
+                }
+            });
+            //Invoke("CheckIfOutOfMoves", maxTime);
         }
         else
         {
             //TODO wrong sound, nothing happens
+            SetGameState(EGameState.PlayersTurn, "Reshuffle wrong");
         }
-    }
-
-    private void PowerUp_Breake()
-    {
-        if (BreakePowerup)
-        {
-            BreakePowerup = false;
-        }
-        else
-        {
-            BreakePowerup = true;
-        }
-		ChainPowerup = false;
-        DestroyColorPowerup = false;
     }
 
     public void OnBreakePowerupUsed(SSlot slot)
     {
-		BreakePowerup = false;
-        _powerupUsed = true;
+        SetGameState(EGameState.PlayerUsedPowerup, "OnBreakePowerupUsed");
         BreakePipeInSlot(slot, (slot.Pipe as Pipe_Colored).GetExplodeEffectPrefab()); //BreakePipeInSlot(slot, BreakeEffectPrefab);
-        int current = PowerUps[GameData.PowerUpType.Breake];
-        --current;
-        PowerUps[GameData.PowerUpType.Breake] = current;
 		//
 		EventData eventData = new EventData("OnPowerUpUsedEvent");
 		eventData.Data["type"] = GameData.PowerUpType.Breake;
@@ -1843,33 +1766,16 @@ public class GameBoard : MonoBehaviour
         if (GetMovablePipesCount() == 0)
         {
             OnTurnWasMade(false, true);
+        } else
+        {
+            SetGameState(EGameState.PlayersTurn, "Breake powerup completed");
         }
         //
     }
 
-    private void PowerUp_Chain()
-    {
-        if (ChainPowerup)
-        {
-            ChainPowerup = false;
-        }
-        else
-        {
-            ChainPowerup = true;
-        }
-		BreakePowerup = false;
-        DestroyColorPowerup = false;
-    }
-
     public void OnChainPowerupUsed(SSlot slot)
     {
-		ChainPowerup = false;
-        _powerupUsed = true;
-        SetGameState(EGameState.Pause);
-        int current = PowerUps[GameData.PowerUpType.Chain];
-        --current;
-        PowerUps[GameData.PowerUpType.Chain] = current;
-
+        SetGameState(EGameState.PlayerUsedPowerup, "OnChainPowerupUsed");
 		//
 		EventData eventData = new EventData("OnPowerUpUsedEvent");
 		eventData.Data["type"] = GameData.PowerUpType.Chain;
@@ -1947,6 +1853,9 @@ public class GameBoard : MonoBehaviour
             if (GetMovablePipesCount() == 0)
             {
                 OnTurnWasMade(false, true);
+            } else
+            {
+                SetGameState(EGameState.PlayersTurn, "Chain powerup completed");
             }
         } else
         {
@@ -1954,25 +1863,9 @@ public class GameBoard : MonoBehaviour
         }
     }
 
-    private void PowerUp_DestroyColor()
-    {
-        if (DestroyColorPowerup)
-        {
-            DestroyColorPowerup = false;
-        }
-        else
-        {
-            DestroyColorPowerup = true;
-        }
-        BreakePowerup = false;
-        ChainPowerup = false;
-    }
-
     public void OnDestroyColorPowerupUsed(SSlot slot)
     {
-        DestroyColorPowerup = false;
-        _powerupUsed = true;
-        SetGameState(EGameState.Pause);
+        SetGameState(EGameState.PlayerUsedPowerup, "OnDestroyColorPowerupUsed");
         // find all pipes with this color
         int colorToDestroy = slot.Pipe.AColor;
         List<SSlot> slots = new List<SSlot>();
@@ -2001,14 +1894,13 @@ public class GameBoard : MonoBehaviour
                 if (GetMovablePipesCount() == 0)
                 {
                      OnTurnWasMade(false, true);
+                } else
+                {
+                    SetGameState(EGameState.PlayersTurn, "DestroyColorsPowerupciompleted");
                 }
                 //
             });
         slots.Clear();
-        //
-        int current = PowerUps[GameData.PowerUpType.DestroyColor];
-        --current;
-        PowerUps[GameData.PowerUpType.DestroyColor] = current;
         //
         EventData eventData = new EventData("OnPowerUpUsedEvent");
         eventData.Data["type"] = GameData.PowerUpType.DestroyColor;
@@ -2133,7 +2025,7 @@ public class GameBoard : MonoBehaviour
         //}
     }
 
-    private void CheckIfOutOfMoves()
+    private bool CheckIfOutOfMoves()
     {
         List<SSlot> slots = GetEmptySSlots();
         if (slots.Count == 0)
@@ -2142,16 +2034,17 @@ public class GameBoard : MonoBehaviour
             if (!movesExists)
             {
                 OnLoose();
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     public void OnLoose()
     {
         Debug.Log("You Loose!");
         MusicManager.playSound("level_lost");
-        SetGameState(EGameState.Loose);
+        SetGameState(EGameState.Loose, "OnLoose");
         GameManager.Instance.Player.SavedGame = null;
         LeanTween.delayedCall(1.0f, () => {
             //EventData eventData = new EventData("OnOpenFormNeededEvent");
@@ -2324,21 +2217,21 @@ public class GameBoard : MonoBehaviour
         {
             return;
         }
-        _tutor2Timer -= Time.deltaTime;
-        if (_tutor2Timer <= 0)
-        {
-            if (!GameManager.Instance.Player.IsTutorialShowed("2"))
-            {
-                for (var powerup = GameData.PowerUpType.Reshuffle; powerup <= GameData.PowerUpType.DestroyColor; ++powerup)
-                {
-                    if (PowerUps[powerup] > 0) // && GameManager.Instance.Player.PowerUpsState.ContainsKey(powerup) && GameManager.Instance.Player.PowerUpsState[powerup].Level > 0)
-                    {
-                        GameManager.Instance.ShowTutorial("2", new Vector3(0, 0, 0));
-                        return;
-                    }
-                }
-            }
-        }
+        //_tutor2Timer -= Time.deltaTime;
+        //if (_tutor2Timer <= 0)
+        //{
+        //    if (!GameManager.Instance.Player.IsTutorialShowed("2"))
+        //    {
+        //        for (var powerup = GameData.PowerUpType.Reshuffle; powerup <= GameData.PowerUpType.DestroyColor; ++powerup)
+        //        {
+        //            if (PowerUps[powerup] > 0) // && GameManager.Instance.Player.PowerUpsState.ContainsKey(powerup) && GameManager.Instance.Player.PowerUpsState[powerup].Level > 0)
+        //            {
+        //                GameManager.Instance.ShowTutorial("2", new Vector3(0, 0, 0));
+        //                return;
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     private void ResetHint(bool resetByTime = false)
@@ -2405,7 +2298,7 @@ public class GameBoard : MonoBehaviour
 
     private IEnumerator OnCreatureMixGameCompleted()
     {
-        SetGameState(EGameState.Loose);
+        SetGameState(EGameState.Loose, "Loose");
         int nextLevel = GameManager.Instance.Player.CreatureMixLevel + 1;
         _upgradesManager.SetLevel(nextLevel, false);
         GameManager.Instance.Player.CreatureMixLevel = nextLevel;
@@ -2766,7 +2659,7 @@ public class GameBoard : MonoBehaviour
 
     public void SetGameState(EGameState gameState, string reason)
     {
-        Debug.Log("GS: " + _gameState + " -> " + _gameState);
+        Debug.Log(reason + " -> " + _gameState.ToString());
         _gameState = gameState;
     }
 
@@ -2946,7 +2839,7 @@ public class GameBoard : MonoBehaviour
 
     public void OnTurnWasMade(bool wasMatch, bool justAddPipe)
     {
-        SetGameState(EGameState.PlayersAttack);
+        SetGameState(EGameState.PlayersAttack, "OnTurnWasMade");
         AddPipesAfterTurn(wasMatch, justAddPipe);
         if (_gameState != EGameState.Loose && _gameState != EGameState.Win)
         {
@@ -2965,10 +2858,9 @@ public class GameBoard : MonoBehaviour
         yield return StartCoroutine(AAttacks.PlayersAttackCoroutine());
         if (!CheckWinConditions())
         {
-            if (_powerupUsed)
+            if (_gameState == EGameState.PlayerUsedPowerup)
             {
-                _powerupUsed = false;
-                SetGameState(EGameState.PlayersTurn); // users turn
+                SetGameState(EGameState.PlayersTurn, "after powerup"); // users turn, when powerup cleared board
             } else
             {
                 if (Consts.ENEMIES_TURN_ON_EVERY_MATCH || !wasMatch)
@@ -2978,9 +2870,12 @@ public class GameBoard : MonoBehaviour
                 if (!CheckLooseConditions())
                 {
                     // adding new enemies
-                    if (AEnemiesQueue.OnTurnWasMade())
+                    if (Consts.ENEMIES_TURN_ON_EVERY_MATCH || !wasMatch)
                     {
-                        yield return new WaitForSeconds(0.5f);
+                        if (AEnemiesQueue.OnTurnWasMade())
+                        {
+                            yield return new WaitForSeconds(0.5f);
+                        }
                     }
                     StartPlayersTurn();
                 }
@@ -2996,7 +2891,7 @@ public class GameBoard : MonoBehaviour
 
     private void StartPlayersTurn()
     {
-        SetGameState(EGameState.PlayersTurn);
+        SetGameState(EGameState.PlayersTurn, "StartPlayersTurn");
     }
 
     public int GetMovesToNextPipe()
@@ -3015,10 +2910,9 @@ public class GameBoard : MonoBehaviour
         {
             _resources[i] = 0;
         }
-        SetGameState(EGameState.Pause);
+        SetGameState(EGameState.Pause, "Reset()");
         TimePlayed = 0;
         DragSlot = null;
-        AddsViewed = false;
 
         _upgradesManager.SetLevel(GameManager.Instance.Player.CreatureMixLevel, true);
 
@@ -3074,7 +2968,7 @@ public class GameBoard : MonoBehaviour
 
     private bool CheckWinConditions()
     {
-        if (AEnemies.NoEnemiesLeft())
+        if (AEnemies.NoEnemiesLeft() && AEnemiesQueue.IsQueueEmpty())
         {
             OnLevelCompleted();
             return true;
@@ -3084,7 +2978,7 @@ public class GameBoard : MonoBehaviour
 
     private void OnLevelCompleted()
     {
-        SetGameState(EGameState.Win);
+        SetGameState(EGameState.Win, "Win");
         ClearBoardQuick();
         StartCoroutine(OnCreatureMixGameCompleted());
     }

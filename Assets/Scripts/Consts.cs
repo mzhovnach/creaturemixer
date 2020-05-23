@@ -64,8 +64,6 @@ public class Consts
     public static int MAX_COLORED_LEVELS = 3; // 5, on this level pipe will be destroyed if MAX_COLORED_LEVEL_REMOVES == true
     public static bool BAD_PIXEL_MACHANIC_IN_CLASSIC_GAME = false;
     public static bool MAX_COLORED_LEVEL_REMOVES = false;
-    public static bool MAX_COLORED_LEVEL_GIVES_POWERUP = false;
-    public static GameData.PowerUpType MAX_COLORED_LEVEL_GIVES_POWERUP_TYPE = GameData.PowerUpType.Reshuffle; // when pipe reached MAX_COLORED_LEVELS it blast off and gives powerup
     public static float DARK_SCREEN_SHOW_HIDE_TIME = 0.5f;
     public static int CLASSIC_GAME_COLORS = 5;
     public static int CREATURE_MIX_COLORS = 4;
@@ -111,6 +109,7 @@ public class Consts
     public static bool SHOW_ADD_POINTS_ANIMATION = false;
 
     public static float ADD_POINTS_EFFECT_TIME = 1.0f;
+    public static float ADD_MANA_EFFECT_TIME = 0.5f;
     public static float POINTS_RASE_TIME = 0.5f;
 
     public static int LEVELS_COUNT = 99;
@@ -136,8 +135,6 @@ public class Consts
 
     public static int MAX_FPS = 60;
     public static bool CHECK_AIM_ON_COMBINE = true; // if false - will check only in _slotsToCheckAims slots
-    public static bool WITH_POWERUPS = false;
-
     public static float FINAL_ATTACK_TIME = 0.5f;
     public static bool ENEMIES_TURN_ON_EVERY_MATCH = false; // if false moves only on no match from player
 }

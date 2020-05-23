@@ -241,23 +241,21 @@ public class SSlot : MonoBehaviour {
 	public void OnMouseDownByPosition(Vector2 pos)
 	{
 		GameBoard board = GameManager.Instance.Game;
-		if (board.BreakePowerup)
-		{
-			board.OnBreakePowerupUsed(this);
-			return;
-		}
-		else
-		if (board.ChainPowerup)
-		{
-			board.OnChainPowerupUsed(this);
-			return;
-		}
-		else
-		if (board.DestroyColorPowerup)
-		{
-			board.OnDestroyColorPowerupUsed(this);
-			return;
-		}
+		//if (board.BreakePowerup)
+		//{
+		//	board.OnBreakePowerupUsed(this);
+		//	return;
+		//} else
+		//if (board.ChainPowerup)
+		//{
+		//	board.OnChainPowerupUsed(this);
+		//	return;
+		//} else
+		//if (board.DestroyColorPowerup)
+		//{
+		//	board.OnDestroyColorPowerupUsed(this);
+		//	return;
+		//}
 
 		if (!IsMovable() || !Pipe.IsMovable())
 		{

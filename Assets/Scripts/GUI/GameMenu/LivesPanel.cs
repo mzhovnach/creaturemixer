@@ -6,7 +6,6 @@ public class LivesPanel : MonoBehaviour
 {
     const float         CHANGE_SPEED = 0.025f;
     const float         MAX_TIME = 3.0f;
-    const float         RESOURCES_EFFECT_OFFSET = 100.0f;
     public Text         AmountText;
     public GameObject   AGameObject;
     private int         AmountCurrent;

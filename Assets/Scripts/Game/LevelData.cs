@@ -40,12 +40,6 @@ public class LevelData
 	public List<SSlotData>  Slots;
     public List<Vector3Int> Aims; // x - chip type, y - level of chip, z - completed or not(0 or 1)
     [Range(0, 2)] public int CreatureId;
-    public int              ReshufflePowerups;
-    public int              BreakePowerups;
-    public int              ChainPowerups;
-    public int              DestroyColorsPowerups;
-    public int              SwapPowerups;
-    public bool             AddsViewed; // for getting Chain Powerup
     public List<int>        QueueState; // states of queue with pipes
     public List<int>        Colors;
     public bool             AddNewPipes;
@@ -60,12 +54,6 @@ public class LevelData
 		Slots = new List<SSlotData>();
 		Resources = new List<long>();
         QueueState = new List<int>();
-        ReshufflePowerups = 0;
-        BreakePowerups = 0;
-        ChainPowerups = 0;
-        DestroyColorsPowerups = 0;
-        SwapPowerups = 0;
-        AddsViewed = false;
         AddNewPipes = true;
 
         for (int i = 0; i < Consts.COLORS.Length; ++i)
@@ -94,11 +82,6 @@ public class LevelData
         {
             res.Slots.Add(cmLevelData.NeededStates[i]);
         }
-        res.ReshufflePowerups = Consts.POWERUPS_RESHUFFLE_AT_START;
-        res.BreakePowerups = Consts.POWERUPS_BREAKE_AT_START;
-        res.ChainPowerups = Consts.POWERUPS_CHAIN_AT_START;
-        res.DestroyColorsPowerups = Consts.POWERUPS_DESTROY_COLOR_AT_START;
-        res.AddsViewed = true;
         res.Aims = new List<Vector3Int>();
         res.CreatureId = cmLevelData.CreatureId;
         for (int i = 0; i < cmLevelData.Aims.Count; ++i)
@@ -160,11 +143,6 @@ public class LevelData
         UnityEngine.Random.InitState(level);
         LevelData res = new LevelData();
         res.AddNewPipes = true;
-        res.ReshufflePowerups = Consts.POWERUPS_RESHUFFLE_AT_START;
-        res.BreakePowerups = Consts.POWERUPS_BREAKE_AT_START;
-        res.ChainPowerups = Consts.POWERUPS_CHAIN_AT_START;
-        res.DestroyColorsPowerups = Consts.POWERUPS_DESTROY_COLOR_AT_START;
-        res.AddsViewed = true;
         res.Colors = new List<int>();
         // aims
         res.Aims = new List<Vector3Int>();

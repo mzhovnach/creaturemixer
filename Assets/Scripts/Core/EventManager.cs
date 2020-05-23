@@ -84,10 +84,6 @@ public class EventManager
 	public static event EventController.MethodContainer OnReachMaxPipeLevelEvent;
 	public void CallOnReachMaxPipeLevelEvent(EventData ob = null) { if (OnReachMaxPipeLevelEvent != null) OnReachMaxPipeLevelEvent(ob); }
 
-
-    public static event EventController.MethodContainer OnPowerUpsResetNeededEvent;
-    public void CallOnPowerUpsResetNeededEvent(EventData ob = null) { if (OnPowerUpsResetNeededEvent != null) OnPowerUpsResetNeededEvent(ob); }
-
     public static event EventController.MethodContainer OnUISwitchNeededEvent;
     public void CallOnUISwitchNeededEvent(EventData ob = null) { if (OnUISwitchNeededEvent != null) OnUISwitchNeededEvent(ob); }
 

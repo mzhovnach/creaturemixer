@@ -70,6 +70,7 @@ public class Enemies : MonoBehaviour
 
     public bool NoEnemiesLeft()
     {
+        Debug.Log("Left " + _enemies.Count + " enemies on field");
         return _enemies.Count == 0;
     }
 
@@ -98,6 +99,7 @@ public class Enemies : MonoBehaviour
             //
             enemyObj.transform.position = centerPos;
             enemy.InitEnemy();
+            Debug.Log("EnemyAdded, total " + _enemies.Count);
             return true;
         }
     }
@@ -195,10 +197,14 @@ public class Enemies : MonoBehaviour
             enemy = attack.TargetObject.GetComponent<Enemy>();
         }
 
-        if (!enemy || enemy.IsDead())
+        if (!enemy)
         {
             // no enemy to attack
             return 0;
+        } else
+        if (enemy.IsDead())
+        {
+            Debug.LogError("EnemyIsDead!");
         }
 
         delay = enemy.GainDamage(attack.Power, attack.Color);

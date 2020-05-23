@@ -27,28 +27,6 @@ public class Cheats
     {
         if (IsCheatEnabled)
         {
-            if (Input.GetKeyDown(KeyCode.R)) //Reshuffle Powerup
-            {
-                int current = GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Reshuffle];
-                ++current;
-                GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Reshuffle] = current;
-                //
-                EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
-                eventData.Data["isStart"] = true;
-                GameManager.Instance.EventManager.CallOnPowerUpsResetNeededEvent(eventData);
-            }
-
-            if (Input.GetKeyDown(KeyCode.C)) // Chain Powerup
-            {
-                int current = GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Chain];
-                ++current;
-                GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Chain] = current;
-                //
-                EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
-                eventData.Data["isStart"] = true;
-                GameManager.Instance.EventManager.CallOnPowerUpsResetNeededEvent(eventData);
-            }
-
             if (Input.GetKeyDown(KeyCode.L)) // Loose
             {
                 board.OnLoose();

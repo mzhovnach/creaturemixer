@@ -36,13 +36,10 @@ public enum ResourceType {
 public class UserData
 {
 	[System.Serializable]
-	public class DictPowerUpsStates: SerializableDictionary<GameData.PowerUpType, PowerUpState> {}
-	[System.Serializable]
 	public class DictTrophiesItems: SerializableDictionary<ETrophyType, TrophyCompleteData> {}
 
     //[NonSerialized()]
 	public string							Name;
-	public DictPowerUpsStates               PowerUpsState;
 	public DictTrophiesItems			    TrophiesItems;
     //
     public string                           LastGameTrack;
@@ -79,8 +76,6 @@ public class UserData
 
 	public void SetDefaults()
 	{
-        PowerUpsState = new DictPowerUpsStates();
-
         RestartCounter = 0;
         LastGameTrack = "";
 
@@ -93,15 +88,6 @@ public class UserData
 //			trophy.Completed = false;
 //			TrophiesItems.Add(td.Key, trophy);
 //		}
-
-        foreach (GameData.PowerUpType powerUp in Enum.GetValues(typeof(GameData.PowerUpType)))
-        {
-            //TODO real data
-            PowerUpState pw = new PowerUpState();
-            pw.AmountPerLevel = 10;
-            pw.Level = 1;
-            PowerUpsState.Add(powerUp, pw);
-        }
         // options
         TutorialsShowed = new List<string>();
 		// time played

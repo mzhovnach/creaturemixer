@@ -8,7 +8,6 @@ using System;
 
 public class GameMenuUIController : BaseUIController
 {
-    private Dictionary<GameData.PowerUpType, PowerUpButton> Powerups;
     public GameObject BtnResetSettings;
     public GameObject ButtonPlayEndless;
     public GameObject ButtonPlayEndlessBlocked;
@@ -79,22 +78,6 @@ public class GameMenuUIController : BaseUIController
         //{
         //    return;
         //}
-        //turn off powerups
-        if (Powerups.ContainsKey(GameData.PowerUpType.DestroyColor))
-        {
-            Powerups[GameData.PowerUpType.DestroyColor].UpdatePowerup();
-        }
-        if (Powerups.ContainsKey(GameData.PowerUpType.Chain))
-        {
-            Powerups[GameData.PowerUpType.Chain].UpdatePowerup();
-        }
-        if (Powerups.ContainsKey(GameData.PowerUpType.Breake))
-        {
-            Powerups[GameData.PowerUpType.Breake].UpdatePowerup();
-        }
-        GameManager.Instance.Game.BreakePowerup = false;
-        GameManager.Instance.Game.ChainPowerup = false;
-        GameManager.Instance.Game.DestroyColorPowerup = false;
         //
         //GameManager.Instance.HideTutorial("");
         //GameManager.Instance.CurrentMenu = "game_menu";
@@ -140,35 +123,7 @@ public class GameMenuUIController : BaseUIController
 #if (PUBLISHING_PLATFORM_AMAZON)
         ButtonTurnOffAds.SetActive(false);
 #endif
-        ResetPowerupsAmount();
-        Powerups = new Dictionary<GameData.PowerUpType, PowerUpButton>();
-        for (int i = 0; i < 4; ++i)
-        {
-            Transform transf = transform.Find("BoosterButton_" + i.ToString());
-            if (transf != null)
-            {
-                PowerUpButton script = transf.GetComponent<PowerUpButton>();
-                Powerups.Add(script.PowerupType, script);
-                //script.ResetPowerup();
-            }
-        }
         //GameManager.Instance.Game.PlayGame();
-    }
-
-    protected override void Awake()
-    {
-        base.Awake();
-        EventManager.OnPowerUpUsedEvent += OnPowerUpUsed;
-        EventManager.OnReachMaxPipeLevelEvent += OnReachMaxPipeLevel;
-        EventManager.OnPowerUpsResetNeededEvent += OnPowerUpsResetNeeded;
-    }
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        EventManager.OnPowerUpUsedEvent -= OnPowerUpUsed;
-        EventManager.OnReachMaxPipeLevelEvent -= OnReachMaxPipeLevel;
-        EventManager.OnPowerUpsResetNeededEvent -= OnPowerUpsResetNeeded;
     }
 
     protected override void OnDeactivate()
@@ -198,127 +153,6 @@ public class GameMenuUIController : BaseUIController
     {
         BroadcastMessage("Enable");
         OnActivate();
-    }
-
-
-    ////////////////////// Feeding
-    public void OnPowerUpUsed(EventData e)
-    {
-        GameData.PowerUpType pType = (GameData.PowerUpType)e.Data["type"];
-        if (Powerups.ContainsKey(pType))
-        {
-            Powerups[pType].UpdatePowerup();
-        }
-    }
-
-    public void OnPowerUpsResetNeeded(EventData e)
-    {
-        if (Powerups == null)
-        {
-            return;
-        }
-        if (!e.Data.ContainsKey("isStart"))
-        {
-            ResetPowerupsAmount();
-        }
-        foreach (var p in Powerups)
-        {
-            p.Value.ResetPowerup();
-        }
-    }
-
-    public void OnReachMaxPipeLevel(EventData e)
-    {
-        if (Consts.MAX_COLORED_LEVEL_GIVES_POWERUP)
-        {
-            //add powerup
-            GameManager.Instance.Game.PowerUps[Consts.MAX_COLORED_LEVEL_GIVES_POWERUP_TYPE] += 1;
-            Powerups[Consts.MAX_COLORED_LEVEL_GIVES_POWERUP_TYPE].UpdatePowerup();
-            Powerups[Consts.MAX_COLORED_LEVEL_GIVES_POWERUP_TYPE].PlayAddAnimation((float)e.Data["x"], (float)e.Data["y"]);
-        }
-    }
-
-    public void BoosterButton_ReshuffleOnClick()
-    {
-        //GameManager.Instance.HideTutorial("");
-        Powerups[GameData.PowerUpType.Reshuffle].SelectPowerup();
-        GameManager.Instance.Game.OnPowerUpClicked(GameData.PowerUpType.Reshuffle);
-        //unselect other
-        if (Powerups.ContainsKey(GameData.PowerUpType.Chain))
-        {
-            Powerups[GameData.PowerUpType.Chain].UpdatePowerup();
-        }
-        if (Powerups.ContainsKey(GameData.PowerUpType.Breake))
-        {
-            Powerups[GameData.PowerUpType.Breake].UpdatePowerup();
-        }
-    }
-
-    public void BoosterButton_BreakeOnClick()
-    {
-        //GameManager.Instance.HideTutorial("");
-        Powerups[GameData.PowerUpType.Breake].SelectPowerup();
-        GameManager.Instance.Game.OnPowerUpClicked(GameData.PowerUpType.Breake);
-        //unselect other
-        if (Powerups.ContainsKey(GameData.PowerUpType.Chain))
-        {
-            Powerups[GameData.PowerUpType.Chain].UpdatePowerup();
-        }
-        if (Powerups.ContainsKey(GameData.PowerUpType.DestroyColor))
-        {
-            Powerups[GameData.PowerUpType.DestroyColor].UpdatePowerup();
-        }
-        //TUTOR_3
-        if (!GameManager.Instance.Player.IsTutorialShowed("3"))
-        {
-            GameManager.Instance.ShowTutorial("3", new Vector3(0, 0, 0));
-        }
-    }
-
-    public void BoosterButton_ChainOnClick()
-    {
-        //GameManager.Instance.HideTutorial("");
-        Powerups[GameData.PowerUpType.Chain].SelectPowerup();
-        GameManager.Instance.Game.OnPowerUpClicked(GameData.PowerUpType.Chain);
-        //unselect other
-        if (Powerups.ContainsKey(GameData.PowerUpType.Breake))
-        {
-            Powerups[GameData.PowerUpType.Breake].UpdatePowerup();
-        }
-        if (Powerups.ContainsKey(GameData.PowerUpType.DestroyColor))
-        {
-            Powerups[GameData.PowerUpType.DestroyColor].UpdatePowerup();
-        }
-    }
-
-    public void BoosterButton_DestroyColorOnClick()
-    {
-        //GameManager.Instance.HideTutorial("");
-        Powerups[GameData.PowerUpType.DestroyColor].SelectPowerup();
-        GameManager.Instance.Game.OnPowerUpClicked(GameData.PowerUpType.DestroyColor);
-        //unselect other
-        if (Powerups.ContainsKey(GameData.PowerUpType.Chain))
-        {
-            Powerups[GameData.PowerUpType.Chain].UpdatePowerup();
-        }
-        if (Powerups.ContainsKey(GameData.PowerUpType.Breake))
-        {
-            Powerups[GameData.PowerUpType.Breake].UpdatePowerup();
-        }
-        //TUTOR_4
-        if (!GameManager.Instance.Player.IsTutorialShowed("4"))
-        {
-            GameManager.Instance.ShowTutorial("4", new Vector3(0, 0, 0));
-        }
-    }
-
-    private void ResetPowerupsAmount()
-    {
-        GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Reshuffle] = Consts.POWERUPS_RESHUFFLE_AT_START;
-        GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Breake] = Consts.POWERUPS_BREAKE_AT_START;
-        GameManager.Instance.Game.PowerUps[GameData.PowerUpType.Chain] = Consts.POWERUPS_CHAIN_AT_START;
-        GameManager.Instance.Game.PowerUps[GameData.PowerUpType.DestroyColor] = Consts.POWERUPS_DESTROY_COLOR_AT_START;
-
     }
 
     /////////////// MAIN_MENU

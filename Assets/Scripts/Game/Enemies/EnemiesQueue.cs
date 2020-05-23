@@ -133,4 +133,10 @@ public class EnemiesQueue : MonoBehaviour
         }
         return CreateNextEnemies(false);
     }
+
+    public bool IsQueueEmpty()
+    {
+        Debug.Log("Left " + _queue.Count + " enemies in queue");
+        return _queue.Count == 0;
+    }
 }
