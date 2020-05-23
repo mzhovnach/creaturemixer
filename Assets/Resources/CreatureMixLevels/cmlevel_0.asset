@@ -37,84 +37,84 @@ MonoBehaviour:
     c: -1
   - x: 3
     y: 4
+    pt: 1
+    p: 0
+    c: 2
+  - x: 4
+    y: 4
+    pt: 0
+    p: -1
+    c: -1
+  - x: 0
+    y: 3
+    pt: 0
+    p: -1
+    c: -1
+  - x: 1
+    y: 3
+    pt: 1
+    p: 0
+    c: 2
+  - x: 2
+    y: 3
+    pt: 0
+    p: -1
+    c: -1
+  - x: 3
+    y: 3
     pt: 0
     p: -1
     c: -1
   - x: 4
-    y: 4
+    y: 3
+    pt: 1
+    p: 0
+    c: 3
+  - x: 0
+    y: 2
+    pt: 0
+    p: -1
+    c: -1
+  - x: 1
+    y: 2
+    pt: 0
+    p: -1
+    c: -1
+  - x: 2
+    y: 2
     pt: 1
     p: 0
     c: 0
+  - x: 3
+    y: 2
+    pt: 0
+    p: -1
+    c: -1
+  - x: 4
+    y: 2
+    pt: 0
+    p: -1
+    c: -1
   - x: 0
-    y: 3
+    y: 1
+    pt: 0
+    p: -1
+    c: -1
+  - x: 1
+    y: 1
+    pt: 1
+    p: 0
+    c: 3
+  - x: 2
+    y: 1
+    pt: 0
+    p: -1
+    c: -1
+  - x: 3
+    y: 1
     pt: 1
     p: 0
     c: 1
-  - x: 1
-    y: 3
-    pt: 0
-    p: -1
-    c: -1
-  - x: 2
-    y: 3
-    pt: 0
-    p: -1
-    c: -1
-  - x: 3
-    y: 3
-    pt: 0
-    p: -1
-    c: -1
-  - x: 4
-    y: 3
-    pt: 1
-    p: 0
-    c: 2
-  - x: 0
-    y: 2
-    pt: 0
-    p: -1
-    c: -1
-  - x: 1
-    y: 2
-    pt: 0
-    p: -1
-    c: -1
-  - x: 2
-    y: 2
-    pt: 0
-    p: -1
-    c: -1
-  - x: 3
-    y: 2
-    pt: 0
-    p: -1
-    c: -1
-  - x: 4
-    y: 2
-    pt: 0
-    p: -1
-    c: -1
-  - x: 0
-    y: 1
-    pt: 0
-    p: -1
-    c: -1
-  - x: 1
-    y: 1
-    pt: 0
-    p: -1
-    c: -1
-  - x: 2
-    y: 1
-    pt: 0
-    p: -1
-    c: -1
-  - x: 3
-    y: 1
-    pt: 0
-    p: -1
-    c: -1
   - x: 4
     y: 1
     pt: 0
@@ -127,9 +127,9 @@ MonoBehaviour:
     c: 1
   - x: 1
     y: 0
-    pt: 1
-    p: 0
-    c: 3
+    pt: 0
+    p: -1
+    c: -1
   - x: 2
     y: 0
     pt: 0
@@ -137,14 +137,14 @@ MonoBehaviour:
     c: -1
   - x: 3
     y: 0
-    pt: 1
-    p: 0
-    c: 3
+    pt: 0
+    p: -1
+    c: -1
   - x: 4
     y: 0
-    pt: 1
-    p: 0
-    c: 2
+    pt: 0
+    p: -1
+    c: -1
   AddNewPipes: 1
   CreatureId: 0
   Queue:
@@ -169,6 +169,30 @@ MonoBehaviour:
     Slot: 0
     Parameters: 
   - Name: enemy_1
+    Delay: 3
+    Slot: 0
+    Parameters: 
+  - Name: enemy_2
+    Delay: 3
+    Slot: 0
+    Parameters: 
+  - Name: enemy_3
+    Delay: 5
+    Slot: 0
+    Parameters: 
+  - Name: enemy_3
+    Delay: 7
+    Slot: 0
+    Parameters: 
+  - Name: enemy_1
+    Delay: 7
+    Slot: 0
+    Parameters: 
+  - Name: enemy_1
+    Delay: 3
+    Slot: 0
+    Parameters: 
+  - Name: enemy_3
     Delay: 3
     Slot: 0
     Parameters: 

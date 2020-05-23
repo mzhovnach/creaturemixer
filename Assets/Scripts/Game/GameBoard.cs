@@ -2773,6 +2773,10 @@ public class GameBoard : MonoBehaviour
                     pipeneeded = true;
                 }
             }
+            if (GetMovablePipesCount() == 0)
+            {
+                pipeneeded = true;
+            }
         }
         else
         {

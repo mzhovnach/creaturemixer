@@ -116,6 +116,7 @@ public class PowerupsPanel : MonoBehaviour
         {
             SetAmount(0);
             GameManager.Instance.Game.PowerUp_Reshuffle();
+            GameManager.Instance.Game.ALivesPanel.AddLives(10);
         }
     }
 
