@@ -18,7 +18,8 @@ public enum EGameState
     PlayerUsedPowerup = 3,
     PlayersAttack = 4, // match was made or powerup used that made match
     EnemiesAttack = 5,
-    EnemyAppear = 6
+    EnemyAppear = 6,
+    MoveEnemy = 7
 }
 
 public enum ESlideType
@@ -176,6 +177,8 @@ public class GameBoard : MonoBehaviour
     private EGameState _gameState = EGameState.Pause;
     public float TimePlayed;
     public SSlot DragSlot;
+    public Enemy DragEnemy = null;
+    private Vector2 _startDragEnemyPos = Vector2.zero;
     private int _movesToNextPipe;           // for turn base game
     public int _allTurns;                   // for all game types
     private int _pipesAdded;
@@ -214,6 +217,7 @@ public class GameBoard : MonoBehaviour
         SetGameState(EGameState.Pause, "Awake");
         TimePlayed = 0;
         DragSlot = null;
+        DragEnemy = null;
         GameManager.Instance.Game = this;
         //
         //EventManager.OnTransitToMenu += OnTransitToMenu;
@@ -486,6 +490,7 @@ public class GameBoard : MonoBehaviour
 	{
         _currentTouchId = -1;
         DragSlot = null;
+        DragEnemy = null;
         HideSelection();
         _addNewPipes = levelData.AddNewPipes;
         //
@@ -2406,6 +2411,7 @@ public class GameBoard : MonoBehaviour
             {
                 _currentTouchId = -1;
                 DragSlot = null;
+                DragEnemy = null;
                 HideSelection();
             } else
             // only 1 touch - first touch (B real) for clicks on buttons and popups
@@ -2462,12 +2468,22 @@ public class GameBoard : MonoBehaviour
                                 //Debug.Log("left up");
                                 _currentTouchId = -1;
                                 LeftMouseUpByPosition(downGamePosNew2);
-                            }
-                            else
-                            if (DragSlot != null && Consts.SLIDE_WITHOUT_MOUSE_UP)
+                            } else
+                            if (Consts.SLIDE_WITHOUT_MOUSE_UP)
                             {
-                                DragSlot.UpdateSlot(downGamePosNew2);
+                                if (DragSlot != null)
+                                {
+                                    DragSlot.UpdateSlot(downGamePosNew2);
+                                } else
+                                if (DragEnemy != null)
+                                {
+                                    if (AEnemies.TryToMoveEnemyBySlide(DragEnemy, _startDragEnemyPos, downGamePosNew2, false))
+                                    {
+                                        DragEnemy = null;
+                                    }
+                                }
                             }
+
                             break;
                         }
                     }
@@ -2487,7 +2503,7 @@ public class GameBoard : MonoBehaviour
                 //Debug.Log("over-left down");
                 LeftMouseDownByPosition(downGamePosNew);
             } else
-            if (Consts.START_SLIDE_ON_NO_MOUSE_DOWN && Input.GetMouseButton(0) && DragSlot == null)
+            if (Consts.START_SLIDE_ON_NO_MOUSE_DOWN && Input.GetMouseButton(0) && DragSlot == null && DragEnemy == null)
             {
                 // left down
                 //Debug.Log("left down");
@@ -2501,9 +2517,24 @@ public class GameBoard : MonoBehaviour
                 LeftMouseUpByPosition(downGamePosNew);
             }
             else
-            if (DragSlot != null && Consts.SLIDE_WITHOUT_MOUSE_UP)
+            if (Consts.SLIDE_WITHOUT_MOUSE_UP)
             {
-                DragSlot.UpdateSlot(downGamePosNew);
+                if (DragSlot != null)
+                {
+                    DragSlot.UpdateSlot(downGamePosNew);
+                } else
+                if (DragEnemy != null)
+                {
+                    if (AEnemies.TryToMoveEnemyBySlide(DragEnemy, _startDragEnemyPos, downGamePosNew, false))
+                    {
+                        SetGameState(EGameState.MoveEnemy, "move with slide (no mouse up)");
+                        LeanTween.delayedCall(Enemies.ENEMY_SLIDE_TIME, () =>
+                        {
+                            OnTurnWasMade(false, false);
+                        });
+                        DragEnemy = null;
+                    }
+                }
             }
 		}
 	}
@@ -2514,12 +2545,18 @@ public class GameBoard : MonoBehaviour
 		{
 			return;
 		}
-		if (_gameState != EGameState.PlayersTurn || DragSlot != null)
+		if (_gameState != EGameState.PlayersTurn)
 		{
 			// can't drag
 			return;
 		}
-		if (GameManager.Instance.GameFlow.IsSomeWindow())
+        if (DragSlot != null)
+        {
+            Debug.LogError("DragSlot != null");
+            return;
+        }
+
+        if (GameManager.Instance.GameFlow.IsSomeWindow())
 		{
 			return;
 		}
@@ -2548,13 +2585,21 @@ public class GameBoard : MonoBehaviour
 			{
 				slot.OnMouseDownByPosition(downGamePos);
 			}
-		}
-        if (Consts.START_SLIDE_ON_NO_MOUSE_DOWN && DragSlot == null)
+        } else
+        if (Consts.MOVE_ENEMIES_WITH_SLIDE)
+        {
+            DragEnemy = AEnemies.GetEnemyByPos(downGamePos);
+            if (DragEnemy)
+            {
+                _startDragEnemyPos = downGamePos;
+            }
+        }
+        if (Consts.START_SLIDE_ON_NO_MOUSE_DOWN && DragSlot == null && DragEnemy == null)
         {
             // we clicked on empty cell
             _currentTouchId = -1;
         }
-	}
+    }
 
 	protected virtual void LeftMouseUpByPosition(Vector2 downGamePos)
 	{
@@ -2565,7 +2610,19 @@ public class GameBoard : MonoBehaviour
 		if (DragSlot != null)
 		{
 			DragSlot.OnMouseUpByPosition(downGamePos);
-		}
+		} else
+        if (DragEnemy != null)
+        {
+            if (AEnemies.TryToMoveEnemyBySlide(DragEnemy, _startDragEnemyPos, downGamePos, true))
+            {
+                SetGameState(EGameState.MoveEnemy, "move with slide");
+                LeanTween.delayedCall(Enemies.ENEMY_SLIDE_TIME, () =>
+                {
+                    OnTurnWasMade(false, false);
+                });
+            }
+            DragEnemy = null;
+        }
 	}
 
 	public Material GetMaterialForColoredPipe(int acolor, int param)
@@ -2843,8 +2900,14 @@ public class GameBoard : MonoBehaviour
 
     public void OnTurnWasMade(bool wasMatch, bool justAddPipe)
     {
-        SetGameState(EGameState.PlayersAttack, "OnTurnWasMade");
-        AddPipesAfterTurn(wasMatch, justAddPipe);
+        if (_gameState == EGameState.MoveEnemy)
+        {
+            SetGameState(EGameState.PlayersAttack, "OnTurnWasMadeAfterMovedEnemy");
+        } else
+        {
+            SetGameState(EGameState.PlayersAttack, "OnTurnWasMade");
+            AddPipesAfterTurn(wasMatch, justAddPipe);
+        }
         if (_gameState != EGameState.Loose && _gameState != EGameState.Win)
         {
             if (!justAddPipe)
@@ -2920,6 +2983,7 @@ public class GameBoard : MonoBehaviour
         SetGameState(EGameState.Pause, "Reset()");
         TimePlayed = 0;
         DragSlot = null;
+        DragEnemy = null;
 
         _upgradesManager.SetLevel(GameManager.Instance.Player.CreatureMixLevel, true);
 

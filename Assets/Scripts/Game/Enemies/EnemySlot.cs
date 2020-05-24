@@ -7,6 +7,7 @@ using UnityEngine;
 public class EnemySlot : MonoBehaviour
 {
     public int Id;
+    public BoxCollider2D Collider;
     private Enemy _enemy;
 
     public bool RemoveEnemy(Enemy enemy)

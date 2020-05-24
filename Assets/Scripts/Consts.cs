@@ -141,4 +141,6 @@ public class Consts
     public static bool MINIMIZE_DELAY_ON_ENEMY_APPEARS = true;
     public static bool MINIMIZE_DELAY_ON_ENEMY_ATTACKS = true;
     public static bool MINIMIZE_DELAY_ON_PLAYER_ATTACKS = true;
+
+    public static bool MOVE_ENEMIES_WITH_SLIDE = true;
 }

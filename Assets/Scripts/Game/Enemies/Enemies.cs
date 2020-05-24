@@ -8,6 +8,8 @@ public class Enemies : MonoBehaviour
     // клас тримає поточних ворогів на полі
     // вороги в залежності від розмірів займають 1 - 3 слоти
     // якщо немає місця, то новий ворог з черги не з"являється
+    private const float                     MIN_DISTANCE_TO_MOVE_ENEMY = 0.25f;
+    public const float                      ENEMY_SLIDE_TIME = 0.25f;
     public static int                       SLOTS_COUNT = 5;
     public static float                     ENEMIES_Z = -2f;
     public const float                      ATTACK_BEAM_FLY_TIME = 0.25f;
@@ -87,20 +89,29 @@ public class Enemies : MonoBehaviour
             GameObject enemyObj = _pool.GetObjectFromPool(enemyData.Name, ObjectsContainer);
             Enemy enemy = enemyObj.GetComponent<Enemy>();
             _enemies.Add(enemy);
-            // enemy position
-            Vector3 centerPos = Vector3.zero;
-            for (int i = 0; i < slotsForEnemy.Count; ++i)
-            {
-                slotsForEnemy[i].SetEnemy(enemy);
-                centerPos += slotsForEnemy[i].transform.position;
-            }
-            centerPos = centerPos / slotsForEnemy.Count;
-            centerPos.z = ENEMIES_Z;
-            //
-            enemyObj.transform.position = centerPos;
+            SetEnemyToSlots(slotsForEnemy, enemy, true);
             enemy.InitEnemy();
             Debug.Log("EnemyAdded, total " + _enemies.Count);
             return true;
+        }
+    }
+
+    private void SetEnemyToSlots(List<EnemySlot> slotsForEnemy, Enemy enemy, bool force)
+    {
+        Vector3 centerPos = Vector3.zero;
+        for (int i = 0; i < slotsForEnemy.Count; ++i)
+        {
+            slotsForEnemy[i].SetEnemy(enemy);
+            centerPos += slotsForEnemy[i].transform.position;
+        }
+        centerPos = centerPos / slotsForEnemy.Count;
+        centerPos.z = ENEMIES_Z;
+        if (force)
+        {
+            enemy.transform.position = centerPos;
+        } else
+        {
+            LeanTween.move(enemy.gameObject, centerPos, ENEMY_SLIDE_TIME);
         }
     }
 
@@ -297,5 +308,104 @@ public class Enemies : MonoBehaviour
     public bool IsAttacking()
     {
         return _incompletedAttacksCount > 0;
+    }
+
+    public bool TryToMoveEnemyBySlide(Enemy enemy, Vector2 startPos, Vector2 endPos, bool mouseUp)
+    {
+        bool wasSlide = false;
+        if (Mathf.Abs(endPos.x - startPos.x) >= MIN_DISTANCE_TO_MOVE_ENEMY)
+        {
+            if (endPos.x > startPos.x)
+            {
+                // slide to right
+                wasSlide = TryToMoveEnemy(enemy, 1);
+            } else
+            {
+                // slide to right
+                wasSlide = TryToMoveEnemy(enemy, -1);
+            }
+        }
+        if (mouseUp && !wasSlide)
+        {
+            //TODO sound that wrong move
+        }
+        return wasSlide;
+    }
+
+    List<EnemySlot> GetSlotsWithEnemy(Enemy enemy)
+    {
+        List<EnemySlot> res = new List<EnemySlot>();
+        for (int i = 0; i < Slots.Count; ++i)
+        {
+            if (Slots[i].GetEnemy() == enemy)
+            {
+                res.Add(Slots[i]);
+            }
+        }
+        return res;
+    }
+
+    private bool TryToMoveEnemy(Enemy enemy, int side)
+    {
+        // TODO можливо слайдити як і пайпи дол упору?
+        int enemySize = enemy.Size;
+        List<EnemySlot> slotsMoveFrom = GetSlotsWithEnemy(enemy);
+        List<EnemySlot> slotsMoveInTo = new List<EnemySlot>();
+        int leftSlot = slotsMoveFrom[0].Id;
+        int rightSlot = slotsMoveFrom[slotsMoveFrom.Count - 1].Id;
+        if (side > 0)
+        {
+            // to the right
+            if (rightSlot + 1 >= Slots.Count)
+            {
+                // move out of slots
+                return false;
+            }
+            if (!Slots[rightSlot + 1].IsEmpty())
+            {
+                // slot is occupied
+                return false;
+            }
+            for (int i = leftSlot + 1; i <= rightSlot + 1; ++i)
+            {
+                slotsMoveInTo.Add(Slots[i]);
+            }
+        } else
+        {
+            // to the left
+            if (leftSlot - 1 < 0)
+            {
+                // move out of slots
+                return false;
+            }
+            if (!Slots[leftSlot - 1].IsEmpty())
+            {
+                // slot is occupied
+                return false;
+            }
+            for (int i = leftSlot - 1; i <= rightSlot - 1; ++i)
+            {
+                slotsMoveInTo.Add(Slots[i]);
+            }
+        }
+        for (int i = 0; i < slotsMoveFrom.Count; ++i)
+        {
+            slotsMoveFrom[i].SetEnemy(null);
+        }
+        SetEnemyToSlots(slotsMoveInTo, enemy, false);
+        return true;
+    }
+
+    public Enemy GetEnemyByPos(Vector2 pos)
+    {
+        Vector3 pos3 = new Vector3(pos.x, pos.y, Slots[0].Collider.bounds.center.z);
+        for (int i = 0; i < Slots.Count; ++i)
+        {
+            if (Slots[i].Collider.bounds.Contains(pos3))
+            {
+                return Slots[i].GetEnemy();
+            }
+        }
+        return null;
     }
 }
