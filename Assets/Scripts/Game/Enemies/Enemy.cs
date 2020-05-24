@@ -45,6 +45,8 @@ public class Enemy : MonoBehaviour
     [Range(-1, 4)]
     public int Color = -1; // default color
 
+    public EnemyUI AEnemyUI;
+
     protected int _lives = 0;
     protected bool _dead = false;
     protected int _movesToAttack; //TODO set this parameter to 1, 2, 3 for each enemy at start of level?
@@ -59,12 +61,12 @@ public class Enemy : MonoBehaviour
         _animState = EEnemyAnimState.Normal;
         _lives = MaxLives;
         _movesToAttack = AttackInterval;
+        AEnemyUI.InitEnemyUI(this);
         LeanTween.cancel(ShakeObject);
         ShakeObject.transform.localPosition = Vector3.zero;
         //LeanTween.cancel(ScaleObject);
         //ScaleObject.transform.localScale = Vector3.one;
         UpdateLivesView();
-        UpdateMovesToAttackView();
         PlayAppearAnimation();
     }
 
@@ -78,6 +80,7 @@ public class Enemy : MonoBehaviour
         _attacksApplied.Add(attackData);
         _lives -= attackData.AAttack.Power;
         _lives = Mathf.Max(0, _lives);
+        AEnemyUI.SetLives(_lives);
         _dead = _lives == 0;
         return PlayGainDamageAnimation();
     }
@@ -221,26 +224,18 @@ public class Enemy : MonoBehaviour
         if (_movesToAttack > 0)
         {
             --_movesToAttack;
-            UpdateMovesToAttackView();
+            AEnemyUI.SetMoves(_movesToAttack);
         }
     }
 
     public void ResetMovesToAttack()
     {
         _movesToAttack = AttackInterval;
-        UpdateMovesToAttackView();
+        AEnemyUI.SetMoves(_movesToAttack);
     }
 
-    public void UpdateMovesToAttackView()
+    public int GetLives()
     {
-        //TODO show digit near enemy
-        if (_movesToAttack == 1)
-        {
-            //TODO highlight if ready to attack
-        } else
-        if (_movesToAttack == 0)
-        {
-            //TODO hide - time to attack now
-        }
+        return _lives;
     }
 }

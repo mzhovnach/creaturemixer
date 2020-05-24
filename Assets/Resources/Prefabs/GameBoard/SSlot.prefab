@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 465074}
   - component: {fileID: 11422900}
-  - component: {fileID: 5003336}
   - component: {fileID: 21215646}
   m_Layer: 25
   m_Name: SSlot
@@ -52,27 +51,6 @@ MonoBehaviour:
   SpriteNormal: {fileID: 21300000, guid: df0444ce43c254541882edea6940abce, type: 3}
   SpriteDouble: {fileID: 21300000, guid: 5e00d90655fee9f40955d626fd22b98a, type: 3}
   Image: {fileID: 21215646}
---- !u!50 &5003336
-Rigidbody2D:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 163594}
-  m_BodyType: 1
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0
-  m_GravityScale: 0
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
 --- !u!212 &21215646
 SpriteRenderer:
   m_ObjectHideFlags: 0
