@@ -184,17 +184,17 @@ public class Enemies : MonoBehaviour
     }
 
 
-    public float ApplyAttack(Attack attack)
+    public float ApplyAttack(AttackData attackData)
     {
         float delay = 0;
         Enemy enemy = null;
-        if (attack.TargetType == EAttackTarget.EnemySlot)
+        if (attackData.AAttack.TargetType == EAttackTarget.EnemySlot)
         {
-            EnemySlot slot = attack.TargetObject.GetComponent<EnemySlot>();
+            EnemySlot slot = attackData.AAttack.TargetObject.GetComponent<EnemySlot>();
             enemy = slot.GetEnemy();
         } else
         {
-            enemy = attack.TargetObject.GetComponent<Enemy>();
+            enemy = attackData.AAttack.TargetObject.GetComponent<Enemy>();
         }
 
         if (!enemy)
@@ -207,7 +207,8 @@ public class Enemies : MonoBehaviour
             Debug.LogError("EnemyIsDead!");
         }
 
-        delay = enemy.GainDamage(attack.Power, attack.Color);
+        delay = enemy.ApplyAttack(attackData);
+        attackData.State = AttackData.EAttackState.Applied;
         if (enemy.IsDead())
         {
             FreeSlotsFromEnemy(enemy);
@@ -249,7 +250,7 @@ public class Enemies : MonoBehaviour
         //
         for (int i = 0; i < attackingEnemies.Count; ++i)
         {
-            yield return StartCoroutine(EnemyAttackCoroutine(attackingEnemies[i]));
+            yield return StartCoroutine(EnemyAttackCoroutine(attackingEnemies[i], i == attackingEnemies.Count - 1));
         }
 		do
         {
@@ -257,14 +258,20 @@ public class Enemies : MonoBehaviour
         } while (IsAttacking());
     }
 
-    public IEnumerator EnemyAttackCoroutine(Enemy enemy)
+    public IEnumerator EnemyAttackCoroutine(Enemy enemy, bool last)
     {
 
-        //attack player one by one, counter for enemies attacks to awit to end
+        //attack player one by one, counter for enemies attacks to wait to end
         enemy.PlayAttackAnimation();
         AddAttack();
         GameManager.Instance.Game.ALivesPanel.AttackByEnemy(enemy);
-        yield return new WaitForSeconds(0.2f);
+        if (Consts.MINIMIZE_DELAY_ON_ENEMY_ATTACKS && last && !GameManager.Instance.Game.ALivesPanel.IsDead())
+        {
+            // no delay
+        } else
+        {
+            yield return new WaitForSeconds(0.2f);
+        }
         enemy.ResetMovesToAttack();
     }
 

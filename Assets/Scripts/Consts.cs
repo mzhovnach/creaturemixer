@@ -137,4 +137,8 @@ public class Consts
     public static bool CHECK_AIM_ON_COMBINE = true; // if false - will check only in _slotsToCheckAims slots
     public static float FINAL_ATTACK_TIME = 0.5f;
     public static bool ENEMIES_TURN_ON_EVERY_MATCH = false; // if false moves only on no match from player
+
+    public static bool MINIMIZE_DELAY_ON_ENEMY_APPEARS = true;
+    public static bool MINIMIZE_DELAY_ON_ENEMY_ATTACKS = true;
+    public static bool MINIMIZE_DELAY_ON_PLAYER_ATTACKS = true;
 }

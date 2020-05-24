@@ -191,6 +191,6 @@ MonoBehaviour:
   ScaleObject: {fileID: 5854722986360757037}
   ShakeObject: {fileID: 2566774683081032695}
   MaxLives: 10
-  MaxDamage: 3
+  MaxDamage: 2
   AttackInterval: 3
   Color: -1

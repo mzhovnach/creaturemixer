@@ -2,13 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class AttackData
+{
+    public enum EAttackState
+    {
+        Fly = 0,        // анімація польоту до монстра
+        Applied = 1,    // атака примінена, грає анімація атаки
+    }
+    public Attack AAttack = null;
+    public EAttackState State = EAttackState.Fly;
+
+    public bool RemoveAttack(Attack attack)
+    {
+        if (attack != AAttack)
+        {
+            return false;
+        }
+        AAttack = null;
+        if (attack.DestroyOnComplete)
+        {
+            // destroy attack object
+            Debug.Log("RemoveAttackObject " + attack.name + " with Object");
+            GameObject.Destroy(attack.gameObject);
+        } else
+        {
+            // just remove Attack component from attack object
+            Debug.Log("RemoveAttackObject " + attack.name + " with Component");
+            GameObject.Destroy(attack);
+        }
+        return true;
+    }
+
+    public void Clear()
+    {
+        RemoveAttack(AAttack);
+    }
+}
+
 public class Attacks : MonoBehaviour
 {
 	private const float			SIMPLE_ATTACK_SPEED = 0.05f; // per unit
-    private List<Attack>        _attacks = new List<Attack>();
+    private List<AttackData>    _attacksData = new List<AttackData>();
     private SuperSimplePool     _pool;
     private Enemies             _enemies;
-    private int                 _incompletedAttacksCount = 0;
 	public Transform 			ObjectsContainer;
 
     private void Awake()
@@ -19,38 +55,72 @@ public class Attacks : MonoBehaviour
 
     public void ClearAllAttacks()
     {
-        _incompletedAttacksCount = 0;
-        for (int i = _attacks.Count - 1; i >= 0; --i)
+        for (int i = _attacksData.Count - 1; i >= 0; --i)
         {
-            GameObject.Destroy(_attacks[i].gameObject);
+            _attacksData.Clear();
         }
-        _attacks.Clear();
+        _attacksData.Clear();
     }
 
-    private void AddAttack(Attack attack)
+    private AttackData AddAttack(Attack attack)
     {
-        ++_incompletedAttacksCount;
-        _attacks.Add(attack);
-        Debug.Log("AddAttack " + attack.name + " / " + _incompletedAttacksCount);
+        AttackData attackData = new AttackData();
+        attackData.AAttack = attack;
+        attackData.State = AttackData.EAttackState.Fly;
+        _attacksData.Add(attackData);
+        Debug.Log("AddAttack " + attack.name + " / " + GetAttackingAttacksCount());
+        return attackData;
     }
 
-    public void DecreaseAttacksCount()
+    public void OnAttackApplied(AttackData attackData)
     {
-        --_incompletedAttacksCount;
-        Debug.Log("DecreaseAttacksCount, left " + _incompletedAttacksCount);
-        if (_incompletedAttacksCount < 0)
-        {
-            Debug.LogError("_incompletedAttacksCount = " + _incompletedAttacksCount);
-        }
-        if (_incompletedAttacksCount < _attacks.Count)
-        {
-            Debug.LogError("_incompletedAttacksCount < _attacks.Count");
-        }
+        _attacksData.Remove(attackData);
+        Debug.Log("AttackRemoved, left " + GetAttackingAttacksCount());
     }
 
     public bool IsAttacking()
     {
-        return _incompletedAttacksCount > 0; //_attacks.Count > 0;
+        for (int i = _attacksData.Count - 1; i >= 0; --i)
+        {
+            if (_attacksData[i].State == AttackData.EAttackState.Fly)
+            {
+                return true;
+            }
+        }
+        if (!Consts.MINIMIZE_DELAY_ON_PLAYER_ATTACKS)
+        {
+            for (int i = _attacksData.Count - 1; i >= 0; --i)
+            {
+                if (_attacksData[i].State == AttackData.EAttackState.Applied)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public int GetAttackingAttacksCount()
+    {
+        int res = 0;
+        for (int i = _attacksData.Count - 1; i >= 0; --i)
+        {
+            if (_attacksData[i].State == AttackData.EAttackState.Fly)
+            {
+                ++res;
+            }
+        }
+        if (!Consts.MINIMIZE_DELAY_ON_PLAYER_ATTACKS)
+        {
+            for (int i = _attacksData.Count - 1; i >= 0; --i)
+            {
+                if (_attacksData[i].State == AttackData.EAttackState.Applied)
+                {
+                    ++res;
+                }
+            }
+        }
+        return res;
     }
 
     public IEnumerator PlayersAttackCoroutine()
@@ -75,7 +145,7 @@ public class Attacks : MonoBehaviour
         attack.Power = attackPower;
         attack.TargetType = EAttackTarget.EnemySlot;
         attack.TargetObject = enemySlot.gameObject;
-        AddAttack(attack);
+        AttackData attackData = AddAttack(attack);
         // fly to slot
         Vector3 finalPos = enemySlot.transform.position;
         finalPos.z = -7;
@@ -84,7 +154,7 @@ public class Attacks : MonoBehaviour
         LeanTween.move(attackObject, finalPos, flyTime)
             .setEaseOutSine()
             .setOnComplete(() => {
-                ApplyAttack(attack);
+                ApplyAttack(attackData);
             });
         // 
     }
@@ -100,7 +170,7 @@ public class Attacks : MonoBehaviour
         attack.Power = attackPower;
         attack.TargetType = EAttackTarget.EnemySlot;
         attack.TargetObject = enemySlot.gameObject;
-        AddAttack(attack);
+        AttackData attackData = AddAttack(attack);
 
         //Time.timeScale = 0.1f;
         Vector3 fromPos = pipe.transform.position;
@@ -153,7 +223,7 @@ public class Attacks : MonoBehaviour
                 //Destroy(trailEffect, Consts.ADD_POINTS_EFFECT_TIME + 0.2f);
                 pipe.transform.localScale = Vector3.one;
                 pipe.transform.localScale = Vector3.zero;
-                ApplyAttack(attack);
+                ApplyAttack(attackData);
                 pipe.gameObject.SetActive(false);
                 //pipe.PlayHideAnimation();
             })
@@ -168,34 +238,17 @@ public class Attacks : MonoBehaviour
         LeanTween.scale(pipe.gameObject, new Vector3(scale, scale, scale), Consts.FINAL_ATTACK_TIME - 0.1f);
     }
 
-    private void ApplyAttack(Attack attack)
+    private void ApplyAttack(AttackData attackData)
     {
-        if (_enemies.ApplyAttack(attack) <= 0)
+        if (_enemies.ApplyAttack(attackData) <= 0)
         {
             // no enemy attacked
-            RemoveAttackObject(attack);
-            DecreaseAttacksCount();
+            attackData.Clear();
+            _attacksData.Remove(attackData);
         } else
         {
             // enemy attacked
-            RemoveAttackObject(attack);
-        }
-        
-    }
-
-    private void RemoveAttackObject(Attack attack)
-    {
-        _attacks.Remove(attack);
-        if (attack.DestroyOnComplete)
-        {
-            // destroy attack object
-            Debug.Log("RemoveAttackObject " + attack.name + " with Object");
-            GameObject.Destroy(attack.gameObject);
-        } else
-        {
-            // just remove Attack component from attack object
-            Debug.Log("RemoveAttackObject " + attack.name + " with Component");
-            GameObject.Destroy(attack);
+            attackData.Clear();
         }
     }
 }

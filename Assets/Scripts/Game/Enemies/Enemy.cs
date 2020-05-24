@@ -50,12 +50,15 @@ public class Enemy : MonoBehaviour
     protected int _movesToAttack; //TODO set this parameter to 1, 2, 3 for each enemy at start of level?
 
     EEnemyAnimState _animState = EEnemyAnimState.Normal;
+    public const float ENEMY_APPEAR_TIME = 0.15f;
+    public List<AttackData> _attacksApplied = new List<AttackData>();
 
     public virtual void InitEnemy()
     {
         _dead = false;
         _animState = EEnemyAnimState.Normal;
         _lives = MaxLives;
+        _movesToAttack = AttackInterval;
         LeanTween.cancel(ShakeObject);
         ShakeObject.transform.localPosition = Vector3.zero;
         //LeanTween.cancel(ScaleObject);
@@ -65,14 +68,15 @@ public class Enemy : MonoBehaviour
         PlayAppearAnimation();
     }
 
-    public virtual float GainDamage(int damage, int color)
+    public virtual float ApplyAttack(AttackData attackData)
     {
         if (_dead)
         {
             Debug.LogError("DEAD!");
             return 0;
         }
-        _lives -= damage;
+        _attacksApplied.Add(attackData);
+        _lives -= attackData.AAttack.Power;
         _lives = Mathf.Max(0, _lives);
         _dead = _lives == 0;
         return PlayGainDamageAnimation();
@@ -80,10 +84,6 @@ public class Enemy : MonoBehaviour
 
     protected virtual float PlayGainDamageAnimation()
     {
-        if (_animState == EEnemyAnimState.GainDamage)
-        {
-            GameManager.Instance.Game.AAttacks.DecreaseAttacksCount(); // decrease from previous attack
-        }
         _animState = EEnemyAnimState.GainDamage;
         UpdateLivesView();
         float time = 0.25f;
@@ -103,7 +103,7 @@ public class Enemy : MonoBehaviour
                     PlayDeathAnimation();
                 } else
                 {
-                    GameManager.Instance.Game.AAttacks.DecreaseAttacksCount();
+                    RemoveAppliedAttacks();
                     _animState = EEnemyAnimState.Normal;
                 }
             });
@@ -121,9 +121,18 @@ public class Enemy : MonoBehaviour
             .setEaseInOutSine()
             .setOnComplete(() =>
             {
-                GameManager.Instance.Game.AAttacks.DecreaseAttacksCount();
+                RemoveAppliedAttacks();
                 HideForce();
             });
+    }
+
+    private void RemoveAppliedAttacks()
+    {
+        for (int i = 0; i < _attacksApplied.Count; ++i)
+        {
+            GameManager.Instance.Game.AAttacks.OnAttackApplied(_attacksApplied[i]);
+        }
+        _attacksApplied.Clear();
     }
 
     public virtual float PlayAttackAnimation() // returnes time of animation
@@ -171,7 +180,7 @@ public class Enemy : MonoBehaviour
 
     public virtual float PlayAppearAnimation()
     {
-        float time = 0.15f;
+        float time = ENEMY_APPEAR_TIME;
         LeanTween.cancel(ScaleObject);
         ScaleObject.transform.localScale = new Vector3(0, 0, 1);
         float scaleMax = 1f;

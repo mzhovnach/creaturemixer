@@ -2659,7 +2659,7 @@ public class GameBoard : MonoBehaviour
 
     public void SetGameState(EGameState gameState, string reason)
     {
-        Debug.Log(reason + " -> " + _gameState.ToString());
+        Debug.Log(reason + " : " + _gameState.ToString() + " -> " + gameState);
         _gameState = gameState;
     }
 
@@ -2878,7 +2878,10 @@ public class GameBoard : MonoBehaviour
                     {
                         if (AEnemiesQueue.OnTurnWasMade())
                         {
-                            yield return new WaitForSeconds(0.5f);
+                            if (!Consts.MINIMIZE_DELAY_ON_ENEMY_APPEARS)
+                            {
+                                yield return new WaitForSeconds(Enemy.ENEMY_APPEAR_TIME);
+                            }
                         }
                     }
                     StartPlayersTurn();
