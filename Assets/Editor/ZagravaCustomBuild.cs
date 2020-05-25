@@ -72,6 +72,14 @@ public class ZagravaCustomBuild
             BuildPipeline.BuildPlayer(buildPlayerOptions);
             if (!silent) EditorUtility.RevealInFinder(path);
         }
+        PrepareDownloadsFile(Path.Combine(defaultDirectory, "android_template.html"), Path.Combine(defaultDirectory, "android.html"), "[ANDROIDBUILDDATE]", CurrentDateTimeToString());
+    }
+
+    static void PrepareDownloadsFile(string templateFile, string destFile, string templateString, string destString)
+    {
+        string textFile = File.ReadAllText(templateFile);
+        textFile = textFile.Replace(templateString, destString);
+        File.WriteAllText(destFile, textFile);
     }
 
     #region common
@@ -142,6 +150,11 @@ public class ZagravaCustomBuild
     static string CurrentDateToString()
     {
         return System.DateTime.Now.Year.ToString("D4") + System.DateTime.Now.Month.ToString("D2") + System.DateTime.Now.Day.ToString("D2");
+    }
+
+    static string CurrentDateTimeToString()
+    {
+        return CurrentDateToString() + " " + System.DateTime.Now.Hour.ToString("D2") + System.DateTime.Now.Minute.ToString("D2") + System.DateTime.Now.Second.ToString("D2");
     }
 
     static string GetProjectDataFolder()
