@@ -128,7 +128,7 @@ public class Consts
 
     public static bool SLIDE_WITHOUT_MOUSE_UP = true;
 #if UNITY_ANDROID || UNITY_IOS
-    public static bool START_SLIDE_ON_NO_MOUSE_DOWN = true;
+    public static bool START_SLIDE_ON_NO_MOUSE_DOWN = false;
 #else
     public static bool START_SLIDE_ON_NO_MOUSE_DOWN = false;
 #endif
