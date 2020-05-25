@@ -265,8 +265,8 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 2
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: '{inproject}: brainblender.keystore'
-  AndroidKeyaliasName: release_key
+  AndroidKeystoreName: '{inproject}: user.keystore'
+  AndroidKeyaliasName: developer
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
