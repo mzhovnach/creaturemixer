@@ -12,7 +12,8 @@ public class ZagravaCustomBuild
         SetBuildTargetSettings(BuildTargetGroup.Android, "com.zagravagames.creaturemixer", "");
 
         string defaultDirectory = "";
-        string defaultFilename = "CreatureMixer_" + CurrentDateToString();
+        string defaultFilename = "CreatureMixer";
+        //string defaultFilename = "CreatureMixer_" + CurrentDateToString();
 
         CreateBuild(BuildTarget.Android, defaultDirectory, defaultFilename, true);
     }
@@ -22,7 +23,7 @@ public class ZagravaCustomBuild
         SetBuildTargetSettings(BuildTargetGroup.iOS, "com.zagravagames.creaturemixer", "NO_GPGS");
 
         string defaultDirectory = "";
-        string defaultFilename = "CreatureMixer_" + CurrentDateToString();
+        string defaultFilename = "CreatureMixer";
 
         CreateBuild(BuildTarget.iOS, defaultDirectory, defaultFilename, true);
     }
