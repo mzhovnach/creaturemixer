@@ -2479,6 +2479,11 @@ public class GameBoard : MonoBehaviour
                                 {
                                     if (AEnemies.TryToMoveEnemyBySlide(DragEnemy, _startDragEnemyPos, downGamePosNew2, false))
                                     {
+                                        SetGameState(EGameState.MoveEnemy, "move with slide2");
+                                        LeanTween.delayedCall(Enemies.ENEMY_SLIDE_TIME, () =>
+                                        {
+                                            OnTurnWasMade(false, false);
+                                        });
                                         DragEnemy = null;
                                     }
                                 }
