@@ -61,7 +61,7 @@ public class Consts
         9
 	};
 
-    public static int MAX_COLORED_LEVELS = 3; // 5, on this level pipe will be destroyed if MAX_COLORED_LEVEL_REMOVES == true
+    public static int MAX_COLORED_LEVELS = 9; // 5, on this level pipe will be destroyed if MAX_COLORED_LEVEL_REMOVES == true
     public static bool BAD_PIXEL_MACHANIC_IN_CLASSIC_GAME = false;
     public static bool MAX_COLORED_LEVEL_REMOVES = false;
     public static float DARK_SCREEN_SHOW_HIDE_TIME = 0.5f;
@@ -97,13 +97,6 @@ public class Consts
     public static float SHAKE_TIME_ON_SEQUENCE = 0.2f;
     public static float PIPES_ON_SEQUENCE_ANIMATION_TIME = 0.5f;
     public static float PIPES_ON_SEQUENCE_POWER = 10.0f;
-
-	//Powerups
-	public static int POWERUPS_RESHUFFLE_AT_START = 3;
-	public static int POWERUPS_BREAKE_AT_START = 3;
-	public static int POWERUPS_CHAIN_AT_START = 0;
-    public static int POWERUPS_DESTROY_COLOR_AT_START = 1;
-    //
 
     public static float HINT_DELAY = 15;
     public static bool SHOW_ADD_POINTS_ANIMATION = false;
@@ -143,4 +136,6 @@ public class Consts
     public static bool MINIMIZE_DELAY_ON_PLAYER_ATTACKS = true;
 
     public static bool MOVE_ENEMIES_WITH_SLIDE = true;
+
+    public static bool FILLER_VARIATION = true;
 }

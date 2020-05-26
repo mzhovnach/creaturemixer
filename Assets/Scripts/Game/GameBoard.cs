@@ -44,6 +44,7 @@ public struct SlideData
 	public int 				DistX;
 	public int 				DistY;
 	public ESlideType 		SlideType;
+    public int              NewParam;
 }
 
 public class GameBoard : MonoBehaviour
@@ -170,6 +171,11 @@ public class GameBoard : MonoBehaviour
 
 	private int                               _currentTouchId = -1; // for EInputType.UsingPositions
 	public Material[] ColoredMaterials;
+    public Material[] ColoredMaterialsFill_0;
+    public Material[] ColoredMaterialsFill_1;
+    public Material[] ColoredMaterialsFill_2;
+    public Material[] ColoredMaterialsFill_3;
+    public Material[] ColoredMaterialsFill_4;
 
     // GameData
     private List<long> _resources;
@@ -924,14 +930,27 @@ public class GameBoard : MonoBehaviour
 				return ESlideType.Consum;
 			} else
 			{
-				if (pType2 == EPipeType.Colored && pipe.AColor == pipe2.AColor && _maxColoredLevels > pipe.Param && pipe.Param == pipe2.Param)
-				{
-					// can match them
-					return ESlideType.Match;
-				} else
-				{
-					return ESlideType.Move;
-				}
+                if (Consts.FILLER_VARIATION)
+                {
+                    if (pType2 == EPipeType.Colored && pipe.AColor == pipe2.AColor && _maxColoredLevels > pipe.Param)
+                    {
+                        // can match them
+                        return ESlideType.Match;
+                    } else
+                    {
+                        return ESlideType.Move;
+                    }
+                } else
+                {
+                    if (pType2 == EPipeType.Colored && pipe.AColor == pipe2.AColor && _maxColoredLevels > pipe.Param && pipe.Param == pipe2.Param)
+                    {
+                        // can match them
+                        return ESlideType.Match;
+                    } else
+                    {
+                        return ESlideType.Move;
+                    }
+                }
 			}
 		}
 		return ESlideType.None;
@@ -955,7 +974,7 @@ public class GameBoard : MonoBehaviour
 		res.PosAforMatchSlide.y = res.FinalPosForSlide.y;
 		res.DistX = 0;
 		res.DistY = 0;
-
+        res.NewParam = -1;
 
 		if (res.DirX != 0)
 		{
@@ -982,6 +1001,16 @@ public class GameBoard : MonoBehaviour
 				FindMinYToSlide(ref res);
 			}
 		}
+        if (res.SlideType == ESlideType.Match)
+        {
+            if (Consts.FILLER_VARIATION)
+            {
+                res.NewParam = Mathf.Min(res.Pipe.Param + res.Pipe2.Param + 1, 9);
+            } else
+            {
+                res.NewParam = res.Pipe.Param + 1;
+            }
+        }
 		// find distances in slots
 		res.DistX = Mathf.Abs(res.PosSlideFrom.x - res.FinalPosForSlide.x);
 		res.DistY = Mathf.Abs(res.PosSlideFrom.y - res.FinalPosForSlide.y);
@@ -1131,7 +1160,8 @@ public class GameBoard : MonoBehaviour
 //		}
 
 		// rase value and rotate animation
-		slideData.Pipe.RaseCombineAnimation(slideData.DirX, slideData.DirY);
+        slideData.Pipe.RaseCombineAnimation(slideData.NewParam, slideData.DirX, slideData.DirY);
+		
         // points
         int multiplyer = 1;
         if (GameManager.Instance.Player.SlotsDoubles.Contains(new Vector2(slot2.X, slot2.Y)))
@@ -2634,6 +2664,34 @@ public class GameBoard : MonoBehaviour
 	{
 		return ColoredMaterials[acolor * Consts.CLASSIC_GAME_COLORS + param];
 	}
+
+    public Material GetMaterialForFillPipeVariation(int acolor, int param)
+    {
+        switch (acolor)
+        {
+            case 0:
+                {
+                    return ColoredMaterialsFill_0[param];
+                }
+            case 1:
+                {
+                    return ColoredMaterialsFill_1[param];
+                }
+            case 2:
+                {
+                    return ColoredMaterialsFill_2[param];
+                }
+            case 3:
+                {
+                    return ColoredMaterialsFill_3[param];
+                }
+            case 4:
+                {
+                    return ColoredMaterialsFill_4[param];
+                }
+        }
+        return ColoredMaterialsFill_0[param];
+    }
 
     public void SetResourceForce(long amount, int color)
     {

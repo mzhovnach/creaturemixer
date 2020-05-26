@@ -44,7 +44,7 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: 5868d071e0f02704bb109f4570345ea7, type: 3}
     - {fileID: 102900000, guid: d13f8482f8b6741499f347efb5d2d0c5, type: 3}
-    totalSpriteSurfaceArea: 12521952
+    totalSpriteSurfaceArea: 19235818
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -65,6 +65,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: fbdcf0b06558b49dfb91f63b4445bb77, type: 3}
   - {fileID: 21300000, guid: 1a12dfc00e857944aabccf692657480f, type: 3}
   - {fileID: 21300000, guid: 84cc02d0c6765432db165008726d799a, type: 3}
+  - {fileID: 21300000, guid: 588414f0701a9a142a7ed991043dd2d9, type: 3}
   - {fileID: 21300000, guid: 789167f037b4c384188a4989957d137e, type: 3}
   - {fileID: 21300000, guid: 4dd02e1183fac374d8cd188921ed00e8, type: 3}
   - {fileID: 21300000, guid: 9c646e217b5534efdb92d6cbe8662577, type: 3}
@@ -111,6 +112,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 140eaff242dc8b34da9bfdc8e10b535e, type: 3}
   - {fileID: 21300000, guid: 9de4ba03f26b8413987d981a5ed4d33d, type: 3}
   - {fileID: 21300000, guid: 8b486213495084d21a4b9263a425baca, type: 3}
+  - {fileID: 21300000, guid: 83046713ffdb3e346b0996224e3534bf, type: 3}
   - {fileID: 21300000, guid: 45a2181323933415bbcd23bfc6b4717d, type: 3}
   - {fileID: 21300000, guid: d386ae13ab197b34caa480d4c24528a5, type: 3}
   - {fileID: 21300000, guid: 3304342328c7845b6ac9a7108e8e545f, type: 3}
@@ -120,6 +122,8 @@ SpriteAtlas:
   - {fileID: 21300000, guid: ec32d063054101d4b87511a05ca94018, type: 3}
   - {fileID: 21300000, guid: 164ac7633c07a014985a5cc1b8c381dc, type: 3}
   - {fileID: 21300000, guid: 6de7be63cc4f845f4badb1d560bd8a0e, type: 3}
+  - {fileID: 21300000, guid: 9f8372733e11f554d8616bf8e8163de6, type: 3}
+  - {fileID: 21300000, guid: 3a65b38377d35634da0344bcf3718b26, type: 3}
   - {fileID: 21300000, guid: 864745838b69e4a42abc09e3c1027648, type: 3}
   - {fileID: 21300000, guid: fe175793a87ef4ab799fcc305e386851, type: 3}
   - {fileID: 21300000, guid: 610796c3340e640a6b86cf961ad95353, type: 3}
@@ -138,6 +142,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 496615443b7944bb6b0514d8efcb396e, type: 3}
   - {fileID: 21300000, guid: d13c3754a1ccba2439c9f59d74de8f52, type: 3}
   - {fileID: 21300000, guid: 8891916453ce34b64a69717da7180dac, type: 3}
+  - {fileID: 21300000, guid: 81a6627497dbcc4429a1cb47b938ca06, type: 3}
   - {fileID: 21300000, guid: 48165e74d16e07e4c9d835247b74ccd3, type: 3}
   - {fileID: 21300000, guid: f08592843154e4836866f2ba06ce487a, type: 3}
   - {fileID: 21300000, guid: 142fbe84af64b2e4fa64e106add08a28, type: 3}
@@ -164,6 +169,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: a226ba55a42af477f8cf03ee775ebd04, type: 3}
   - {fileID: 21300000, guid: fcb55b554214faf4c9ccc4f153901a16, type: 3}
   - {fileID: 21300000, guid: 64489f55ccf6b4c37b16fa12b2e5d88e, type: 3}
+  - {fileID: 21300000, guid: b8a29275998eda9498cd866f999fa2b0, type: 3}
   - {fileID: 21300000, guid: ede03b75838e3864a8033a9d7e04c4b9, type: 3}
   - {fileID: 21300000, guid: 2a6ab0856c0224f62a240f9604335f93, type: 3}
   - {fileID: 21300000, guid: fa1c3b855354549e19838b21243d94f1, type: 3}
@@ -183,6 +189,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: b3158026b48534e32b37ba5ef1cd7de9, type: 3}
   - {fileID: 21300000, guid: 4efcbd264b64d634c84f68665f1b2e42, type: 3}
   - {fileID: 21300000, guid: db576e2656e1b40e2ac07580b39ba4ff, type: 3}
+  - {fileID: 21300000, guid: 5a716f36260b3b64a83c5091fcd8a541, type: 3}
   - {fileID: 21300000, guid: 66234e4645a0d4e14a14512d9eee23f3, type: 3}
   - {fileID: 21300000, guid: 89a9fe465472cb24881f5e2667bd7130, type: 3}
   - {fileID: 21300000, guid: 469f29563db404118977a6a398ed67a6, type: 3}
@@ -227,6 +234,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 592fd1483ab1b45efa788b20b1e3e758, type: 3}
   - {fileID: 21300000, guid: 3888c34827ec5e54ba7ed22a331ae18a, type: 3}
   - {fileID: 21300000, guid: 0a7a0b48247504539831d44b6dbfa969, type: 3}
+  - {fileID: 21300000, guid: 75179c48741403e4ba5c12f5168b8b48, type: 3}
   - {fileID: 21300000, guid: a7c0d678353b3dc40b363d0f9fb982c9, type: 3}
   - {fileID: 21300000, guid: 09ece778d163a458892007ee4bd9280d, type: 3}
   - {fileID: 21300000, guid: 8b42f878e1036409aa4d3bba16ebd81d, type: 3}
@@ -245,12 +253,14 @@ SpriteAtlas:
   - {fileID: 21300000, guid: b7fb4a09850444ccb9bf547ed5de2a32, type: 3}
   - {fileID: 21300000, guid: 722e5b09573524127bd15d35b4232ddb, type: 3}
   - {fileID: 21300000, guid: ce1b7c09caef046feb847a259e81117d, type: 3}
+  - {fileID: 21300000, guid: 683e84197acb15e4e937d7969d0f4649, type: 3}
   - {fileID: 21300000, guid: 93bcf51968d9c4812b57a40137e88515, type: 3}
   - {fileID: 21300000, guid: bb0a5d19af35cef4b9459a706c106690, type: 3}
   - {fileID: 21300000, guid: b4ac6329f9db94533a4858c522077d1b, type: 3}
   - {fileID: 21300000, guid: 1477a3394e7786d4cac8b8048908ea7a, type: 3}
   - {fileID: 21300000, guid: d5cd324966df44e21ba918db8d05b6d7, type: 3}
   - {fileID: 21300000, guid: e3438e59e73b50a4a9894d81d4947408, type: 3}
+  - {fileID: 21300000, guid: 6fbd8279e43bfe541ac4e261fb9447f3, type: 3}
   - {fileID: 21300000, guid: 82ec1a79026ed41b19076bf56f065067, type: 3}
   - {fileID: 21300000, guid: d807fd79d7c8b49a5913865dba569849, type: 3}
   - {fileID: 21300000, guid: a8509789b47342b4db14173b3cf1b643, type: 3}
@@ -287,6 +297,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: b761272b72abf6644b79c4d64624c240, type: 3}
   - {fileID: 21300000, guid: c0d6972b473f142df92a6a7977cb39da, type: 3}
   - {fileID: 21300000, guid: 385dd13bde04c4c9da5a42045ad6f188, type: 3}
+  - {fileID: 21300000, guid: 1d1b8e4badba4ee4abbb390cd97e2807, type: 3}
   - {fileID: 21300000, guid: d6283f4b4eeacb946bdc6c4d8b708393, type: 3}
   - {fileID: 21300000, guid: 19f37a5bbf8caaf4b81df040116aa2ad, type: 3}
   - {fileID: 21300000, guid: 021db16bd63196046812d59dcf13296f, type: 3}
@@ -305,10 +316,12 @@ SpriteAtlas:
   - {fileID: 21300000, guid: e0ce1f0c260070e43a53a9e068e25d0a, type: 3}
   - {fileID: 21300000, guid: d740821c73bb64852b73743f5510fe15, type: 3}
   - {fileID: 21300000, guid: 8499da1c8c7627d40b65319aeeb530a2, type: 3}
+  - {fileID: 21300000, guid: 47eef22cb9b1ec84c8473e9b2985c65f, type: 3}
   - {fileID: 21300000, guid: 38f4a43c55d6b4989bd5df8148f8dbe9, type: 3}
   - {fileID: 21300000, guid: ca48b43cf465f364bb227eef14010b15, type: 3}
   - {fileID: 21300000, guid: 23e2e93c9ac19416f963c7bf34f6b66c, type: 3}
   - {fileID: 21300000, guid: a914224cf5a5347b49dd81e0e04510b7, type: 3}
+  - {fileID: 21300000, guid: c8e8675cf7aaee743a805bfa447baf0d, type: 3}
   - {fileID: 21300000, guid: b121416c47383446cbe9152d2581e466, type: 3}
   - {fileID: 21300000, guid: dd7ff66ccdf384058875f8887ab66d94, type: 3}
   - {fileID: 21300000, guid: fd3c0f6c2dc113041981b6b039aab664, type: 3}
@@ -327,6 +340,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f629ed0d40f924b6e84baf95b9f7e7ef, type: 3}
   - {fileID: 21300000, guid: 4ce2c01d5e99446a98f059598f180660, type: 3}
   - {fileID: 21300000, guid: 41df971d0ea20eb4d93813ec0c932291, type: 3}
+  - {fileID: 21300000, guid: 574d824df81aa0e44b925a83c4d8bddb, type: 3}
   - {fileID: 21300000, guid: 8734f94d60ae542c5aaea738c8a22614, type: 3}
   - {fileID: 21300000, guid: 82fbbe5dc8fa6413e9f80e81f14c0794, type: 3}
   - {fileID: 21300000, guid: e3858f6d4a61142e2821228ace71728d, type: 3}
@@ -351,6 +365,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: d96c776e8ed684dc290fb9e83e8b444b, type: 3}
   - {fileID: 21300000, guid: 3d4ef48eb42aa4b0e875f1ed5a8d30a8, type: 3}
   - {fileID: 21300000, guid: 9d71dd8e106454a32a4a555cbe1e553d, type: 3}
+  - {fileID: 21300000, guid: c5638f8ecb7abdb4ca61a4b58bfec4bd, type: 3}
   - {fileID: 21300000, guid: 59163d9ecf7a64fa49149ef8db3e2264, type: 3}
   - {fileID: 21300000, guid: a6dfe1beaf1474623ad920075ba35e09, type: 3}
   - {fileID: 21300000, guid: db07d5beba6505c4792ab1e79c52b323, type: 3}
@@ -408,6 +423,7 @@ SpriteAtlas:
   - Monster_2_Layer 25
   - TrophyBack
   - LevelMap_upgrade_07_wave_01
+  - colored_0
   - colored_0_1
   - EndlessStatisticTrophy
   - Monster_2_Layer 21
@@ -454,6 +470,7 @@ SpriteAtlas:
   - colored_1_3
   - Monster_2_Layer 43
   - Monster_2_Layer 20
+  - colored_1
   - Monster_2_Layer 44
   - Destroy_Particle_Emitter
   - LevelMap_singer_03_mouth
@@ -463,6 +480,8 @@ SpriteAtlas:
   - MovesPanel_icon
   - Symbol_1
   - 3_1
+  - colored_3
+  - filled_5
   - Monster_2_eye
   - LevelMap_upgrade_08_body
   - LevelMap_pyramid_right_eye
@@ -481,6 +500,7 @@ SpriteAtlas:
   - LevelMap_fish_mouth_01
   - ButtonLeftOver
   - Monster_1_Layer 58
+  - colored_4
   - Color_0
   - Monster_3_Layer 85
   - colored_0_0
@@ -507,6 +527,7 @@ SpriteAtlas:
   - LevelMap_mush_02_cap
   - BTN_EndlessStatisticShare_back
   - LevelMap_pyramid_mouth
+  - filled_1
   - MovesPanel_back
   - Monster_2_Layer 26
   - LevelMap_ten_02_shadow
@@ -526,6 +547,7 @@ SpriteAtlas:
   - LevelMap_l_claw_01
   - BTN_LevelsButtonBack
   - LevelMap_plants_01
+  - filled_2
   - LevelMap_fish_body
   - colored_2_0
   - LevelMap_mush_03_cap
@@ -570,6 +592,7 @@ SpriteAtlas:
   - LevelMap_mush_02_skirt
   - BTN_Levels_HomeIcon
   - Monster_2_Layer 41
+  - filled_0
   - colored_0_4
   - Monster_1_Layer 68
   - Monster_1_Layer 62
@@ -588,12 +611,14 @@ SpriteAtlas:
   - LevelMap_upgrade_08_wave_02
   - LevelMap_upgrade_06_right_eye
   - LevelMap_lava_wave_04
+  - filled_6
   - 1_1
   - BTN_NoAdds_Icon
   - 1_3
   - OptionsBack
   - LevelMap_mush_02_shadow
   - LevelsButton_back
+  - filled_9
   - LevelMap_Layer 97 copy
   - CubeParticleEmitter
   - TrophyFill
@@ -630,6 +655,7 @@ SpriteAtlas:
   - white_hole
   - LevelMap_mush_01_shadow
   - LevelMap_ten_01_base
+  - filled_4
   - LevelStatisticStar
   - BTN_PlayLevels_Icon
   - BTN_OptionsSound_off
@@ -648,10 +674,12 @@ SpriteAtlas:
   - colored_3_0
   - Monster_1_Layer 51
   - StarsPanel_back
+  - filled_3
   - LevelMap_singer_03_body
   - BTN_Play_Icon
   - LevelMap_upgrade_06_mouth
   - Monster_3_Layer 93
+  - filled_8
   - 3_3
   - Monster_1_Layer 51 copy
   - colored_4_4
@@ -670,6 +698,7 @@ SpriteAtlas:
   - Monster_2_Layer 38
   - Monster_2_Layer 24
   - Selection
+  - filled_7
   - LevelMap_volcano_tongue
   - LevelMap_mush_03_eyelids
   - LevelMap_plants_03
@@ -694,6 +723,7 @@ SpriteAtlas:
   - Monster_2_Layer 45
   - Monster_1_Layer 46 copy
   - Monster_1_Layer 67
+  - colored_2
   - LevelMap_sm__07_cap
   - LevelMap_sm__04_shadow
   - LevelsButton_lock

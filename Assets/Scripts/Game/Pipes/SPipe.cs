@@ -65,7 +65,7 @@ public class SPipe : MonoBehaviour
 		return PipeType == EPipeType.Colored;
 	}
 
-	public virtual void RaseCombineAnimation(int dirX, int dirY)
+	public virtual void RaseCombineAnimation(int newParam, int dirX, int dirY)
 	{
 		// animation of colored pipe when other pipe slides to it
 	}

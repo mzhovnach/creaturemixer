@@ -31,11 +31,11 @@ public class Pipe_Colored : SPipe
 		return Consts.COLORS[color];
 	}
 
-	public override void RaseCombineAnimation(int dirX, int dirY)
+	public override void RaseCombineAnimation(int newParam, int dirX, int dirY)
 	{
         // animation of colored pipe when other pipe slides to it
         // GameManager.Instance.Game.ShakeCamera(Consts.SHAKE_POWER_ON_PIPE_COMBINE, Consts.SHAKE_POWER_ON_PIPE_COMBINE, Consts.SHAKE_TIME_ON_PIPE_COMBINE);
-		SetValue(Param + 1, dirX, dirY);
+		SetValue(newParam, dirX, dirY);
 	}
 
 	public override void RemoveCombineAnimation()
@@ -107,7 +107,11 @@ public class Pipe_Colored : SPipe
 		
 	public override void UpdateSkin()
 	{
-
+        if (Consts.FILLER_VARIATION)
+        {
+            ARenderer.material = GameManager.Instance.Game.GetMaterialForFillPipeVariation(AColor, Param);
+            return;
+        }
 		ARenderer.material = GameManager.Instance.Game.GetMaterialForColoredPipe(AColor, Param);
 	}    
 
