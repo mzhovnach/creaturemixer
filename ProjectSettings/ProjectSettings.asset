@@ -235,9 +235,9 @@ PlayerSettings:
   metalAPIValidation: 1
   iOSRenderExtraFrameOnPause: 1
   appleDeveloperTeamID: 77U2SH8PVP
-  iOSManualSigningProvisioningProfileID: 
+  iOSManualSigningProvisioningProfileID: e256a988-9fb8-4ae1-8684-5b00ad6e84b4
   tvOSManualSigningProvisioningProfileID: 
-  iOSManualSigningProvisioningProfileType: 0
+  iOSManualSigningProvisioningProfileType: 2
   tvOSManualSigningProvisioningProfileType: 0
   appleEnableAutomaticSigning: 0
   iOSRequireARKit: 0
@@ -707,6 +707,7 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
+    4: NO_GPGS
     7: 
   platformArchitecture:
     iPhone: 2
