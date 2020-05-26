@@ -2618,10 +2618,7 @@ public class GameBoard : MonoBehaviour
 			SPipe pipe = slot.Pipe;
 			if (pipe)
 			{
-                if (!TryCreateFinalAttackByTouch(slot))
-                {
-				    slot.OnMouseDownByPosition(downGamePos);
-                }
+				slot.OnMouseDownByPosition(downGamePos);
 			}
         } else
         if (Consts.MOVE_ENEMIES_WITH_SLIDE)
@@ -2647,8 +2644,14 @@ public class GameBoard : MonoBehaviour
 		}
 		if (DragSlot != null)
 		{
-			DragSlot.OnMouseUpByPosition(downGamePos);
-		} else
+			if (DragSlot.OnMouseUpByPosition(downGamePos))
+            {
+                // impulse too short - tap
+                TryCreateFinalAttackByTouch(DragSlot);
+            }
+            HideSelection();
+            DragSlot = null;
+        } else
         if (DragEnemy != null)
         {
             if (AEnemies.TryToMoveEnemyBySlide(DragEnemy, _startDragEnemyPos, downGamePos, true))

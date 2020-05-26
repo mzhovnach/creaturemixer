@@ -271,10 +271,8 @@ public class SSlot : MonoBehaviour {
 		}
 	}
 
-	public void OnMouseUpByPosition(Vector2 endPos)
+	public bool OnMouseUpByPosition(Vector2 endPos) // returnes true if impulse too short
 	{
-		GameManager.Instance.Game.HideSelection();
-		GameManager.Instance.Game.DragSlot = null;
 		// check if enough distance to slide and find direction
 		float dx = endPos.x - MouseDownPos.x;
 		float dy = endPos.y - MouseDownPos.y;
@@ -283,9 +281,10 @@ public class SSlot : MonoBehaviour {
 		if (Mathf.Max(absDx, absDy) < Consts.IMPULSE_DISTANCE)
 		{
 			// impulse too short (cancelled impulse)
-			return;
+			return true;
 		}
         Slide(dx, dy, absDx, absDy);
+        return false;
 	}
 
     private void Slide(float dx, float dy, float absDx, float absDy)
