@@ -5,13 +5,13 @@
 	<key>destination</key>
 	<string>export</string>
 	<key>method</key>
-	<string>app-store</string>
+	<string>ad-hoc</string>
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>com.zagravagames.creaturemixer</key>
-		<string>Creature Mixer iOS Distribution</string>
+		<string>Creature Mixer AdHoc</string>
 		<key>creaturemixer.app</key>
-		<string>Creature Mixer iOS Distribution</string>
+		<string>Creature Mixer AdHoc</string>
 	</dict>
 	<key>signingCertificate</key>
 	<string>CF17BA60288B4A756C7669AC972191B8BCF2200C</string>

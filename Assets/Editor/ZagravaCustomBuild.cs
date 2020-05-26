@@ -26,6 +26,7 @@ public class ZagravaCustomBuild
         string defaultFilename = "CreatureMixer";
 
         CreateBuild(BuildTarget.iOS, defaultDirectory, defaultFilename, true);
+        PrepareDownloadsFile(Path.Combine(defaultDirectory, "ios_template.html"), Path.Combine(defaultDirectory, "ios.html"), "[IOSBUILDDATE]", CurrentDateTimeToString());
     }
 
     static void CreateBuild(BuildTarget target, string defaultDirectory, string defaultFilename, bool silent = false)
