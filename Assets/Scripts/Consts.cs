@@ -61,7 +61,7 @@ public class Consts
         9
 	};
 
-    public static int MAX_COLORED_LEVELS = 9; // 5, on this level pipe will be destroyed if MAX_COLORED_LEVEL_REMOVES == true
+    public static int MAX_COLORED_LEVELS = 3; // 5, on this level pipe will be destroyed if MAX_COLORED_LEVEL_REMOVES == true, for Fill variation - 9
     public static bool BAD_PIXEL_MACHANIC_IN_CLASSIC_GAME = false;
     public static bool MAX_COLORED_LEVEL_REMOVES = false;
     public static float DARK_SCREEN_SHOW_HIDE_TIME = 0.5f;

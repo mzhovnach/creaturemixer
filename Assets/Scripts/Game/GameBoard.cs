@@ -2618,7 +2618,10 @@ public class GameBoard : MonoBehaviour
 			SPipe pipe = slot.Pipe;
 			if (pipe)
 			{
-				slot.OnMouseDownByPosition(downGamePos);
+                if (!TryCreateFinalAttackByTouch(slot))
+                {
+				    slot.OnMouseDownByPosition(downGamePos);
+                }
 			}
         } else
         if (Consts.MOVE_ENEMIES_WITH_SLIDE)
@@ -2852,7 +2855,7 @@ public class GameBoard : MonoBehaviour
                 ////aimComplited = AAimPanel.CheckSlot(GetSlot(_lastSlotWithMatch));
                 ////_lastSlotWithMatch.x = -1;
                 ////allAimsCompleted = AAimPanel.IsAllAimsCompleted();
-                TryCreateFinalAttack(GetSlot(_lastSlotWithMatch));
+                //TryCreateFinalAttack(GetSlot(_lastSlotWithMatch));
                 _lastSlotWithMatch.x = -1;
             }
         } else
@@ -3133,5 +3136,21 @@ public class GameBoard : MonoBehaviour
         {
             AAttacks.CreateFinalAttack(slot, slot.Pipe.AColor, slot.Pipe.Param * 3); // TODO correct power of strike according to upgrades and balance
         }
+    }
+
+    public bool TryCreateFinalAttackByTouch(SSlot slot)
+    {
+        if (!slot.Pipe || !slot.Pipe.IsColored())
+        {
+            return false;
+        }
+        if (slot.Pipe.Param == _maxColoredLevels - 1)
+        {
+            AAttacks.CreateFinalAttack(slot, slot.Pipe.AColor, slot.Pipe.Param * 3); // TODO correct power of strike according to upgrades and balance
+            SetGameState(EGameState.EnemiesAttack, "attacking by touch final");
+            OnTurnWasMade(true, false);
+            return true;
+        }
+        return false;
     }
 }
