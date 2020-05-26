@@ -1266,7 +1266,7 @@ public class GameBoard : MonoBehaviour
         } else
 		{
             // players simple attack
-            CreateSimpleAttack(slideData.Slot2, slideData.Pipe.AColor, slideData.Pipe.Param);
+            CreateSimpleAttack(slideData.Slot2, slideData.Pipe.AColor, slideData.NewParam);
 
             //GameObject effect = (GameObject)GameObject.Instantiate(MatchEffectPrefab, Vector3.zero, Quaternion.identity);
             //effect.transform.SetParent(SlotsContainer, false);
@@ -3119,7 +3119,12 @@ public class GameBoard : MonoBehaviour
 
     public void CreateSimpleAttack(SSlot slot, int pipeColor, int pipeParam)
     {
-        AAttacks.CreateSimpleAttack(slot, pipeColor, pipeParam * 3); // TODO correct power of strike according to upgrades and balance
+        int attackPower = pipeParam * 3;
+        if (Consts.FILLER_VARIATION)
+        {
+            attackPower = pipeParam + 1;
+        }
+        AAttacks.CreateSimpleAttack(slot, pipeColor, attackPower); // TODO correct power of strike according to upgrades and balance
     }
 
     public void TryCreateFinalAttack(SSlot slot)
