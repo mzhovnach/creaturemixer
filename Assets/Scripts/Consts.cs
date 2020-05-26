@@ -137,5 +137,5 @@ public class Consts
 
     public static bool MOVE_ENEMIES_WITH_SLIDE = true;
 
-    public static bool FILLER_VARIATION = true;
+    public static bool FILLER_VARIATION = false;
 }
