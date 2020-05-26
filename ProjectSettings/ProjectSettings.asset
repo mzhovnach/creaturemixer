@@ -168,7 +168,7 @@ PlayerSettings:
     Android: com.zagravagames.creaturemixer
     Standalone: unity.DieDesu.Feeding
     Tizen: com.Company.ProductName
-    iPhone: com.brainblendergames.ctd
+    iPhone: com.zagravagames.creaturemixer
     tvOS: com.Company.ProductName
   buildNumber:
     iPhone: 1
@@ -234,12 +234,12 @@ PlayerSettings:
   metalEditorSupport: 1
   metalAPIValidation: 1
   iOSRenderExtraFrameOnPause: 1
-  appleDeveloperTeamID: 
+  appleDeveloperTeamID: 77U2SH8PVP
   iOSManualSigningProvisioningProfileID: 
   tvOSManualSigningProvisioningProfileID: 
   iOSManualSigningProvisioningProfileType: 0
   tvOSManualSigningProvisioningProfileType: 0
-  appleEnableAutomaticSigning: 1
+  appleEnableAutomaticSigning: 0
   iOSRequireARKit: 0
   iOSAutomaticallyDetectAndAddCapabilities: 1
   appleEnableProMotion: 0
