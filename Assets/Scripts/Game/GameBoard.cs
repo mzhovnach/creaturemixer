@@ -510,7 +510,11 @@ public class GameBoard : MonoBehaviour
         //AAimPanel.InitPanel(levelData);
         AAttacks.ClearAllAttacks();
         ALivesPanel.InitPanel(100, 100);
-        APowerupsPanel.InitPanel(0, 20);
+
+        List<PowerupData> powerupsData = new List<PowerupData>(); //TODO select before level
+        powerupsData.Add(new PowerupData(EPowerupType.AddLives, 0));
+        powerupsData.Add(new PowerupData(EPowerupType.Reshaffle, 0));
+        APowerupsPanel.InitPanel(powerupsData);
         for (int i = 0; i < WIDTH; ++i)
 		{
 			for (int j = 0; j < HEIGHT; ++j)
@@ -548,61 +552,6 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
         StartPlayersTurn();
     }
-
-	//protected IEnumerator CreateLeveledLevel(ScriptableLevelData levelData) 
-	//{
- //       _currentTouchId = -1;
- //       DragSlot = null;
- //       HideSelection();
- //       //
- //       TimePlayed = 0;
-	//	MovesLeft = levelData.MinMovesCount;
-	//	StarsGained = 0;
-	//	AMovesPanel.SetAmountForce(MovesLeft);
- //       AStarsPanel.ResetScores();
- //       //AStarsPanel.SetAmountForce(StarsGained);
-	//	ALevelPanel.SetText();
-		
-	//	PowerUps[GameData.PowerUpType.Reshuffle] = 0;
-	//	PowerUps[GameData.PowerUpType.Breake] = 0;
-	//	PowerUps[GameData.PowerUpType.Chain] = 0;
-	//	PowerUps[GameData.PowerUpType.DestroyColor] = 0;
-	//	AddsViewed = true;
-
- //       // powerups
- //       EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
- //       eventData.Data["isStart"] = true;
- //       GameManager.Instance.EventManager.CallOnPowerUpsResetNeededEvent(eventData);
- //       BreakePowerup = false;
- //       ChainPowerup = false;
- //       DestroyColorPowerup = false;
-
- //       yield return new WaitForSeconds(Consts.DARK_SCREEN_SHOW_HIDE_TIME);
- //       yield return StartCoroutine(ClearBoard());
- //       // create pipes force
- //       for (int i = 0; i < levelData.StartStates.Count; ++i)
- //       {
- //           int x = levelData.StartStates[i].x;
- //           int y = levelData.StartStates[i].y;
- //           Slots[x, y].InitSavedSlot(levelData.StartStates[i]);
- //           // pipe
- //           EPipeType pType = (EPipeType)levelData.StartStates[i].pt;
- //           if (pType != EPipeType.None)
- //           {
- //               // create pipe
- //               SPipe pipe = CreatePipe(pType, levelData.StartStates[i].p, levelData.StartStates[i].c);
- //               Slots[x, y].SetPipe(pipe);
- //               pipe.PlayAddAnimation();
- //               if (pType == EPipeType.Hole)
- //               {
- //                   Slots[x, y].SetAsHole();
- //               }
- //               yield return new WaitForSeconds(0.05f);
- //           }
- //       }
- //       yield return new WaitForSeconds(0.25f);
- //       UnsetPause();
- //   }
 		
 	public void PlayGame()
     {
@@ -1312,7 +1261,7 @@ public class GameBoard : MonoBehaviour
 			BumpCameraHorizontal(horizontalBump, Consts.BUMP_TIME);
             if (slideData.Slot2.X == 0 || slideData.Slot2.X == WIDTH - 1)
             {
-                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.DistX);
+                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.Pipe, slideData.DistX);
             }
 		} else
 		{
@@ -1321,7 +1270,7 @@ public class GameBoard : MonoBehaviour
 			BumpCameraVertical(verticalBump, Consts.BUMP_TIME);
             if (slideData.Slot2.Y == 0 || slideData.Slot2.Y == HEIGHT - 1)
             {
-                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.DistY);
+                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.Pipe, slideData.DistY);
             }
         }
 	}
@@ -1523,7 +1472,7 @@ public class GameBoard : MonoBehaviour
             }
         }
         // check powerups
-        if (APowerupsPanel.IsFull())
+        if (APowerupsPanel.IsCanApply())
         {
             // show notification
             EventData eventData = new EventData("OnShowNotificationEvent");
@@ -1690,102 +1639,6 @@ public class GameBoard : MonoBehaviour
         //
         pipe.RemoveConsumAnimation();
 	}
-
-    public void PowerUp_Reshuffle()
-    {
-        SetGameState(EGameState.PlayerUsedPowerup, "PowerUp_Reshuffle");
-        List <SSlot> slots = new List<SSlot>();
-        for (int i = 0; i < WIDTH; ++i)
-        {
-            for (int j = 0; j < HEIGHT; ++j)
-            {
-                SSlot slot = Slots[i, j];
-                SPipe pipe = slot.Pipe;
-                if (pipe != null)
-                {
-                    slots.Add(slot);
-                }
-            }
-        }
-        if (slots.Count > 0)
-        {
-            //int boosterPower = GameManager.Instance.Player.BoosterLevel * Consts.PU__POWER_PER_LEVEL_RESHUFFLE;
-            //boosterPower = Mathf.Min(slots.Count, boosterPower);
-            int boosterPower = slots.Count;
-            // take pipes from slots
-            slots = Helpers.ShuffleList(slots);
-            List<SPipe> pipes = new List<SPipe>();
-            for (int i = 0; i < boosterPower; ++i)
-            {
-                pipes.Add(slots[i].TakePipe());
-            }
-            // find free slots
-            List<SSlot> freeSlots = GetEmptySSlots();
-            // randomly move pipes to slots
-            float maxTime = 0;
-            for (int i = 0; i < boosterPower; ++i)
-            {
-                // add to new slot
-                SPipe pipe = pipes[i];
-                int randI = UnityEngine.Random.Range(0, freeSlots.Count);
-                SSlot slot = freeSlots[randI];
-
-                if (slot.X == pipe.X && slot.Y == pipe.Y && freeSlots.Count > 1)
-                {
-                    // we must change slot
-                    --i;
-                    continue;
-                }
-
-                freeSlots.RemoveAt(randI);
-                // find distance
-                float dx = pipe.X - slot.X;
-                float dy = pipe.Y - slot.Y;
-                float distance = Mathf.Sqrt(dx * dx + dy * dy);
-                // find move time, check max time
-                float moveTime = distance * Consts.PU__RESHUFFLE_TIME_PER_SLOT;
-                if (moveTime > maxTime)
-                {
-                    maxTime = moveTime;
-                }
-                //
-                slot.SetPipe(pipe, false);
-                // move upper
-                Vector3 oldPos = pipe.transform.position;
-                oldPos.z = PipeZ - 1.0f;
-                pipe.transform.position = oldPos;
-                // fly to new slot
-                GameObject pipeObj = pipe.gameObject;
-                LeanTween.cancel(pipeObj);
-                Vector3 newPos = slot.transform.position;
-                newPos.z = PipeZ;
-                LeanTween.move(pipeObj, newPos, moveTime)
-                    //.setDelay(i * 0.01f)
-                    .setEase(LeanTweenType.easeInOutSine);
-            }
-            MusicManager.playSound("reshuffle");
-            pipes.Clear();
-            freeSlots.Clear();
-			//
-			EventData eventData = new EventData("OnPowerUpUsedEvent");
-			eventData.Data["type"] = GameData.PowerUpType.Reshuffle;
-			GameManager.Instance.EventManager.CallOnPowerUpUsedEvent(eventData);
-            //
-            LeanTween.delayedCall(maxTime, ()=>
-            {
-                if (!CheckIfOutOfMoves())
-                {
-                    SetGameState(EGameState.PlayersTurn, "Reshuffle powerup completed");
-                }
-            });
-            //Invoke("CheckIfOutOfMoves", maxTime);
-        }
-        else
-        {
-            //TODO wrong sound, nothing happens
-            SetGameState(EGameState.PlayersTurn, "Reshuffle wrong");
-        }
-    }
 
     public void OnBreakePowerupUsed(SSlot slot)
     {
@@ -2060,7 +1913,7 @@ public class GameBoard : MonoBehaviour
         //}
     }
 
-    private bool CheckIfOutOfMoves()
+    public bool CheckIfOutOfMoves()
     {
         List<SSlot> slots = GetEmptySSlots();
         if (slots.Count == 0)
