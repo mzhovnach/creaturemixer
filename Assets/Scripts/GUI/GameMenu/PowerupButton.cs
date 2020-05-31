@@ -34,6 +34,10 @@ public class PowerupButton : MonoBehaviour
 
         Color acolor = Consts.GET_COLOR_BY_ID(_powerup.GetColor());
         Filler.color = acolor;
+        acolor.r = Mathf.Max(0, acolor.r - 0.6f);
+        acolor.g = Mathf.Max(0, acolor.g - 0.6f);
+        acolor.b = Mathf.Max(0, acolor.b - 0.6f);
+        BackImage.color = acolor;
     }
 
     public void InitPowerup(PowerupsPanel panel, PowerupData data)

@@ -39,11 +39,11 @@ public class Consts
 
     public static Color[] COLORS =
     {
-        new Color(255/255.0f, 50/255.0f, 0/255.0f, 1),
-        new Color(255/255.0f, 255/255.0f, 0/255.0f, 1),
         new Color(50/255.0f, 255/255.0f, 0/255.0f, 1),
-        new Color(50/255.0f, 0/255.0f, 255/255.0f, 1),
-		new Color(150/255.0f, 0/255.0f, 255/255.0f, 1),
+        new Color(255/255.0f, 120/255.0f, 80/255.0f, 1),
+        new Color(0/255.0f, 150/255.0f, 255/255.0f, 1),
+        new Color(255/255.0f, 50/255.0f, 0/255.0f, 1),
+        new Color(150/255.0f, 0/255.0f, 255/255.0f, 1),
         //
 		new Color(150/255.0f, 150/255.0f, 150/255.0f, 1), // - neutral color
 	};
@@ -63,6 +63,7 @@ public class Consts
 	};
 
     public static int MAX_COLORED_LEVELS = 3; // 5, on this level pipe will be destroyed if MAX_COLORED_LEVEL_REMOVES == true, for Fill variation - 9
+    public static int MAX_COLORED_LEVEL_IN_QUEUE = 1;
     public static bool BAD_PIXEL_MACHANIC_IN_CLASSIC_GAME = false;
     public static bool MAX_COLORED_LEVEL_REMOVES = false;
     public static float DARK_SCREEN_SHOW_HIDE_TIME = 0.5f;

@@ -11,8 +11,8 @@ public class CreatureMixLevelEditor : Editor
 	private const int                       LAST_COLOR_PARAM = 4; // = Consts.MAX_COLORS_LEVEL - 1
 
     private int 					        SLOT_SIZE = 60;
-	private int 					        _w = 5;
-	private int 					        _h = 5;
+	private int 					        _w = GameBoard.WIDTH;
+	private int 					        _h = GameBoard.HEIGHT;
 	private List<List<SSlotData>>	        _neededStates = new List<List<SSlotData>>();
 
     // current brush
@@ -537,8 +537,8 @@ public class CreatureMixLevelEditor : Editor
             RecreateLevel();
             return;
         }
-        _w = 5;
-        _h = 5;
+        _w = GameBoard.WIDTH;
+        _h = GameBoard.HEIGHT; ;
         _textures = new Texture[_w * _h];
 		_neededStates = new List<List<SSlotData>>();
 

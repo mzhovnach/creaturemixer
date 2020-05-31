@@ -1393,14 +1393,15 @@ public class GameBoard : MonoBehaviour
             // get info about first pipe from queue
             EPipeType pipeType = AQueuePanel.GetNextType();
             int acolor = AQueuePanel.GetNextColor();
+            int aparam = AQueuePanel.GetNextParam();
             // add new pipe to queue
             if (newPipeType == EPipeType.Blocker)
             {
                 AQueuePanel.MoveQueue(newPipeType, -1, 0);
             } else
-            //if (newPipeType == EPipeType.Colored)
+            if (newPipeType == EPipeType.Colored)
             {
-                AQueuePanel.MoveQueue(newPipeType, GetRandomColor(), 0);
+                AQueuePanel.MoveQueue(newPipeType, GetRandomColor(), UnityEngine.Random.Range(0, Consts.MAX_COLORED_LEVEL_IN_QUEUE + 1));
             }
             //
             SSlot slot = slots[UnityEngine.Random.Range(0, slots.Count)];
@@ -1412,11 +1413,11 @@ public class GameBoard : MonoBehaviour
                 slot.SetPipe(bPipe);
                 bPipe.PlayAddAnimation();
             } else
-            //if (pipeType == EPipeType.Colored)
+            if (pipeType == EPipeType.Colored)
             {
                 // add colored pipe to slot
 				SPipe cPipe = GetPipeFromPool(EPipeType.Colored, acolor).GetComponent<SPipe>();
-                cPipe.InitPipe(0, acolor, false);
+                cPipe.InitPipe(aparam, acolor, false);
                 slot.SetPipe(cPipe);
                 cPipe.PlayAddAnimation();
             }
