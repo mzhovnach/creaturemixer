@@ -90,11 +90,13 @@ public class PowerupsPanel : MonoBehaviour
 				if (_selectedButton == powerupButton)
 				{
                     powerupButton.Unselect();
-					return;
+                    _selectedButton = null;
+                    return;
 				} else
 				{
                     _selectedButton.Unselect();
-				}
+                    _selectedButton = null;
+                }
 			}
 			
 			if (!powerupButton.IsSelectable())
