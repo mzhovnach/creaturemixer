@@ -24,19 +24,20 @@ public class Powerup : MonoBehaviour
 	{
 
 	}
-		
-    public bool IsCanApplyPowerup()
+
+    public virtual void ApplyPowerup(SSlot slot)
     {
-        if (GameManager.Instance.Game.GetGameState() != EGameState.PlayersTurn || !IsCanApply())
-        {
-            return false;
-        }
-        return IsCanApply();
+
     }
 
-    protected virtual bool IsCanApply()
+    public virtual bool IsCanApply()
     {
         // перевірка чи паверап буде примінений, чи щось змінить
+        return true;
+    }
+
+    public virtual bool IsCanApply(SSlot slot)
+    {
         return true;
     }
 

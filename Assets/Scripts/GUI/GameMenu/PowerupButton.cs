@@ -12,6 +12,7 @@ public class PowerupButton : MonoBehaviour
     public GameObject   		AGameObject;
     public GameObject           SelectionObject;
 
+    public Image                BackImage;
     public Image    			Filler;
 	public UIButton     		UseButton;
 	public Image 				Icon;
@@ -30,6 +31,9 @@ public class PowerupButton : MonoBehaviour
         _amountCurrent = 0;
         _amount = 0;
         AmountText.text = "0";
+
+        Color acolor = Consts.GET_COLOR_BY_ID(_powerup.GetColor());
+        Filler.color = acolor;
     }
 
     public void InitPowerup(PowerupsPanel panel, PowerupData data)
@@ -66,19 +70,20 @@ public class PowerupButton : MonoBehaviour
         LeanTween.value(AGameObject, (float)_amountCurrent, (float)_amount, time)
             //.setEase(LeanTweenType.easeInOutSine)
             //	.setDelay(UIConsts.SHOW_DELAY_TIME)
-            .setOnUpdate
-                (
-                    (float val) =>
+            .setOnUpdate((float val) =>
+                {
+                    int ival = (int)val;
+                    if (ival != _amountCurrent)
                     {
-                        int ival = (int)val;
-                        if (ival != _amountCurrent)
-                        {
-                            _amountCurrent = ival;
-                            AmountText.text = ival.ToString();
-                            Filler.fillAmount = val / _maxAmount;
-                        }
+                        _amountCurrent = ival;
+                        AmountText.text = ival.ToString();
+                        Filler.fillAmount = val / _maxAmount;
                     }
-                );
+                })
+            .setOnComplete(()=>
+                {
+                    Filler.fillAmount = ((float)_amount) / _maxAmount;
+                });
     }
 
     public bool RemoveMana(int manaToRemove)
@@ -160,15 +165,36 @@ public class PowerupButton : MonoBehaviour
 		SelectionObject.SetActive(false);
 	}
 	
-	public void ApplyPowerup()
+	public bool TryApplyPowerup()
 	{
-		SetAmount(0);
+        if (!IsCanApply())
+        {
+            return false;
+        }
+        SetAmount(0);
 		_powerup.ApplyPowerup();
+        return true;
 	}
-		
+
+    public bool TryApplyPowerup(SSlot slot)
+    {
+        if (!IsCanApply(slot))
+        {
+            return false;
+        }
+        SetAmount(0);
+        _powerup.ApplyPowerup(slot);
+        return true;
+    }
+
     public bool IsCanApply()
     {
-        return _powerup.IsCanApplyPowerup();
+        return _powerup.IsCanApply();
+    }
+
+    public bool IsCanApply(SSlot slot)
+    {
+        return _powerup.IsCanApply(slot);
     }
 
     public bool IsSelectable()

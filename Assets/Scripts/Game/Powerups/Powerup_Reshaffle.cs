@@ -91,11 +91,11 @@ public class Powerup_Reshaffle : Powerup
             MusicManager.playSound("reshuffle");
             pipes.Clear();
             freeSlots.Clear();
-            //
-            EventData eventData = new EventData("OnPowerUpUsedEvent");
-            eventData.Data["type"] = GameData.PowerUpType.Reshuffle;
-            GameManager.Instance.EventManager.CallOnPowerUpUsedEvent(eventData);
-            //
+            ////
+            //EventData eventData = new EventData("OnPowerUpUsedEvent");
+            //eventData.Data["type"] = GameData.PowerUpType.Reshuffle;
+            //GameManager.Instance.EventManager.CallOnPowerUpUsedEvent(eventData);
+            ////
             LeanTween.delayedCall(maxTime, () =>
             {
                 if (!board.CheckIfOutOfMoves())
@@ -112,7 +112,7 @@ public class Powerup_Reshaffle : Powerup
         }
 	}
 		
-    protected override bool IsCanApply()
+    public override bool IsCanApply()
     {
         GameBoard board = GameManager.Instance.Game;
         List<SSlot> slots = new List<SSlot>();

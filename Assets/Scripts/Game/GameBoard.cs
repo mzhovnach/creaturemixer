@@ -514,6 +514,7 @@ public class GameBoard : MonoBehaviour
         List<PowerupData> powerupsData = new List<PowerupData>(); //TODO select before level
         powerupsData.Add(new PowerupData(EPowerupType.AddLives, 0));
         powerupsData.Add(new PowerupData(EPowerupType.Reshaffle, 0));
+        powerupsData.Add(new PowerupData(EPowerupType.DestroyPiece, 0));
         APowerupsPanel.InitPanel(powerupsData);
         for (int i = 0; i < WIDTH; ++i)
 		{
@@ -1594,39 +1595,8 @@ public class GameBoard : MonoBehaviour
 				}
 			);
 	}
-		
-    //public void OnPowerUpClicked(GameData.PowerUpType type)
-    //{
-    //    if (_gameState != EGameState.PlayersTurn)
-    //    {
-    //        return;
-    //    }
-    //	ResetHint();
-    //	if (type == GameData.PowerUpType.Reshuffle)
-    //    {
-    //        // reshuffle
-    //        PowerUp_Reshuffle();
-    //        return;
-    //    } else
-    //	if (type == GameData.PowerUpType.Breake)
-    //    {
-    //        // break
-    //        PowerUp_Breake();
-    //        return;
-    //    } else
-    //	if (type == GameData.PowerUpType.Chain)
-    //    {
-    //        // chain booster
-    //        PowerUp_Chain();
-    //    } else
-    //    if (type == GameData.PowerUpType.DestroyColor)
-    //    {
-    //        // chain booster
-    //        PowerUp_DestroyColor();
-    //    }
-    //}
 
-	private void BreakePipeInSlot(SSlot slot, GameObject prefab) //, Vector3 startEffectPos)
+	public void BreakePipeInSlot(SSlot slot, GameObject prefab) //, Vector3 startEffectPos)
 	{
         MusicManager.playSound("chip_destroy");
         SPipe pipe = slot.TakePipe();
@@ -1639,27 +1609,6 @@ public class GameBoard : MonoBehaviour
         //
         pipe.RemoveConsumAnimation();
 	}
-
-    public void OnBreakePowerupUsed(SSlot slot)
-    {
-        SetGameState(EGameState.PlayerUsedPowerup, "OnBreakePowerupUsed");
-        BreakePipeInSlot(slot, (slot.Pipe as Pipe_Colored).GetExplodeEffectPrefab()); //BreakePipeInSlot(slot, BreakeEffectPrefab);
-		//
-		EventData eventData = new EventData("OnPowerUpUsedEvent");
-		eventData.Data["type"] = GameData.PowerUpType.Breake;
-		GameManager.Instance.EventManager.CallOnPowerUpUsedEvent(eventData);
-		//
-        
-        // if no pipes left - add new pipe on board without move counting
-        if (GetMovablePipesCount() == 0)
-        {
-            OnTurnWasMade(false, true);
-        } else
-        {
-            SetGameState(EGameState.PlayersTurn, "Breake powerup completed");
-        }
-        //
-    }
 
     public void OnChainPowerupUsed(SSlot slot)
     {

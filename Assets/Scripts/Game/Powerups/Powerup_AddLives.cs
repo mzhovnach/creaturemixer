@@ -10,9 +10,12 @@
 	public override void ApplyPowerup()
 	{
         GameManager.Instance.Game.ALivesPanel.AddLives(_power);
-	}
-		
-    protected override bool IsCanApply()
+        //EventData eventData = new EventData("OnPowerUpUsedEvent");
+        //eventData.Data["type"] = GameData.PowerUpType.AddLives;
+        //GameManager.Instance.EventManager.CallOnPowerUpUsedEvent(eventData);
+    }
+
+    public override bool IsCanApply()
     {
         return GameManager.Instance.Game.ALivesPanel.IsWounded();
     }

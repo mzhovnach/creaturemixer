@@ -350,7 +350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3584906, g: 0.2756319, b: 0.2756319, a: 1}
+  m_Color: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
   m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -381,6 +381,7 @@ MonoBehaviour:
   AmountText: {fileID: 44373356265556486}
   AGameObject: {fileID: 7838458198886972958}
   SelectionObject: {fileID: 5703588894241422637}
+  BackImage: {fileID: 7645464496641105557}
   Filler: {fileID: 8884089163279506208}
   UseButton: {fileID: 996570349874691870}
   Icon: {fileID: 158728887657258704}

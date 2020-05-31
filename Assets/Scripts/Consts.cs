@@ -44,7 +44,8 @@ public class Consts
         new Color(50/255.0f, 255/255.0f, 0/255.0f, 1),
         new Color(50/255.0f, 0/255.0f, 255/255.0f, 1),
 		new Color(150/255.0f, 0/255.0f, 255/255.0f, 1),
-		//new Color(150/255.0f, 150/255.0f, 150/255.0f, 1),
+        //
+		new Color(150/255.0f, 150/255.0f, 150/255.0f, 1), // - neutral color
 	};
 
     public static long[] POINTS =		// points for each level of colored pipe
@@ -138,4 +139,13 @@ public class Consts
     public static bool MOVE_ENEMIES_WITH_SLIDE = true;
 
     public static bool FILLER_VARIATION = false;
+
+    public static Color GET_COLOR_BY_ID(int colorId)
+    {
+        if (colorId >= 0)
+        {
+            return COLORS[colorId]; // colored
+        }
+        return COLORS[5]; // neutral
+    }
 }

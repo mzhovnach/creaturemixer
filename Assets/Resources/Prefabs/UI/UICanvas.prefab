@@ -19228,6 +19228,7 @@ MonoBehaviour:
   FolderToScan: PowerupsButtons
   Prefabs:
   - {fileID: 7847532254522878720, guid: 1a35e3d331d73cc42bec8b47b74a9505, type: 3}
+  - {fileID: 2050140622505664325, guid: a823b832858374349b761758f507304f, type: 3}
   - {fileID: 5061619631797271910, guid: 35d91d23a6356b74c97141d5fb506df2, type: 3}
   - {fileID: 7838458198886972958, guid: 02412d1bdbfc8e148a0c298e047c74d1, type: 3}
 --- !u!1 &5765482690506942240

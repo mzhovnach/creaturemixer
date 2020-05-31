@@ -35,7 +35,9 @@ public class PowerupsPanel : MonoBehaviour
 		{
             _buttons[i].gameObject.SetActive(false);
 		}
-	}
+        _buttons.Clear();
+
+    }
 	
 	private void AddPowerupButton(PowerupData powerupData)
 	{
@@ -97,7 +99,7 @@ public class PowerupsPanel : MonoBehaviour
 			
 			if (!powerupButton.IsSelectable())
 			{
-				powerupButton.ApplyPowerup(); 
+                powerupButton.TryApplyPowerup();
 			} else
 			{
                 powerupButton.Select();
@@ -127,5 +129,41 @@ public class PowerupsPanel : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public bool OnSlotTouched(SSlot slot)
+    {
+        if (GameManager.Instance.Game.GetGameState() != EGameState.PlayersTurn)
+        {
+            return false;
+        }
+        if (_selectedButton)
+        {
+            bool applied = _selectedButton.TryApplyPowerup(slot);
+            if (applied)
+            {
+                _selectedButton.Unselect();
+                _selectedButton = null;
+            }
+            return true; // ca't swipe if powerup selected?
+        } else
+        {
+            return false;
+        }
+        //if (board.BreakePowerup)
+        //{
+        //	board.OnBreakePowerupUsed(this);
+        //	return;
+        //} else
+        //if (board.ChainPowerup)
+        //{
+        //	board.OnChainPowerupUsed(this);
+        //	return;
+        //} else
+        //if (board.DestroyColorPowerup)
+        //{
+        //	board.OnDestroyColorPowerupUsed(this);
+        //	return;
+        //}
     }
 }
