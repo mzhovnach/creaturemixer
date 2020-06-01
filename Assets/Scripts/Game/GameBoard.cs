@@ -510,7 +510,12 @@ public class GameBoard : MonoBehaviour
         //AAimPanel.InitPanel(levelData);
         AAttacks.ClearAllAttacks();
         ALivesPanel.InitPanel(100, 100);
-        APowerupsPanel.InitPanel(0, 20);
+
+        List<PowerupData> powerupsData = new List<PowerupData>(); //TODO select before level
+        powerupsData.Add(new PowerupData(EPowerupType.AddLives, 0));
+        powerupsData.Add(new PowerupData(EPowerupType.Reshaffle, 0));
+        powerupsData.Add(new PowerupData(EPowerupType.DestroyPiece, 0));
+        APowerupsPanel.InitPanel(powerupsData);
         for (int i = 0; i < WIDTH; ++i)
 		{
 			for (int j = 0; j < HEIGHT; ++j)
@@ -548,61 +553,6 @@ public class GameBoard : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
         StartPlayersTurn();
     }
-
-	//protected IEnumerator CreateLeveledLevel(ScriptableLevelData levelData) 
-	//{
- //       _currentTouchId = -1;
- //       DragSlot = null;
- //       HideSelection();
- //       //
- //       TimePlayed = 0;
-	//	MovesLeft = levelData.MinMovesCount;
-	//	StarsGained = 0;
-	//	AMovesPanel.SetAmountForce(MovesLeft);
- //       AStarsPanel.ResetScores();
- //       //AStarsPanel.SetAmountForce(StarsGained);
-	//	ALevelPanel.SetText();
-		
-	//	PowerUps[GameData.PowerUpType.Reshuffle] = 0;
-	//	PowerUps[GameData.PowerUpType.Breake] = 0;
-	//	PowerUps[GameData.PowerUpType.Chain] = 0;
-	//	PowerUps[GameData.PowerUpType.DestroyColor] = 0;
-	//	AddsViewed = true;
-
- //       // powerups
- //       EventData eventData = new EventData("OnPowerUpsResetNeededEvent");
- //       eventData.Data["isStart"] = true;
- //       GameManager.Instance.EventManager.CallOnPowerUpsResetNeededEvent(eventData);
- //       BreakePowerup = false;
- //       ChainPowerup = false;
- //       DestroyColorPowerup = false;
-
- //       yield return new WaitForSeconds(Consts.DARK_SCREEN_SHOW_HIDE_TIME);
- //       yield return StartCoroutine(ClearBoard());
- //       // create pipes force
- //       for (int i = 0; i < levelData.StartStates.Count; ++i)
- //       {
- //           int x = levelData.StartStates[i].x;
- //           int y = levelData.StartStates[i].y;
- //           Slots[x, y].InitSavedSlot(levelData.StartStates[i]);
- //           // pipe
- //           EPipeType pType = (EPipeType)levelData.StartStates[i].pt;
- //           if (pType != EPipeType.None)
- //           {
- //               // create pipe
- //               SPipe pipe = CreatePipe(pType, levelData.StartStates[i].p, levelData.StartStates[i].c);
- //               Slots[x, y].SetPipe(pipe);
- //               pipe.PlayAddAnimation();
- //               if (pType == EPipeType.Hole)
- //               {
- //                   Slots[x, y].SetAsHole();
- //               }
- //               yield return new WaitForSeconds(0.05f);
- //           }
- //       }
- //       yield return new WaitForSeconds(0.25f);
- //       UnsetPause();
- //   }
 		
 	public void PlayGame()
     {
@@ -1312,7 +1262,7 @@ public class GameBoard : MonoBehaviour
 			BumpCameraHorizontal(horizontalBump, Consts.BUMP_TIME);
             if (slideData.Slot2.X == 0 || slideData.Slot2.X == WIDTH - 1)
             {
-                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.DistX);
+                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.Pipe, slideData.DistX);
             }
 		} else
 		{
@@ -1321,7 +1271,7 @@ public class GameBoard : MonoBehaviour
 			BumpCameraVertical(verticalBump, Consts.BUMP_TIME);
             if (slideData.Slot2.Y == 0 || slideData.Slot2.Y == HEIGHT - 1)
             {
-                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.DistY);
+                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.Pipe, slideData.DistY);
             }
         }
 	}
@@ -1443,14 +1393,15 @@ public class GameBoard : MonoBehaviour
             // get info about first pipe from queue
             EPipeType pipeType = AQueuePanel.GetNextType();
             int acolor = AQueuePanel.GetNextColor();
+            int aparam = AQueuePanel.GetNextParam();
             // add new pipe to queue
             if (newPipeType == EPipeType.Blocker)
             {
                 AQueuePanel.MoveQueue(newPipeType, -1, 0);
             } else
-            //if (newPipeType == EPipeType.Colored)
+            if (newPipeType == EPipeType.Colored)
             {
-                AQueuePanel.MoveQueue(newPipeType, GetRandomColor(), 0);
+                AQueuePanel.MoveQueue(newPipeType, GetRandomColor(), UnityEngine.Random.Range(0, Consts.MAX_COLORED_LEVEL_IN_QUEUE + 1));
             }
             //
             SSlot slot = slots[UnityEngine.Random.Range(0, slots.Count)];
@@ -1462,11 +1413,11 @@ public class GameBoard : MonoBehaviour
                 slot.SetPipe(bPipe);
                 bPipe.PlayAddAnimation();
             } else
-            //if (pipeType == EPipeType.Colored)
+            if (pipeType == EPipeType.Colored)
             {
                 // add colored pipe to slot
 				SPipe cPipe = GetPipeFromPool(EPipeType.Colored, acolor).GetComponent<SPipe>();
-                cPipe.InitPipe(0, acolor, false);
+                cPipe.InitPipe(aparam, acolor, false);
                 slot.SetPipe(cPipe);
                 cPipe.PlayAddAnimation();
             }
@@ -1523,7 +1474,7 @@ public class GameBoard : MonoBehaviour
             }
         }
         // check powerups
-        if (APowerupsPanel.IsFull())
+        if (APowerupsPanel.IsCanApply())
         {
             // show notification
             EventData eventData = new EventData("OnShowNotificationEvent");
@@ -1645,39 +1596,8 @@ public class GameBoard : MonoBehaviour
 				}
 			);
 	}
-		
-    //public void OnPowerUpClicked(GameData.PowerUpType type)
-    //{
-    //    if (_gameState != EGameState.PlayersTurn)
-    //    {
-    //        return;
-    //    }
-    //	ResetHint();
-    //	if (type == GameData.PowerUpType.Reshuffle)
-    //    {
-    //        // reshuffle
-    //        PowerUp_Reshuffle();
-    //        return;
-    //    } else
-    //	if (type == GameData.PowerUpType.Breake)
-    //    {
-    //        // break
-    //        PowerUp_Breake();
-    //        return;
-    //    } else
-    //	if (type == GameData.PowerUpType.Chain)
-    //    {
-    //        // chain booster
-    //        PowerUp_Chain();
-    //    } else
-    //    if (type == GameData.PowerUpType.DestroyColor)
-    //    {
-    //        // chain booster
-    //        PowerUp_DestroyColor();
-    //    }
-    //}
 
-	private void BreakePipeInSlot(SSlot slot, GameObject prefab) //, Vector3 startEffectPos)
+	public void BreakePipeInSlot(SSlot slot, GameObject prefab) //, Vector3 startEffectPos)
 	{
         MusicManager.playSound("chip_destroy");
         SPipe pipe = slot.TakePipe();
@@ -1690,123 +1610,6 @@ public class GameBoard : MonoBehaviour
         //
         pipe.RemoveConsumAnimation();
 	}
-
-    public void PowerUp_Reshuffle()
-    {
-        SetGameState(EGameState.PlayerUsedPowerup, "PowerUp_Reshuffle");
-        List <SSlot> slots = new List<SSlot>();
-        for (int i = 0; i < WIDTH; ++i)
-        {
-            for (int j = 0; j < HEIGHT; ++j)
-            {
-                SSlot slot = Slots[i, j];
-                SPipe pipe = slot.Pipe;
-                if (pipe != null)
-                {
-                    slots.Add(slot);
-                }
-            }
-        }
-        if (slots.Count > 0)
-        {
-            //int boosterPower = GameManager.Instance.Player.BoosterLevel * Consts.PU__POWER_PER_LEVEL_RESHUFFLE;
-            //boosterPower = Mathf.Min(slots.Count, boosterPower);
-            int boosterPower = slots.Count;
-            // take pipes from slots
-            slots = Helpers.ShuffleList(slots);
-            List<SPipe> pipes = new List<SPipe>();
-            for (int i = 0; i < boosterPower; ++i)
-            {
-                pipes.Add(slots[i].TakePipe());
-            }
-            // find free slots
-            List<SSlot> freeSlots = GetEmptySSlots();
-            // randomly move pipes to slots
-            float maxTime = 0;
-            for (int i = 0; i < boosterPower; ++i)
-            {
-                // add to new slot
-                SPipe pipe = pipes[i];
-                int randI = UnityEngine.Random.Range(0, freeSlots.Count);
-                SSlot slot = freeSlots[randI];
-
-                if (slot.X == pipe.X && slot.Y == pipe.Y && freeSlots.Count > 1)
-                {
-                    // we must change slot
-                    --i;
-                    continue;
-                }
-
-                freeSlots.RemoveAt(randI);
-                // find distance
-                float dx = pipe.X - slot.X;
-                float dy = pipe.Y - slot.Y;
-                float distance = Mathf.Sqrt(dx * dx + dy * dy);
-                // find move time, check max time
-                float moveTime = distance * Consts.PU__RESHUFFLE_TIME_PER_SLOT;
-                if (moveTime > maxTime)
-                {
-                    maxTime = moveTime;
-                }
-                //
-                slot.SetPipe(pipe, false);
-                // move upper
-                Vector3 oldPos = pipe.transform.position;
-                oldPos.z = PipeZ - 1.0f;
-                pipe.transform.position = oldPos;
-                // fly to new slot
-                GameObject pipeObj = pipe.gameObject;
-                LeanTween.cancel(pipeObj);
-                Vector3 newPos = slot.transform.position;
-                newPos.z = PipeZ;
-                LeanTween.move(pipeObj, newPos, moveTime)
-                    //.setDelay(i * 0.01f)
-                    .setEase(LeanTweenType.easeInOutSine);
-            }
-            MusicManager.playSound("reshuffle");
-            pipes.Clear();
-            freeSlots.Clear();
-			//
-			EventData eventData = new EventData("OnPowerUpUsedEvent");
-			eventData.Data["type"] = GameData.PowerUpType.Reshuffle;
-			GameManager.Instance.EventManager.CallOnPowerUpUsedEvent(eventData);
-            //
-            LeanTween.delayedCall(maxTime, ()=>
-            {
-                if (!CheckIfOutOfMoves())
-                {
-                    SetGameState(EGameState.PlayersTurn, "Reshuffle powerup completed");
-                }
-            });
-            //Invoke("CheckIfOutOfMoves", maxTime);
-        }
-        else
-        {
-            //TODO wrong sound, nothing happens
-            SetGameState(EGameState.PlayersTurn, "Reshuffle wrong");
-        }
-    }
-
-    public void OnBreakePowerupUsed(SSlot slot)
-    {
-        SetGameState(EGameState.PlayerUsedPowerup, "OnBreakePowerupUsed");
-        BreakePipeInSlot(slot, (slot.Pipe as Pipe_Colored).GetExplodeEffectPrefab()); //BreakePipeInSlot(slot, BreakeEffectPrefab);
-		//
-		EventData eventData = new EventData("OnPowerUpUsedEvent");
-		eventData.Data["type"] = GameData.PowerUpType.Breake;
-		GameManager.Instance.EventManager.CallOnPowerUpUsedEvent(eventData);
-		//
-        
-        // if no pipes left - add new pipe on board without move counting
-        if (GetMovablePipesCount() == 0)
-        {
-            OnTurnWasMade(false, true);
-        } else
-        {
-            SetGameState(EGameState.PlayersTurn, "Breake powerup completed");
-        }
-        //
-    }
 
     public void OnChainPowerupUsed(SSlot slot)
     {
@@ -2060,7 +1863,7 @@ public class GameBoard : MonoBehaviour
         //}
     }
 
-    private bool CheckIfOutOfMoves()
+    public bool CheckIfOutOfMoves()
     {
         List<SSlot> slots = GetEmptySSlots();
         if (slots.Count == 0)
@@ -2644,8 +2447,14 @@ public class GameBoard : MonoBehaviour
 		}
 		if (DragSlot != null)
 		{
-			DragSlot.OnMouseUpByPosition(downGamePos);
-		} else
+			if (DragSlot.OnMouseUpByPosition(downGamePos))
+            {
+                // impulse too short - tap
+                TryCreateFinalAttackByTouch(DragSlot);
+            }
+            HideSelection();
+            DragSlot = null;
+        } else
         if (DragEnemy != null)
         {
             if (AEnemies.TryToMoveEnemyBySlide(DragEnemy, _startDragEnemyPos, downGamePos, true))
@@ -2852,7 +2661,7 @@ public class GameBoard : MonoBehaviour
                 ////aimComplited = AAimPanel.CheckSlot(GetSlot(_lastSlotWithMatch));
                 ////_lastSlotWithMatch.x = -1;
                 ////allAimsCompleted = AAimPanel.IsAllAimsCompleted();
-                TryCreateFinalAttack(GetSlot(_lastSlotWithMatch));
+                //TryCreateFinalAttack(GetSlot(_lastSlotWithMatch));
                 _lastSlotWithMatch.x = -1;
             }
         } else
@@ -3133,5 +2942,21 @@ public class GameBoard : MonoBehaviour
         {
             AAttacks.CreateFinalAttack(slot, slot.Pipe.AColor, slot.Pipe.Param * 3); // TODO correct power of strike according to upgrades and balance
         }
+    }
+
+    public bool TryCreateFinalAttackByTouch(SSlot slot)
+    {
+        if (!slot.Pipe || !slot.Pipe.IsColored())
+        {
+            return false;
+        }
+        if (slot.Pipe.Param == _maxColoredLevels - 1)
+        {
+            AAttacks.CreateFinalAttack(slot, slot.Pipe.AColor, slot.Pipe.Param * 3); // TODO correct power of strike according to upgrades and balance
+            SetGameState(EGameState.EnemiesAttack, "attacking by touch final");
+            OnTurnWasMade(true, false);
+            return true;
+        }
+        return false;
     }
 }

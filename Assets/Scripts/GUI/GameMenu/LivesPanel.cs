@@ -12,7 +12,7 @@ public class LivesPanel : MonoBehaviour
     private int         Amount;
     private int         MaxAmount;
 
-    public Image    Filler;
+    public Image        Filler;
 
     void Awake()
     {
@@ -86,8 +86,14 @@ public class LivesPanel : MonoBehaviour
     {
         return Amount <= 0;
     }
-	
-	public bool AttackByEnemy(Enemy enemy)
+
+    public bool IsWounded()
+    {
+        return Amount < MaxAmount;
+    }
+
+
+    public bool AttackByEnemy(Enemy enemy)
 	{
 		return RemoveLives(enemy.GetDamage());
 	}
