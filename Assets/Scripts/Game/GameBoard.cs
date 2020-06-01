@@ -68,8 +68,8 @@ public class GameBoard : MonoBehaviour
         public EPipeType PipeType;
     }
 
-    public const int 							WIDTH 					= 5;
-	public const int 							HEIGHT 					= 5;
+    public const int 							WIDTH 					= 7;
+	public const int 							HEIGHT 					= 7;
     public static Vector2                       DXDY = Vector2.zero; // зміщення боарда, щоб потрапив в поле зору камери
     public static float							SlotZ                 	= 0.3f;
     public static float             			PipeZ                	= 0.26f;
