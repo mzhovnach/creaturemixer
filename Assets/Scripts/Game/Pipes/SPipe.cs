@@ -9,7 +9,8 @@ public enum EPipeType
 	Base			=	2,	// база				- збирає фішки як завод + головна будівля (гейм овер, якщо втратим)
 	Blocker			=	3,
 	Hole			=	4,	// дірка в полі, в подальшому можливо ембелішменти
-	Last			=	5
+    Character       =   5,
+	Last			=	6
 }
 [System.Serializable]
 public enum EPipeStructureType
@@ -65,7 +66,12 @@ public class SPipe : MonoBehaviour
 		return PipeType == EPipeType.Colored;
 	}
 
-	public virtual void RaseCombineAnimation(int newParam, int dirX, int dirY)
+    public bool IsCharacter()
+    {
+        return PipeType == EPipeType.Character;
+    }
+
+    public virtual void RaseCombineAnimation(int newParam, int dirX, int dirY)
 	{
 		// animation of colored pipe when other pipe slides to it
 	}

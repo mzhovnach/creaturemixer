@@ -19,7 +19,7 @@ public class EnemyUI : MonoBehaviour
 
     public void InitEnemyUI(Enemy enemy)
     {
-        LivesView.InitPanel(enemy.GetLives(), enemy.MaxLives);
+        LivesView.InitCounter(enemy.GetLives(), enemy.MaxLives);
         SetDamage(enemy.GetDamage());
         SetMoves(enemy.GetMovesToAttack());
     }

@@ -43,13 +43,11 @@ public class Attacks : MonoBehaviour
 {
 	private const float			SIMPLE_ATTACK_SPEED = 0.05f; // per unit
     private List<AttackData>    _attacksData = new List<AttackData>();
-    private SuperSimplePool     _pool;
     private Enemies             _enemies;
 	public Transform 			ObjectsContainer;
 
     private void Awake()
     {
-        _pool = GetComponent<SuperSimplePool>();
         _enemies = GameManager.Instance.Game.AEnemies;
     }
 
@@ -138,7 +136,7 @@ public class Attacks : MonoBehaviour
         // instantiate attack beam
 		Vector3 pos = slot.transform.position;
 		pos.z = -7;
-        GameObject attackObject = _pool.InstantiateObject("simple_attack_" + pipeColor.ToString(), ObjectsContainer, pos);
+        GameObject attackObject = GameManager.Instance.Game.GetPool().InstantiateObject("simple_attack_" + pipeColor.ToString(), ObjectsContainer, pos);
         Attack attack = attackObject.AddComponent<Attack>();
         attack.DestroyOnComplete = true;
         attack.Color = pipeColor;

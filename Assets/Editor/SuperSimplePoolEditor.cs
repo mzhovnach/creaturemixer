@@ -39,17 +39,22 @@ public class SuperSimplePoolEditor : Editor
     {
         SuperSimplePool myTarget = (SuperSimplePool)target;
         // find all GameObjects
-        string path = myTarget.FolderToScan;
-        if (path != ""){
-            path = "/" + path;
-        }
-        var guids2 = AssetDatabase.FindAssets("t:gameobject", new string[] { "Assets/Prefabs" + path });
         myTarget.Prefabs = new List<GameObject>();
-        int index = 0;
-        foreach (var guid in guids2)
+        for (int i = 0; i < myTarget.FoldersToScan.Count; ++i)
         {
-            myTarget.Prefabs.Add(AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid)));
-            index++;
+            string path = myTarget.FoldersToScan[i];
+            if (path != "")
+            {
+                path = "/" + path;
+            }
+            var guids2 = AssetDatabase.FindAssets("t:gameobject", new string[] { "Assets/Prefabs" + path });
+
+            int index = 0;
+            foreach (var guid in guids2)
+            {
+                myTarget.Prefabs.Add(AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid)));
+                index++;
+            }
         }
         EditorUtility.SetDirty(myTarget);
     }

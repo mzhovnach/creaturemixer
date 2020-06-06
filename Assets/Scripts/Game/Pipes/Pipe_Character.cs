@@ -1,0 +1,241 @@
+﻿using UnityEngine;
+using System.Collections.Generic;
+
+public enum ECharacterAnimState
+{
+    Normal = 0,
+    GainDamage = 1,
+    Death = 2,
+    Attack = 3
+}
+
+public class Pipe_Character : SPipe
+{
+    protected Powerup           _powerup;
+    public GameObject           Art;
+    public GameObject           Selection;
+    public ProgressView         Mana;
+    public ProgressView         Lives;
+    public GameObject           ScaleObject; // should has local scale = (1, 1, 1)
+    public GameObject           ShakeObject; // should has local position = (0, 0, 0)
+    public GameObject           DeadObject;
+
+    protected bool              _selected = false;
+    protected bool              _dead = false;
+    ECharacterAnimState         _animState = ECharacterAnimState.Normal;
+    //public List<AttackData>     _attacksApplied = new List<AttackData>();
+
+    protected void Awake()
+    {
+        _powerup = GetComponent<Powerup>();
+    }
+
+    public virtual void InitCharacter(int level)
+    {
+        _animState = ECharacterAnimState.Normal;
+        _powerup.InitPowerup(level);
+        Lives.InitCounter(30, 30);  // TODO according to level
+        Mana.InitCounter(0, 20);    // TODO according to level
+        _destroyed = false;
+        _movable = true;
+        _dead = false;
+        DeadObject.SetActive(false);
+        SetValueForce(level);
+        UnselectForce();
+    }
+
+	public void SetValueForce(int param)
+	{
+        Param = param;
+        UpdateSkin();
+    }
+		
+	public override void UpdateSkin()
+	{
+        //TODO different images on different level
+	}
+    public bool RemoveMana(int manaToRemove)
+    {
+        int mana = Mana.GetAmount() - manaToRemove;
+        Mana.SetAmount(mana);
+        return Mana.IsFull();
+    }
+
+    public bool AddMana(int manaToAdd)
+    {
+        int mana = Mana.GetAmount() + manaToAdd;
+        Mana.SetAmount(mana);
+        return Mana.IsFull();
+    }
+
+    public int AddMana(int manaToAdd, int color)
+    {
+        if (Mana.IsFull())
+        {
+            return 0;
+        }
+        if (color < 0 || color == _powerup.GetColor())
+        {
+            int manaToAddReal = Mathf.Min(Mana.GetMaxAmount() - Mana.GetAmount(), manaToAdd);
+            int mana = Mana.GetAmount() + manaToAddReal;
+            Mana.SetAmount(mana);
+            return manaToAdd - manaToAddReal;
+        }
+        return 0;
+    }
+
+    public bool IsSelected()
+    {
+        return _selected;
+    }
+
+    public void Select()
+    {
+        _selected = true;
+        Selection.SetActive(true);
+    }
+
+    public void UnselectForce()
+    {
+        _selected = false;
+        Selection.SetActive(false);
+    }
+
+    public void Unselect()
+    {
+        _selected = false;
+        Selection.SetActive(false);
+    }
+
+    public bool TryApplyPowerup()
+    {
+        if (!IsCanApply())
+        {
+            return false;
+        }
+        Mana.SetAmount(0);
+        _powerup.ApplyPowerup();
+        return true;
+    }
+
+    public bool TryApplyPowerup(SSlot slot)
+    {
+        if (!IsCanApply(slot))
+        {
+            return false;
+        }
+        Mana.SetAmount(0);
+        _powerup.ApplyPowerup(slot);
+        return true;
+    }
+
+    public bool IsCanApply()
+    {
+        return _powerup.IsCanApply();
+    }
+
+    public bool IsCanApply(SSlot slot)
+    {
+        return _powerup.IsCanApply(slot);
+    }
+
+    public bool IsSelectable()
+    {
+        return _powerup.IsSelectable();
+    }
+
+    public EPowerupType GetPowerupType()
+    {
+        return _powerup.GetPowerupType();
+    }
+
+    //public virtual float ApplyAttack(AttackData attackData)
+    //{
+    //    if (_dead)
+    //    {
+    //        Debug.LogError("DEAD!");
+    //        return 0;
+    //    }
+    //    _attacksApplied.Add(attackData);
+    //    int lives = Lives.GetAmount() - attackData.AAttack.Power;
+    //    Lives.SetAmount(lives);
+    //    _dead = Lives.GetAmount() == 0;
+    //    return PlayGainDamageAnimation();
+    //}
+
+    public virtual bool DealDamage(int damage)
+    {
+        if (_dead)
+        {
+            Debug.LogError("DEAD!");
+            return false;
+        }
+        int lives = Lives.GetAmount() - damage;
+        Lives.SetAmount(lives);
+        _dead = Lives.GetAmount() == 0;
+        PlayGainDamageAnimation();
+        return _dead;
+    }
+
+    protected virtual float PlayGainDamageAnimation()
+    {
+        _animState = ECharacterAnimState.GainDamage;
+        //UpdateLivesView();
+        float time = 0.25f;
+        LeanTween.cancel(ShakeObject);
+        float shakePower = 0.2f;
+        LeanTween.value(ShakeObject, 0.0f, 1.0f, time)
+            .setOnUpdate((float val) =>
+            {
+                Vector2 dxy = UnityEngine.Random.insideUnitCircle;
+                ShakeObject.transform.localPosition = new Vector3(shakePower * dxy.x, shakePower * dxy.y, 0);
+            })
+            .setOnComplete(() =>
+            {
+                ShakeObject.transform.localPosition = Vector3.zero;
+                if (_dead)
+                {
+                    PlayDeathAnimation();
+                }
+                else
+                {
+                    //RemoveAppliedAttacks();
+                    _animState = ECharacterAnimState.Normal;
+                }
+            });
+        return time;
+    }
+
+    protected virtual void PlayDeathAnimation()
+    {
+        _animState = ECharacterAnimState.Death;
+        float time = 0.15f;
+        LeanTween.cancel(ScaleObject);
+        float scaleMin = 0f;
+        LeanTween.scale(ScaleObject, new Vector3(scaleMin, scaleMin, 1), time)
+            .setEaseInOutSine()
+            .setOnComplete(() =>
+            {
+                //RemoveAppliedAttacks();
+            });
+        LeanTween.cancel(DeadObject);
+        DeadObject.transform.localScale = new Vector3(0, 0, 1);
+        DeadObject.SetActive(true);
+        LeanTween.scale(ScaleObject, Vector3.one, time)
+            .setEaseInOutSine();
+    }
+
+    public bool IsDead()
+    {
+        return _dead;
+    }
+
+    //private void RemoveAppliedAttacks()
+    //{
+    //    for (int i = 0; i < _attacksApplied.Count; ++i)
+    //    {
+    //        GameManager.Instance.Game.AAttacks.OnAttackApplied(_attacksApplied[i]);
+    //    }
+    //    _attacksApplied.Clear();
+    //}
+}

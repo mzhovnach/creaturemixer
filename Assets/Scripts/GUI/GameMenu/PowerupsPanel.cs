@@ -9,7 +9,6 @@ public class PowerupsPanel : MonoBehaviour
     public GameObject   	    CollectManaEffect; //TODO colorize effect or different prefabs
     private ZActionWorker 	    _worker;
 	private List<PowerupButton>	_buttons = new List<PowerupButton>();
-	public SuperSimplePool 	    Pool;
     public List<Transform>      Positions;
 
     private PowerupButton 	    _selectedButton = null;
@@ -41,18 +40,15 @@ public class PowerupsPanel : MonoBehaviour
 	
 	private void AddPowerupButton(PowerupData powerupData)
 	{
-		GameObject obj = Pool.InstantiateObject("Powerup_" + powerupData.Type.ToString(), Container);
+		GameObject obj = GameManager.Instance.Game.GetPool().InstantiateObject("Powerup_" + powerupData.Type.ToString(), Container);
 		PowerupButton powerupButton = obj.GetComponent<PowerupButton>();
         _buttons.Add(powerupButton);
 		obj.transform.localPosition = Positions[_buttons.Count - 1].localPosition;
 		powerupButton.InitPowerup(this, powerupData);
 	}
 
-    public void AddManaForBump(SSlot slot, SPipe pipe, int distance)
+    public int AddManaForBump(SSlot slot, SPipe pipe, int mana, int color)
     {
-        int color = pipe.AColor;
-        int aparam = pipe.Param;
-        int mana = distance * (aparam + 1); // more distance - more mana
 		for (int i = 0; i < _buttons.Count; ++i)
 		{
 			int addedMana = _buttons[i].AddMana(mana, color);
@@ -74,6 +70,7 @@ public class PowerupsPanel : MonoBehaviour
 				break;
 			}
 		}
+        return mana;
     }
 
     void Update()
@@ -147,25 +144,10 @@ public class PowerupsPanel : MonoBehaviour
                 _selectedButton.Unselect();
                 _selectedButton = null;
             }
-            return true; // ca't swipe if powerup selected?
+            return true; // can't swipe if powerup selected
         } else
         {
             return false;
         }
-        //if (board.BreakePowerup)
-        //{
-        //	board.OnBreakePowerupUsed(this);
-        //	return;
-        //} else
-        //if (board.ChainPowerup)
-        //{
-        //	board.OnChainPowerupUsed(this);
-        //	return;
-        //} else
-        //if (board.DestroyColorPowerup)
-        //{
-        //	board.OnDestroyColorPowerupUsed(this);
-        //	return;
-        //}
     }
 }

@@ -18,7 +18,6 @@ public class Enemies : MonoBehaviour
     public List<EnemyParams>                EnemiesDefaultParams;
     public Transform                        ObjectsContainer;
 
-    private SuperSimplePool                 _pool;
     private List<Enemy>                     _enemies = new List<Enemy>();
     private Dictionary<string, EnemyParams> _enemiesDefaultParams;
 
@@ -26,7 +25,6 @@ public class Enemies : MonoBehaviour
 
     private void Awake()
     {
-        _pool = GetComponent<SuperSimplePool>();
         _enemiesDefaultParams = new Dictionary<string, EnemyParams>();
         for (int i = 0; i < EnemiesDefaultParams.Count; ++i)
         {
@@ -86,7 +84,7 @@ public class Enemies : MonoBehaviour
         } else
         {
             // add enemy
-            GameObject enemyObj = _pool.GetObjectFromPool(enemyData.Name, ObjectsContainer);
+            GameObject enemyObj = GameManager.Instance.Game.GetPool().GetObjectFromPool(enemyData.Name, ObjectsContainer);
             Enemy enemy = enemyObj.GetComponent<Enemy>();
             _enemies.Add(enemy);
             SetEnemyToSlots(slotsForEnemy, enemy, true);

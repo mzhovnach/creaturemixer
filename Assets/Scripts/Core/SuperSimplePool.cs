@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class SuperSimplePool : MonoBehaviour
 {
-    public string FolderToScan = ""; // folder inside Assets/Prefabs
+    public List<string> FoldersToScan = new List<string>(); // folder inside Assets/Prefabs
     private Dictionary<string, GameObject> _prefabs = new Dictionary<string, GameObject>();
     public List<GameObject> Prefabs;
     public Dictionary<string, List<GameObject>> _pool = new Dictionary<string, List<GameObject>>();
 
-    void Awake()
+    public void InitPool()
     {
         for (int i = 0; i < Prefabs.Count; ++i)
         {

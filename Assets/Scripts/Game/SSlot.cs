@@ -22,6 +22,8 @@ public class SSlot : MonoBehaviour {
 	private Vector2			MouseDownPos;
     public bool             IsDoubleSlot { get; set; }
 
+    private bool            _justClick = false;
+
 	#if UNITY_ANDROID || UNITY_IOS
 		private int				TouchId;
 	#endif
@@ -240,17 +242,27 @@ public class SSlot : MonoBehaviour {
 
 	public void OnMouseDownByPosition(Vector2 pos)
 	{
-		if (GameManager.Instance.Game.APowerupsPanel.OnSlotTouched(this))
+        bool canSelect = true;
+        _justClick = !IsMovable() || !Pipe.IsMovable();
+        if (Pipe.IsCharacter())
         {
-            return;
+            if (Pipe.GetComponent<Pipe_Character>().IsDead())
+            {
+                canSelect = false;
+            }
+        } else
+        {
+            if (_justClick)
+            {
+                // can't drag - pipe or slot is immovable
+                canSelect = false;
+            }
         }
 
-		if (!IsMovable() || !Pipe.IsMovable())
+        if (!canSelect)
 		{
-			// can't drag - pipe or slot is immovable
 			return;
-		}
-		else
+		} else
 		{
 			// mark as slot that we drag now
 			GameManager.Instance.Game.DragSlot = this;
@@ -261,6 +273,10 @@ public class SSlot : MonoBehaviour {
 
 	public bool OnMouseUpByPosition(Vector2 endPos) // returnes true if impulse too short
 	{
+        if (_justClick)
+        {
+            return true;
+        }
 		// check if enough distance to slide and find direction
 		float dx = endPos.x - MouseDownPos.x;
 		float dy = endPos.y - MouseDownPos.y;

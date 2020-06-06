@@ -100,6 +100,7 @@ public class GameBoard : MonoBehaviour
 	public LevelPanel							ALevelPanel;
     public LivesPanel                           ALivesPanel;
     public PowerupsPanel                        APowerupsPanel;
+    public Characters                           ACharacters;
 
     public Enemies                              AEnemies;
     public EnemiesQueue                         AEnemiesQueue;
@@ -115,7 +116,7 @@ public class GameBoard : MonoBehaviour
 	public List<GameObject>						ColoredPipesPrefabs;
 	// pool
     public GameObject               			SSlotPrefab;
-	public Dictionary<string, List<GameObject>> Pool { get; set; }
+    private SuperSimplePool                     _pool;
 	//
     public GameObject               			Selection;                                                			// selection for pipe that we move
 
@@ -204,6 +205,8 @@ public class GameBoard : MonoBehaviour
         //Application.targetFrameRate = Consts.MAX_FPS;
         //
         _camera = Camera.main;
+        _pool = GetComponent<SuperSimplePool>();
+        _pool.InitPool();
         //Game Board Data
         _movesToNextPipe = 0;
         if (GameBoard.AddingType != EAddingType.OnNoMatch)
@@ -234,18 +237,6 @@ public class GameBoard : MonoBehaviour
         DXDY.x += transform.localPosition.x;
         DXDY.y += transform.localPosition.y;
 
-        // Pools
-        Pool = new Dictionary<string, List<GameObject>>();
-		Pool.Add("SSlots", new List<GameObject>());
-		for (int i = 0; i < Consts.CLASSIC_GAME_COLORS; ++i)
-		{
-			Pool.Add("Colored_" + i.ToString(), new List<GameObject>());
-		}
-		for (EPipeType i = EPipeType.Base; i < EPipeType.Last; ++i)
-		{
-			Pool.Add("Pipe_" + ((int)i).ToString(), new List<GameObject>());
-		}
-        //
 		CreateSlots();
         // 
         for (int i = 0; i < Sprites.Count; ++i)
@@ -391,9 +382,8 @@ public class GameBoard : MonoBehaviour
 		{
 			for (int j = 0; j < HEIGHT; ++j)
 			{
-				GameObject slotObj = GetSSlotFromPoolWithCreation();
-				slotObj.transform.SetParent(SlotsContainer, false);
-				SSlot slot = slotObj.GetComponent<SSlot>();
+                GameObject slotObj = _pool.InstantiateObject("SSlot", SlotsContainer, Vector3.zero);
+                SSlot slot = slotObj.GetComponent<SSlot>();
 				slotObj.transform.position = SlotPos(i, j);
 				slot.InitSlot(i, j);
 				Slots[i, j] = slot;
@@ -446,6 +436,7 @@ public class GameBoard : MonoBehaviour
                 if (pipe) pipe.gameObject.SetActive(false);
             }
         }
+        ACharacters.ClearCharacters();
         AEnemies.ClearEnemiesForce();
     }
 
@@ -464,6 +455,7 @@ public class GameBoard : MonoBehaviour
                 }
             }
         }
+        ACharacters.ClearCharacters();
     }
 
     protected IEnumerator ClearBoard()
@@ -490,6 +482,7 @@ public class GameBoard : MonoBehaviour
         {
             yield return new WaitForSeconds(waitTime);
         }
+        ACharacters.ClearCharacters();
     }
 
     protected IEnumerator CreateLevel(LevelData levelData) 
@@ -551,6 +544,7 @@ public class GameBoard : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(0.15f);
+        ACharacters.AddCharacters(this, GetEmptySSlots());
         StartPlayersTurn();
     }
 		
@@ -662,72 +656,25 @@ public class GameBoard : MonoBehaviour
 //		eventData.Data["isforce"] = false;
 //		GameManager.Instance.EventManager.CallOnWindowNeededEvent(eventData);
 	}
-	
-	// ------------> POOLS
-	public GameObject GetSSlotFromPoolWithCreation()
-	{
-		// TODO slots olways on game screen? no instantiation?
-		List<GameObject> objects = Pool["SSlots"];
-		GameObject sslot = (GameObject)GameObject.Instantiate(SSlotPrefab, Vector3.zero, Quaternion.identity);
-		objects.Add(sslot);
-		return sslot;
-	}
-
-	public GameObject GetSSlotFromPool()
-	{
-		// TODO slots olways on game screen? no instantiation?
-		List<GameObject> objects = Pool["SSlots"];
-		for (int i = 0; i < objects.Count; ++i)
-		{
-			if (!objects[i].activeSelf)
-			{
-				objects[i].SetActive(true);
-				return objects[i];
-			}
-		}
-		GameObject sslot = (GameObject)GameObject.Instantiate(SSlotPrefab, Vector3.zero, Quaternion.identity);
-		objects.Add(sslot);
-		return sslot;
-	}
 		
 	public GameObject GetPipeFromPool(EPipeType pType, int color = -1)
 	{
 		int pid = (int)pType;
 		string sid = pid.ToString();
-		List<GameObject> objects = null;
+        GameObject obj = null;
 		if (pType == EPipeType.Colored)
 		{
-			objects = Pool["Colored_" + color];
+            obj = _pool.GetObjectFromPool("PipeColored", SlotsContainer);
 		} else
 		{
-			objects = Pool["Pipe_" + sid];
+            obj = _pool.GetObjectFromPool("Pipe_" + sid, SlotsContainer);
 		}
-		for (int i = 0; i < objects.Count; ++i)
-		{
-			if (!objects[i].activeSelf)
-			{
-				objects[i].SetActive(true);
-				return objects[i];
-			}
-		}
-
-		GameObject pipe = null;
-		if (pType == EPipeType.Colored)
-		{
-			pipe = (GameObject)GameObject.Instantiate(ColoredPipesPrefabs[color], Vector3.zero, Quaternion.identity);
-		} else
-		{
-			pipe = (GameObject)GameObject.Instantiate(PipesPrefabs[pid], Vector3.zero, Quaternion.identity);
-		}
-
-		pipe.transform.SetParent(SlotsContainer, false);
-		objects.Add(pipe);
-		return pipe;
+		return obj;
 	}
 
-	// <-----------
+    // <-----------
 
-	private void FindMinXToSlide(ref SlideData slideData)
+    private void FindMinXToSlide(ref SlideData slideData)
 	{
 		for (int i = slideData.PosSlideFrom.x - 1; i >= 0; --i)
 	    {
@@ -1262,7 +1209,7 @@ public class GameBoard : MonoBehaviour
 			BumpCameraHorizontal(horizontalBump, Consts.BUMP_TIME);
             if (slideData.Slot2.X == 0 || slideData.Slot2.X == WIDTH - 1)
             {
-                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.Pipe, slideData.DistX);
+                AddManaForBump(slideData.Slot2, slideData.Pipe, slideData.DistX);
             }
 		} else
 		{
@@ -1271,7 +1218,7 @@ public class GameBoard : MonoBehaviour
 			BumpCameraVertical(verticalBump, Consts.BUMP_TIME);
             if (slideData.Slot2.Y == 0 || slideData.Slot2.Y == HEIGHT - 1)
             {
-                APowerupsPanel.AddManaForBump(slideData.Slot2, slideData.Pipe, slideData.DistY);
+                AddManaForBump(slideData.Slot2, slideData.Pipe, slideData.DistY);
             }
         }
 	}
@@ -2385,7 +2332,7 @@ public class GameBoard : MonoBehaviour
 		}
 		if (_gameState != EGameState.PlayersTurn)
 		{
-			// can't drag
+			// can't drag and use powrups
 			return;
 		}
         if (DragSlot != null)
@@ -2421,7 +2368,18 @@ public class GameBoard : MonoBehaviour
 			SPipe pipe = slot.Pipe;
 			if (pipe)
 			{
-				slot.OnMouseDownByPosition(downGamePos);
+                if (APowerupsPanel.OnSlotTouched(slot))
+                {
+                    // used powerup from panel
+                } else
+                if (ACharacters.OnSlotTouched(slot))
+                {
+                    // used powerup of character
+                } else
+                {
+                    // trying to slide or select pipe
+                    slot.OnMouseDownByPosition(downGamePos);
+                }
 			}
         } else
         if (Consts.MOVE_ENEMIES_WITH_SLIDE)
@@ -2449,8 +2407,11 @@ public class GameBoard : MonoBehaviour
 		{
 			if (DragSlot.OnMouseUpByPosition(downGamePos))
             {
-                // impulse too short - tap
-                TryCreateFinalAttackByTouch(DragSlot);
+                // impulse too short or tap on immovable character - tap
+                if (!TryCreateFinalAttackByTouch(DragSlot))
+                {
+                    ACharacters.CharacterOnClick(DragSlot.Pipe.GetComponent<Pipe_Character>());
+                }
             }
             HideSelection();
             DragSlot = null;
@@ -2959,4 +2920,37 @@ public class GameBoard : MonoBehaviour
         }
         return false;
     }
+
+    public SuperSimplePool GetPool()
+    {
+        return _pool;
+    }
+
+    public void AddManaForBump(SSlot slot, SPipe pipe, int distance)
+    {
+        int color = pipe.AColor;
+        int aparam = pipe.Param;
+        int mana = distance * (aparam + 1); // more distance - more mana
+        mana = ACharacters.AddManaForBump(slot, pipe, mana, color);
+        if (mana > 0)
+        {
+            mana = APowerupsPanel.AddManaForBump(slot, pipe, mana, color);
+        }
+    }
 }
+
+
+////винести базовий клас Чарактер.
+////    від чарактера зробити Енемі і Пайп_чарактер.
+
+//ГеймБоард тримає чарактерів для відслідковування кінця гри(поки панель життів теж є). Мертвий чарактер залишається на полі(на випадок воскресіння + заважає, можливо нерухомий крест)
+//    зробити в ГеймБоарді керування обраним чарактером як паверап панель паверап баттонами(селектейбл)
+//    Чарактери наповнюються бампами кольорових фішок замість панелі паверапів.
+
+//    Вороги атакують, але урон наноситься спершу чарактерам навпроти, а якщо чарактера на лінії удару немає - то в панель життів
+//    Вороги теж атакують за допомогою Attack. У них буде клас-зброя (1-2 зброї на монстра), що раз в Х ходів атакує чи задіює спец вміння(фактично це паверапи).
+
+//Фішку-блокери: 1. що розбивати матчами поряд, 2. розбивати бампами бампами, 3. дірка, в яку треба закинути певний пайп 
+
+
+    //TODO 1 super simple pool in game board with list of folders to scan!!!!!!!!
