@@ -60,7 +60,7 @@ public class Attacks : MonoBehaviour
         _attacksData.Clear();
     }
 
-    private AttackData AddAttack(Attack attack)
+    public AttackData AddAttack(Attack attack)
     {
         AttackData attackData = new AttackData();
         attackData.AAttack = attack;
@@ -121,7 +121,7 @@ public class Attacks : MonoBehaviour
         return res;
     }
 
-    public IEnumerator PlayersAttackCoroutine()
+    public IEnumerator WaitEndAttacksCoroutine()
     {
         do
         {
@@ -236,17 +236,37 @@ public class Attacks : MonoBehaviour
         LeanTween.scale(pipe.gameObject, new Vector3(scale, scale, scale), Consts.FINAL_ATTACK_TIME - 0.1f);
     }
 
-    private void ApplyAttack(AttackData attackData)
+    public void ApplyAttack(AttackData attackData)
     {
-        if (_enemies.ApplyAttack(attackData) <= 0)
+        if (attackData.AAttack.TargetType == EAttackTarget.LivesPanel)
         {
-            // no enemy attacked
+            // attack lives panel
+            GameManager.Instance.Game.ALivesPanel.RemoveLives(attackData.AAttack.Power);
             attackData.Clear();
             _attacksData.Remove(attackData);
         } else
+        if (attackData.AAttack.TargetType == EAttackTarget.Character)
         {
-            // enemy attacked
+            // attack character in slot
+            SSlot slot = attackData.AAttack.TargetObject.GetComponent<SSlot>();
+            Pipe_Character character = slot.Pipe.GetComponent<Pipe_Character>();
+            character.Attack
             attackData.Clear();
+            _attacksData.Remove(attackData);
+
+        } else
+        {
+            // attack enemies
+            if (_enemies.ApplyAttack(attackData) <= 0)
+            {
+                // no enemy attacked
+                attackData.Clear();
+                _attacksData.Remove(attackData);
+            } else
+            {
+                // enemy attacked
+                attackData.Clear();
+            }
         }
     }
 }

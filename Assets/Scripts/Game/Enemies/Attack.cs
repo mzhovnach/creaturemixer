@@ -5,7 +5,10 @@ using UnityEngine;
 public enum EAttackTarget
 {
     EnemySlot = 0,
-    Enemy = 1
+    Enemy = 1,
+    Character = 2,
+    LivesPanel,
+    //Column - to attack whole column
 }
 
 public class Attack : MonoBehaviour

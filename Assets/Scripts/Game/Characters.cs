@@ -151,4 +151,16 @@ public class Characters : MonoBehaviour
             return false;
         }
     }
+
+    public bool IsAllDead()
+    {
+        for (int i = 0; i < _characters.Count; ++i)
+        {
+            if (!_characters[i].IsDead())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 }

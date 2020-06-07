@@ -17,9 +17,9 @@ public struct EnemyParams
         Name = name;
         Size = enemy.Size;
         Lives = enemy.MaxLives;
-        Damage = enemy.MaxDamage;
+        Damage = enemy.AWeapon.MaxPower;
         Color = enemy.Color;
-        AttackInterval = enemy.AttackInterval;
+        AttackInterval = enemy.AWeapon.AttackInterval;
     }
 }
 
@@ -40,16 +40,12 @@ public class Enemy : MonoBehaviour
     public GameObject ScaleObject; // should has local scale = (1, 1, 1)
     public GameObject ShakeObject; // should has local position = (0, 0, 0)
     public int MaxLives = 1;
-    public int MaxDamage = 1;
-    public int AttackInterval = 1;
     [Range(-1, 4)]
     public int Color = -1; // default color
 
-    public EnemyUI AEnemyUI;
-
-    protected int _lives = 0;
+    public Weapon       AWeapon;
+    public ProgressView Lives;
     protected bool _dead = false;
-    protected int _movesToAttack; //TODO set this parameter to 1, 2, 3 for each enemy at start of level?
 
     EEnemyAnimState _animState = EEnemyAnimState.Normal;
     public const float ENEMY_APPEAR_TIME = 0.15f;
@@ -59,9 +55,8 @@ public class Enemy : MonoBehaviour
     {
         _dead = false;
         _animState = EEnemyAnimState.Normal;
-        _lives = MaxLives;
-        _movesToAttack = AttackInterval;
-        AEnemyUI.InitEnemyUI(this);
+        Lives.InitCounter(MaxLives, MaxLives);
+        AWeapon.InitWeapon();
         LeanTween.cancel(ShakeObject);
         ShakeObject.transform.localPosition = Vector3.zero;
         //LeanTween.cancel(ScaleObject);
@@ -78,10 +73,8 @@ public class Enemy : MonoBehaviour
             return 0;
         }
         _attacksApplied.Add(attackData);
-        _lives -= attackData.AAttack.Power;
-        _lives = Mathf.Max(0, _lives);
-        AEnemyUI.SetLives(_lives);
-        _dead = _lives == 0;
+        Lives.SetAmount(Lives.GetAmount() - attackData.AAttack.Power);
+        _dead = Lives.IsEmpty();
         return PlayGainDamageAnimation();
     }
 
@@ -155,7 +148,7 @@ public class Enemy : MonoBehaviour
                         ScaleObject.transform.localScale = val;
                     })
                     .setOnComplete(()=>{
-                        GameManager.Instance.Game.AEnemies.DecreaseAttacksCount();
+                        //GameManager.Instance.Game.AEnemies.DecreaseAttacksCount();
                         _animState = EEnemyAnimState.Normal;
                     });
             });
@@ -192,12 +185,6 @@ public class Enemy : MonoBehaviour
         return time;
     }
 
-    public virtual int GetDamage()
-    {
-        // можливі варіанти, наприклад урон деяких монстрів залежитиме від ситуації на полі (к-сть певних фішок)
-        return MaxDamage;
-    }
-
     public virtual void UpdateLivesView()
     {
         //TODO change art according to lives
@@ -209,33 +196,18 @@ public class Enemy : MonoBehaviour
         return _dead;
     }
 
-    public bool IsReadyToAttack()
-    {
-        return _movesToAttack <= 0;
-    }
-
-    public int GetMovesToAttack()
-    {
-        return _movesToAttack;
-    }
-
     public void DecreaseMovesToAttack()
     {
-        if (_movesToAttack > 0)
-        {
-            --_movesToAttack;
-            AEnemyUI.SetMoves(_movesToAttack);
-        }
+        AWeapon.DecreaseMovesToAttack();
     }
 
-    public void ResetMovesToAttack()
+    public bool IsReadyToAttack()
     {
-        _movesToAttack = AttackInterval;
-        AEnemyUI.SetMoves(_movesToAttack);
+        return AWeapon.IsReady();
     }
 
-    public int GetLives()
+    public void ResetWeapon()
     {
-        return _lives;
+        AWeapon.ResetWeapon();
     }
 }

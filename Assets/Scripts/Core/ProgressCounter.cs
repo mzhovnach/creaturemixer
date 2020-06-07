@@ -83,4 +83,9 @@ public class ProgressCounter : MonoBehaviour
     {
         return Amount >= MaxAmount;
     }
+
+    public bool IsEmpty()
+    {
+        return Amount <= 0;
+    }
 }

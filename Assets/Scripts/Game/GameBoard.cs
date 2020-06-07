@@ -2759,7 +2759,7 @@ public class GameBoard : MonoBehaviour
 
     private IEnumerator OnTurnWasMadeCoroutine(bool wasMatch)
     {
-        yield return StartCoroutine(AAttacks.PlayersAttackCoroutine());
+        yield return StartCoroutine(AAttacks.WaitEndAttacksCoroutine());
         if (!CheckWinConditions())
         {
             if (_gameState == EGameState.PlayerUsedPowerup)
@@ -2866,7 +2866,7 @@ public class GameBoard : MonoBehaviour
 
     public bool CheckLooseConditions()
     {
-        if (ALivesPanel.IsDead())
+        if (ALivesPanel.IsDead() && ACharacters.IsAllDead())
         {
             OnLoose();
             return true;
@@ -2948,8 +2948,6 @@ public class GameBoard : MonoBehaviour
 ////    від чарактера зробити Енемі і Пайп_чарактер.
 
 //ГеймБоард тримає чарактерів для відслідковування кінця гри(поки панель життів теж є). Мертвий чарактер залишається на полі(на випадок воскресіння + заважає, можливо нерухомий крест)
-//    зробити в ГеймБоарді керування обраним чарактером як паверап панель паверап баттонами(селектейбл)
-//    Чарактери наповнюються бампами кольорових фішок замість панелі паверапів.
 
 //    Вороги атакують, але урон наноситься спершу чарактерам навпроти, а якщо чарактера на лінії удару немає - то в панель життів
 //    Вороги теж атакують за допомогою Attack. У них буде клас-зброя (1-2 зброї на монстра), що раз в Х ходів атакує чи задіює спец вміння(фактично це паверапи).

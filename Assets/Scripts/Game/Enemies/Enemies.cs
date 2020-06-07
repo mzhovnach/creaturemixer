@@ -10,10 +10,10 @@ public class Enemies : MonoBehaviour
     // якщо немає місця, то новий ворог з черги не з"являється
     private const float                     MIN_DISTANCE_TO_MOVE_ENEMY = 0.25f;
     public const float                      ENEMY_SLIDE_TIME = 0.25f;
-    public static int                       SLOTS_COUNT = 5;
+    public static int                       SLOTS_COUNT = 7;
     public static float                     ENEMIES_Z = -2f;
     public const float                      ATTACK_BEAM_FLY_TIME = 0.25f;
-    public List<EnemySlot>                  Slots; // для простоти зараз 5 слотів в ряд
+    public List<EnemySlot>                  Slots; // для простоти зараз 7 слотів в ряд
     [HideInInspector]
     public List<EnemyParams>                EnemiesDefaultParams;
     public Transform                        ObjectsContainer;
@@ -21,15 +21,21 @@ public class Enemies : MonoBehaviour
     private List<Enemy>                     _enemies = new List<Enemy>();
     private Dictionary<string, EnemyParams> _enemiesDefaultParams;
 
-    private int                             _incompletedAttacksCount = 0;
+    private Attacks                         _attacks;
 
     private void Awake()
     {
+        SLOTS_COUNT = Slots.Count;
         _enemiesDefaultParams = new Dictionary<string, EnemyParams>();
         for (int i = 0; i < EnemiesDefaultParams.Count; ++i)
         {
             _enemiesDefaultParams.Add(EnemiesDefaultParams[i].Name, EnemiesDefaultParams[i]);
         }
+    }
+
+    private void Start()
+    {
+        _attacks = GameManager.Instance.Game.AAttacks;
     }
 
     public void ClearEnemiesForce()
@@ -261,51 +267,14 @@ public class Enemies : MonoBehaviour
         {
             yield return StartCoroutine(EnemyAttackCoroutine(attackingEnemies[i], i == attackingEnemies.Count - 1));
         }
-		do
-        {
-            yield return new WaitForSeconds(0.005f);
-        } while (IsAttacking());
+        yield return StartCoroutine(_attacks.WaitEndAttacksCoroutine());
     }
 
     public IEnumerator EnemyAttackCoroutine(Enemy enemy, bool last)
     {
-
-        //attack player one by one, counter for enemies attacks to wait to end
+        //attack player one by one
         enemy.PlayAttackAnimation();
-        AddAttack();
-        GameManager.Instance.Game.ALivesPanel.AttackByEnemy(enemy);
-        if (Consts.MINIMIZE_DELAY_ON_ENEMY_ATTACKS && last && !GameManager.Instance.Game.ALivesPanel.IsDead())
-        {
-            // no delay
-        } else
-        {
-            yield return new WaitForSeconds(0.2f);
-        }
-        enemy.ResetMovesToAttack();
-    }
-
-    public void ClearAllAttacks()
-    {
-        _incompletedAttacksCount = 0;
-    }
-
-    private void AddAttack()
-    {
-        ++_incompletedAttacksCount;
-    }
-
-    public void DecreaseAttacksCount()
-    {
-        --_incompletedAttacksCount;
-        if (_incompletedAttacksCount < 0)
-        {
-            Debug.LogError("enemies _incompletedAttacksCount = " + _incompletedAttacksCount);
-        }
-    }
-
-    public bool IsAttacking()
-    {
-        return _incompletedAttacksCount > 0;
+        yield return StartCoroutine(enemy.AWeapon.AttackCoroutine(enemy, last, _attacks));
     }
 
     public bool TryToMoveEnemyBySlide(Enemy enemy, Vector2 startPos, Vector2 endPos, bool mouseUp)
@@ -330,7 +299,7 @@ public class Enemies : MonoBehaviour
         return wasSlide;
     }
 
-    List<EnemySlot> GetSlotsWithEnemy(Enemy enemy)
+    public List<EnemySlot> GetSlotsWithEnemy(Enemy enemy)
     {
         List<EnemySlot> res = new List<EnemySlot>();
         for (int i = 0; i < Slots.Count; ++i)
@@ -338,6 +307,19 @@ public class Enemies : MonoBehaviour
             if (Slots[i].GetEnemy() == enemy)
             {
                 res.Add(Slots[i]);
+            }
+        }
+        return res;
+    }
+
+    public List<int> GetSlotsIdsWithEnemy(Enemy enemy)
+    {
+        List<int> res = new List<int>();
+        for (int i = 0; i < Slots.Count; ++i)
+        {
+            if (Slots[i].GetEnemy() == enemy)
+            {
+                res.Add(Slots[i].Id);
             }
         }
         return res;

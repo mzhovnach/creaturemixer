@@ -134,7 +134,6 @@ public class Consts
     public static bool ENEMIES_TURN_ON_EVERY_MATCH = false; // if false moves only on no match from player
 
     public static bool MINIMIZE_DELAY_ON_ENEMY_APPEARS = true;
-    public static bool MINIMIZE_DELAY_ON_ENEMY_ATTACKS = true;
     public static bool MINIMIZE_DELAY_ON_PLAYER_ATTACKS = true;
 
     public static bool MOVE_ENEMIES_WITH_SLIDE = true;

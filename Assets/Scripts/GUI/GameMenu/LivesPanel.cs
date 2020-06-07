@@ -95,6 +95,6 @@ public class LivesPanel : MonoBehaviour
 
     public bool AttackByEnemy(Enemy enemy)
 	{
-		return RemoveLives(enemy.GetDamage());
+		return false; //RemoveLives(enemy.GetDamage());
 	}
 }
