@@ -79,7 +79,7 @@ public class Pipe_Character : SPipe
             int manaToAddReal = Mathf.Min(Mana.GetMaxAmount() - Mana.GetAmount(), manaToAdd);
             int mana = Mana.GetAmount() + manaToAddReal;
             Mana.SetAmount(mana);
-            return manaToAdd - manaToAddReal;
+            return manaToAddReal;
         }
         return 0;
     }

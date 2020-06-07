@@ -26,8 +26,8 @@ public class Characters : MonoBehaviour
         _characters.Clear();
         emptySlots = Helpers.ShuffleList<SSlot>(emptySlots);
         AddCharacter("Character_0", board, emptySlots);
-        //AddCharacter("Character_1", board, emptySlots);
-        //AddCharacter("Character_2", board, emptySlots);
+        AddCharacter("Character_1", board, emptySlots);
+        AddCharacter("Character_2", board, emptySlots);
     }
 
     private void AddCharacter(string characterId, GameBoard board, List<SSlot> emptySlots)
@@ -47,7 +47,7 @@ public class Characters : MonoBehaviour
         _characters.Add(character);
     }
 
-    public void CharacterOnClick(Pipe_Character character)
+    public void OnCharacterClick(Pipe_Character character)
     {
         if (GameManager.Instance.Game.GetGameState() == EGameState.PlayersTurn)
         {
@@ -65,13 +65,16 @@ public class Characters : MonoBehaviour
                 }
             }
 
-            if (!character.IsSelectable())
+            if (character.Mana.IsFull())
             {
-                character.TryApplyPowerup();
-            } else
-            {
-                character.Select();
-                _selectedCharacter = character;
+                if (!character.IsSelectable())
+                {
+                    character.TryApplyPowerup();
+                } else
+                {
+                    character.Select();
+                    _selectedCharacter = character;
+                }
             }
         }
     }

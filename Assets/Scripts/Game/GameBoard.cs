@@ -1943,6 +1943,10 @@ public class GameBoard : MonoBehaviour
 
 	private bool CheckPipesforHint(SPipe pipeA, SPipe pipeB, int xA, int yA, int xB, int yB, ref List<MatchHintData> possibleHints)
 	{
+        if (!pipeA.IsColored() || !pipeB.IsColored())
+        {
+            return false;
+        }
 		if (pipeA.AColor == pipeB.AColor && pipeA.Param == pipeB.Param && pipeA.Param < _maxColoredLevels)
 		{
 			MatchHintData mhData;
@@ -2410,7 +2414,7 @@ public class GameBoard : MonoBehaviour
                 // impulse too short or tap on immovable character - tap
                 if (!TryCreateFinalAttackByTouch(DragSlot))
                 {
-                    ACharacters.CharacterOnClick(DragSlot.Pipe.GetComponent<Pipe_Character>());
+                    ACharacters.OnCharacterClick(DragSlot.Pipe.GetComponent<Pipe_Character>());
                 }
             }
             HideSelection();
