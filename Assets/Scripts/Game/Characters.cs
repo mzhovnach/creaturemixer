@@ -138,11 +138,18 @@ public class Characters : MonoBehaviour
     {
         if (_selectedCharacter)
         {
-            bool applied = _selectedCharacter.TryApplyPowerup(slot);
-            if (applied)
+            if (_selectedCharacter == slot.Pipe)
             {
                 _selectedCharacter.Unselect();
                 _selectedCharacter = null;
+            } else
+            {
+                bool applied = _selectedCharacter.TryApplyPowerup(slot);
+                if (applied)
+                {
+                    _selectedCharacter.Unselect();
+                    _selectedCharacter = null;
+                }
             }
             return true; // can't swipe if powerup selected
         }
@@ -154,13 +161,24 @@ public class Characters : MonoBehaviour
 
     public bool IsAllDead()
     {
-        for (int i = 0; i < _characters.Count; ++i)
+        //for (int i = 0; i < _characters.Count; ++i)
+        //{
+        //    if (!_characters[i].IsDead())
+        //    {
+        //        return false;
+        //    }
+        //}
+        //return true;
+        return _characters.Count == 0;
+    }
+
+    public void OnCharacterDied(Pipe_Character character)
+    {
+        if (_selectedCharacter == character)
         {
-            if (!_characters[i].IsDead())
-            {
-                return false;
-            }
+            character.Unselect();
+            _selectedCharacter = null;
         }
-        return true;
+        _characters.Remove(character);
     }
 }

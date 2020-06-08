@@ -13,9 +13,8 @@ public enum EAttackTarget
 
 public class Attack : MonoBehaviour
 {
-    public int Power;
-    public int Color;
-    public EAttackTarget TargetType;
-    public GameObject TargetObject;
-    public bool DestroyOnComplete;
+    public EAttackTarget    TargetType;
+    public GameObject       TargetObject;
+    public WeaponBase       Weapon;
+    public bool             DestroyOnComplete;
 }

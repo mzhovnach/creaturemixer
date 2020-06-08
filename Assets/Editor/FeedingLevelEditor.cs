@@ -1695,7 +1695,7 @@ public class FeedingLevelEditor : Editor
                 slotFrom.p = -1;
                 slotFrom.c = -1;
                 slotTo.p += 1;
-                if (slotTo.p >= Consts.MAX_COLORED_LEVELS)
+                if (slotTo.p >= Consts.MAX_COLORED_LEVELS + 1)
                 {
                     // destroy max
                     slotTo.pt = EPipeType.None;

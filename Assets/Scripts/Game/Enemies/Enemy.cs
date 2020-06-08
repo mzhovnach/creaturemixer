@@ -17,9 +17,9 @@ public struct EnemyParams
         Name = name;
         Size = enemy.Size;
         Lives = enemy.MaxLives;
-        Damage = enemy.AWeapon.MaxPower;
+        Damage = enemy.Weapon.MaxPower;
         Color = enemy.Color;
-        AttackInterval = enemy.AWeapon.AttackInterval;
+        AttackInterval = enemy.Weapon.AttackInterval;
     }
 }
 
@@ -36,27 +36,26 @@ public class Enemy : MonoBehaviour
     //TODO
     // Базовий клас ворога - містить свій колір, життя, спец-здібності, анімації атаки, смерті і можливо появи...
     [Range(1, 5)]
-    public int Size = 1; // how many slots
-    public GameObject ScaleObject; // should has local scale = (1, 1, 1)
-    public GameObject ShakeObject; // should has local position = (0, 0, 0)
-    public int MaxLives = 1;
+    public int              Size = 1; // how many slots
+    public GameObject       ScaleObject; // should has local scale = (1, 1, 1)
+    public GameObject       ShakeObject; // should has local position = (0, 0, 0)
+    public int              MaxLives = 1;
     [Range(-1, 4)]
-    public int Color = -1; // default color
+    public int              Color = -1; // default color
 
-    public Weapon       AWeapon;
-    public ProgressView Lives;
-    protected bool _dead = false;
+    public WeaponBaseEnemy  Weapon;
+    public ProgressView     Lives;
+    protected bool          _dead = false;
 
-    EEnemyAnimState _animState = EEnemyAnimState.Normal;
-    public const float ENEMY_APPEAR_TIME = 0.15f;
-    public List<AttackData> _attacksApplied = new List<AttackData>();
+    EEnemyAnimState         _animState = EEnemyAnimState.Normal;
+    public const float      ENEMY_APPEAR_TIME = 0.15f;
 
     public virtual void InitEnemy()
     {
         _dead = false;
         _animState = EEnemyAnimState.Normal;
         Lives.InitCounter(MaxLives, MaxLives);
-        AWeapon.InitWeapon();
+        Weapon.InitWeapon();
         LeanTween.cancel(ShakeObject);
         ShakeObject.transform.localPosition = Vector3.zero;
         //LeanTween.cancel(ScaleObject);
@@ -65,17 +64,22 @@ public class Enemy : MonoBehaviour
         PlayAppearAnimation();
     }
 
-    public virtual float ApplyAttack(AttackData attackData)
+    public virtual bool DealDamage(int power, int acolor)
     {
         if (_dead)
         {
             Debug.LogError("DEAD!");
-            return 0;
+            return true;
         }
-        _attacksApplied.Add(attackData);
-        Lives.SetAmount(Lives.GetAmount() - attackData.AAttack.Power);
+        //TODO paper/scissors/stone!!!
+        //if (acolor >= 0 && acolor == Color)
+        //{
+        //    power *= 2;
+        //}
+        Lives.SetAmount(Lives.GetAmount() - power);
         _dead = Lives.IsEmpty();
-        return PlayGainDamageAnimation();
+        PlayGainDamageAnimation();
+        return _dead;
     }
 
     protected virtual float PlayGainDamageAnimation()
@@ -99,7 +103,6 @@ public class Enemy : MonoBehaviour
                     PlayDeathAnimation();
                 } else
                 {
-                    RemoveAppliedAttacks();
                     _animState = EEnemyAnimState.Normal;
                 }
             });
@@ -117,18 +120,8 @@ public class Enemy : MonoBehaviour
             .setEaseInOutSine()
             .setOnComplete(() =>
             {
-                RemoveAppliedAttacks();
                 HideForce();
             });
-    }
-
-    private void RemoveAppliedAttacks()
-    {
-        for (int i = 0; i < _attacksApplied.Count; ++i)
-        {
-            GameManager.Instance.Game.AAttacks.OnAttackApplied(_attacksApplied[i]);
-        }
-        _attacksApplied.Clear();
     }
 
     public virtual float PlayAttackAnimation() // returnes time of animation
@@ -198,16 +191,16 @@ public class Enemy : MonoBehaviour
 
     public void DecreaseMovesToAttack()
     {
-        AWeapon.DecreaseMovesToAttack();
+        Weapon.DecreaseMovesToAttack();
     }
 
     public bool IsReadyToAttack()
     {
-        return AWeapon.IsReady();
+        return Weapon.IsReady();
     }
 
     public void ResetWeapon()
     {
-        AWeapon.ResetWeapon();
+        Weapon.ResetWeapon();
     }
 }

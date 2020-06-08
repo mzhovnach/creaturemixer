@@ -8,20 +8,18 @@ public class Enemies : MonoBehaviour
     // клас тримає поточних ворогів на полі
     // вороги в залежності від розмірів займають 1 - 3 слоти
     // якщо немає місця, то новий ворог з черги не з"являється
-    private const float                     MIN_DISTANCE_TO_MOVE_ENEMY = 0.25f;
-    public const float                      ENEMY_SLIDE_TIME = 0.25f;
-    public static int                       SLOTS_COUNT = 7;
-    public static float                     ENEMIES_Z = -2f;
-    public const float                      ATTACK_BEAM_FLY_TIME = 0.25f;
-    public List<EnemySlot>                  Slots; // для простоти зараз 7 слотів в ряд
+    private const float MIN_DISTANCE_TO_MOVE_ENEMY = 0.25f;
+    public const float ENEMY_SLIDE_TIME = 0.25f;
+    public static int SLOTS_COUNT = 7;
+    public static float ENEMIES_Z = -2f;
+    public const float ATTACK_BEAM_FLY_TIME = 0.25f;
+    public List<EnemySlot> Slots; // для простоти зараз 7 слотів в ряд
     [HideInInspector]
-    public List<EnemyParams>                EnemiesDefaultParams;
-    public Transform                        ObjectsContainer;
+    public List<EnemyParams> EnemiesDefaultParams;
+    public Transform ObjectsContainer;
 
-    private List<Enemy>                     _enemies = new List<Enemy>();
+    private List<Enemy> _enemies = new List<Enemy>();
     private Dictionary<string, EnemyParams> _enemiesDefaultParams;
-
-    private Attacks                         _attacks;
 
     private void Awake()
     {
@@ -31,11 +29,6 @@ public class Enemies : MonoBehaviour
         {
             _enemiesDefaultParams.Add(EnemiesDefaultParams[i].Name, EnemiesDefaultParams[i]);
         }
-    }
-
-    private void Start()
-    {
-        _attacks = GameManager.Instance.Game.AAttacks;
     }
 
     public void ClearEnemiesForce()
@@ -198,42 +191,7 @@ public class Enemies : MonoBehaviour
         return _enemiesDefaultParams[enemyName].Color;
     }
 
-
-    public float ApplyAttack(AttackData attackData)
-    {
-        float delay = 0;
-        Enemy enemy = null;
-        if (attackData.AAttack.TargetType == EAttackTarget.EnemySlot)
-        {
-            EnemySlot slot = attackData.AAttack.TargetObject.GetComponent<EnemySlot>();
-            enemy = slot.GetEnemy();
-        } else
-        {
-            enemy = attackData.AAttack.TargetObject.GetComponent<Enemy>();
-        }
-
-        if (!enemy)
-        {
-            // no enemy to attack
-            return 0;
-        } else
-        if (enemy.IsDead())
-        {
-            Debug.LogError("EnemyIsDead!");
-        }
-
-        delay = enemy.ApplyAttack(attackData);
-        attackData.State = AttackData.EAttackState.Applied;
-        if (enemy.IsDead())
-        {
-            FreeSlotsFromEnemy(enemy);
-            _enemies.Remove(enemy);
-        }
-
-        return delay;
-    }
-
-    public IEnumerator EnemiesAttackCoroutine()
+    public IEnumerator EnemiesAttackCoroutine(GameBoard board)
     {
         // find enemies to attack with
         List<Enemy> attackingEnemies = new List<Enemy>();
@@ -265,16 +223,12 @@ public class Enemies : MonoBehaviour
         //
         for (int i = 0; i < attackingEnemies.Count; ++i)
         {
-            yield return StartCoroutine(EnemyAttackCoroutine(attackingEnemies[i], i == attackingEnemies.Count - 1));
+            Enemy enemy = attackingEnemies[i];
+            bool last = i == attackingEnemies.Count - 1;
+            enemy.PlayAttackAnimation();
+            yield return StartCoroutine(enemy.Weapon.AttackCoroutine(board, enemy, last));
         }
-        yield return StartCoroutine(_attacks.WaitEndAttacksCoroutine());
-    }
-
-    public IEnumerator EnemyAttackCoroutine(Enemy enemy, bool last)
-    {
-        //attack player one by one
-        enemy.PlayAttackAnimation();
-        yield return StartCoroutine(enemy.AWeapon.AttackCoroutine(enemy, last, _attacks));
+        yield return StartCoroutine(board.AAttacks.WaitEndAttacksCoroutine());
     }
 
     public bool TryToMoveEnemyBySlide(Enemy enemy, Vector2 startPos, Vector2 endPos, bool mouseUp)
@@ -387,5 +341,28 @@ public class Enemies : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public bool DealDamageToEnemy(Enemy enemy, int acolor, int power)
+    {
+        if (enemy.DealDamage(power, acolor))
+        {
+            FreeSlotsFromEnemy(enemy);
+            _enemies.Remove(enemy);
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsSomeAttack()
+    {
+        for (int i = 0; i < _enemies.Count; ++i)
+        {
+            if (_enemies[i].Weapon.IsAttacking())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

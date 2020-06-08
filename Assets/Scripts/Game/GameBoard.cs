@@ -93,6 +93,9 @@ public class GameBoard : MonoBehaviour
 	private Vector3								_cameraPos;
     private Vector3                             _slotsContainerPos;
 
+    public WeaponPlayersSimple                  SimpleWeapon;
+    public WeaponPlayersFinal                   FinalWeapon;
+
     public QueuePanel                           AQueuePanel;
 	public SequencePanel                        ASequencePanel;
 	public MovesPanel							AMovesPanel;
@@ -501,7 +504,6 @@ public class GameBoard : MonoBehaviour
         //
         AQueuePanel.LoadPanel(levelData.QueueState);
         //AAimPanel.InitPanel(levelData);
-        AAttacks.ClearAllAttacks();
         ALivesPanel.InitPanel(100, 100);
 
         List<PowerupData> powerupsData = new List<PowerupData>(); //TODO select before level
@@ -2412,7 +2414,7 @@ public class GameBoard : MonoBehaviour
 			if (DragSlot.OnMouseUpByPosition(downGamePos))
             {
                 // impulse too short or tap on immovable character - tap
-                if (!TryCreateFinalAttackByTouch(DragSlot))
+                if (!TryCreateFinalAttackByTouch(DragSlot) && DragSlot.Pipe.IsCharacter())
                 {
                     ACharacters.OnCharacterClick(DragSlot.Pipe.GetComponent<Pipe_Character>());
                 }
@@ -2769,7 +2771,7 @@ public class GameBoard : MonoBehaviour
             {
                 if (Consts.ENEMIES_TURN_ON_EVERY_MATCH || !wasMatch)
                 {
-                    yield return StartCoroutine(AEnemies.EnemiesAttackCoroutine());
+                    yield return StartCoroutine(AEnemies.EnemiesAttackCoroutine(this));
                 }
                 if (!CheckLooseConditions())
                 {
@@ -2778,10 +2780,7 @@ public class GameBoard : MonoBehaviour
                     {
                         if (AEnemiesQueue.OnTurnWasMade())
                         {
-                            if (!Consts.MINIMIZE_DELAY_ON_ENEMY_APPEARS)
-                            {
-                                yield return new WaitForSeconds(Enemy.ENEMY_APPEAR_TIME);
-                            }
+                            //yield return new WaitForSeconds(Enemy.ENEMY_APPEAR_TIME);
                         }
                     }
                     StartPlayersTurn();
@@ -2866,7 +2865,7 @@ public class GameBoard : MonoBehaviour
 
     public bool CheckLooseConditions()
     {
-        if (ALivesPanel.IsDead() && ACharacters.IsAllDead())
+        if (ALivesPanel.IsDead()) // && ACharacters.IsAllDead())
         {
             OnLoose();
             return true;
@@ -2898,14 +2897,15 @@ public class GameBoard : MonoBehaviour
         {
             attackPower = pipeParam + 1;
         }
-        AAttacks.CreateSimpleAttack(slot, pipeColor, attackPower); // TODO correct power of strike according to upgrades and balance
+        StartCoroutine(SimpleWeapon.AttackCoroutine(this, slot, slot.Pipe.AColor, attackPower)); // TODO correct power of strike according to upgrades and balance
     }
 
     public void TryCreateFinalAttack(SSlot slot)
     {
         if (slot.Pipe.Param == _maxColoredLevels - 1)
         {
-            AAttacks.CreateFinalAttack(slot, slot.Pipe.AColor, slot.Pipe.Param * 3); // TODO correct power of strike according to upgrades and balance
+            int attackPower = slot.Pipe.Param * 3;
+            StartCoroutine(FinalWeapon.AttackCoroutine(this, slot, slot.Pipe.AColor, attackPower)); // TODO correct power of strike according to upgrades and balance
         }
     }
 
@@ -2915,9 +2915,9 @@ public class GameBoard : MonoBehaviour
         {
             return false;
         }
-        if (slot.Pipe.Param == _maxColoredLevels - 1)
+        if (slot.Pipe.Param == _maxColoredLevels)
         {
-            AAttacks.CreateFinalAttack(slot, slot.Pipe.AColor, slot.Pipe.Param * 3); // TODO correct power of strike according to upgrades and balance
+            StartCoroutine(FinalWeapon.AttackCoroutine(this, slot, slot.Pipe.AColor, slot.Pipe.Param * 3)); // TODO correct power of strike according to upgrades and balance
             SetGameState(EGameState.EnemiesAttack, "attacking by touch final");
             OnTurnWasMade(true, false);
             return true;

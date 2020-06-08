@@ -103,9 +103,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2112357396707717551}
-  - component: {fileID: 8980847924052658951}
+  - component: {fileID: 6426567407701868702}
   m_Layer: 5
-  m_Name: Weapon
+  m_Name: WeaponSimple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,7 +132,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8980847924052658951
+--- !u!114 &6426567407701868702
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,14 +141,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6626976354762405209}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4300300fbbb59c4ca36410cc537d764, type: 3}
+  m_Script: {fileID: 11500000, guid: 0043b386b1de9e749a0780348d90abe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Power: 5
+  MaxPower: 5
+  AttackPrefab: {fileID: 7795883488938450998, guid: d5118c301372d504c8ba9e5b8878a5b5,
+    type: 3}
   MovesText: {fileID: 185600310180138828}
   PowerText: {fileID: 4268904097750268547}
-  Power: 5
   AttackInterval: 3
-  MaxPower: 5
 --- !u!1 &8421537095915399653
 GameObject:
   m_ObjectHideFlags: 0

@@ -1417,6 +1417,8 @@ GameObject:
   - component: {fileID: 731540009}
   - component: {fileID: 731540008}
   - component: {fileID: 731540010}
+  - component: {fileID: 731540012}
+  - component: {fileID: 731540011}
   m_Layer: 0
   m_Name: GameBoard
   m_TagString: GameBoard
@@ -1438,6 +1440,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImpulseDistance: 0.5
   BumpShakeObject: {fileID: 1514862302}
+  SimpleWeapon: {fileID: 731540012}
+  FinalWeapon: {fileID: 731540011}
   AQueuePanel: {fileID: 789725383}
   ASequencePanel: {fileID: 0}
   AMovesPanel: {fileID: 789725384}
@@ -1627,6 +1631,34 @@ MonoBehaviour:
   - {fileID: 5061619631797271910, guid: 35d91d23a6356b74c97141d5fb506df2, type: 3}
   - {fileID: 7838458198886972958, guid: 02412d1bdbfc8e148a0c298e047c74d1, type: 3}
   - {fileID: 163594, guid: bf3d6daedecaae744b3f20116436f78a, type: 3}
+--- !u!114 &731540011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731540007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89bdccab0b864224883ead7b54eeebf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Power: 0
+  MaxPower: 1
+--- !u!114 &731540012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 731540007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 559141f084e1f014196464ef54bfe2df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Power: 0
+  MaxPower: 1
 --- !u!1 &747503804
 GameObject:
   m_ObjectHideFlags: 0

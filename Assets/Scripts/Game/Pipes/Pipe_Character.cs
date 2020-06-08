@@ -19,6 +19,8 @@ public class Pipe_Character : SPipe
     public GameObject           ScaleObject; // should has local scale = (1, 1, 1)
     public GameObject           ShakeObject; // should has local position = (0, 0, 0)
     public GameObject           DeadObject;
+    public GameObject           ReadyObject;
+    public EnemyUI              UI;
 
     protected bool              _selected = false;
     protected bool              _dead = false;
@@ -33,9 +35,11 @@ public class Pipe_Character : SPipe
     public virtual void InitCharacter(int level)
     {
         _animState = ECharacterAnimState.Normal;
+        UI.gameObject.SetActive(true);
         _powerup.InitPowerup(level);
         Lives.InitCounter(30, 30);  // TODO according to level
-        Mana.InitCounter(0, 20);    // TODO according to level
+        Mana.InitCounter(0, 15);    // TODO according to level
+        UpdateReadyMark();
         _destroyed = false;
         _movable = true;
         _dead = false;
@@ -65,6 +69,7 @@ public class Pipe_Character : SPipe
     {
         int mana = Mana.GetAmount() + manaToAdd;
         Mana.SetAmount(mana);
+        UpdateReadyMark();
         return Mana.IsFull();
     }
 
@@ -79,6 +84,7 @@ public class Pipe_Character : SPipe
             int manaToAddReal = Mathf.Min(Mana.GetMaxAmount() - Mana.GetAmount(), manaToAdd);
             int mana = Mana.GetAmount() + manaToAddReal;
             Mana.SetAmount(mana);
+            UpdateReadyMark();
             return manaToAddReal;
         }
         return 0;
@@ -114,6 +120,7 @@ public class Pipe_Character : SPipe
             return false;
         }
         Mana.SetAmount(0);
+        UpdateReadyMark();
         _powerup.ApplyPowerup();
         return true;
     }
@@ -125,6 +132,7 @@ public class Pipe_Character : SPipe
             return false;
         }
         Mana.SetAmount(0);
+        UpdateReadyMark();
         _powerup.ApplyPowerup(slot);
         return true;
     }
@@ -149,31 +157,26 @@ public class Pipe_Character : SPipe
         return _powerup.GetPowerupType();
     }
 
-    //public virtual float ApplyAttack(AttackData attackData)
-    //{
-    //    if (_dead)
-    //    {
-    //        Debug.LogError("DEAD!");
-    //        return 0;
-    //    }
-    //    _attacksApplied.Add(attackData);
-    //    int lives = Lives.GetAmount() - attackData.AAttack.Power;
-    //    Lives.SetAmount(lives);
-    //    _dead = Lives.GetAmount() == 0;
-    //    return PlayGainDamageAnimation();
-    //}
-
-    public virtual bool DealDamage(int damage)
+    public virtual bool DealDamage(SSlot slot, int acolor, int power)
     {
         if (_dead)
         {
             Debug.LogError("DEAD!");
             return false;
         }
-        int lives = Lives.GetAmount() - damage;
+        //TODO paper/scissors/stone!!!
+        int lives = Lives.GetAmount() - power;
         Lives.SetAmount(lives);
         _dead = Lives.GetAmount() == 0;
-        PlayGainDamageAnimation();
+        if (_dead)
+        {
+            slot.TakePipe();
+            GameManager.Instance.Game.ACharacters.OnCharacterDied(this);
+            PlayDeathAnimation();
+        } else
+        {
+            PlayGainDamageAnimation();
+        }
         return _dead;
     }
 
@@ -193,15 +196,7 @@ public class Pipe_Character : SPipe
             .setOnComplete(() =>
             {
                 ShakeObject.transform.localPosition = Vector3.zero;
-                if (_dead)
-                {
-                    PlayDeathAnimation();
-                }
-                else
-                {
-                    //RemoveAppliedAttacks();
-                    _animState = ECharacterAnimState.Normal;
-                }
+                _animState = ECharacterAnimState.Normal;
             });
         return time;
     }
@@ -212,16 +207,17 @@ public class Pipe_Character : SPipe
         float time = 0.15f;
         LeanTween.cancel(ScaleObject);
         float scaleMin = 0f;
+        UI.gameObject.SetActive(false);
         LeanTween.scale(ScaleObject, new Vector3(scaleMin, scaleMin, 1), time)
             .setEaseInOutSine()
             .setOnComplete(() =>
             {
-                //RemoveAppliedAttacks();
+                gameObject.SetActive(false);
             });
         LeanTween.cancel(DeadObject);
         DeadObject.transform.localScale = new Vector3(0, 0, 1);
         DeadObject.SetActive(true);
-        LeanTween.scale(ScaleObject, Vector3.one, time)
+        LeanTween.scale(DeadObject, Vector3.one, time)
             .setEaseInOutSine();
     }
 
@@ -230,12 +226,9 @@ public class Pipe_Character : SPipe
         return _dead;
     }
 
-    //private void RemoveAppliedAttacks()
-    //{
-    //    for (int i = 0; i < _attacksApplied.Count; ++i)
-    //    {
-    //        GameManager.Instance.Game.AAttacks.OnAttackApplied(_attacksApplied[i]);
-    //    }
-    //    _attacksApplied.Clear();
-    //}
+    protected void UpdateReadyMark()
+    {
+        //TODO move to counter view!!!!, particles, hide progress bar through canvas group
+        ReadyObject.SetActive(Mana.IsFull());
+    }
 }

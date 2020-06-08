@@ -50,7 +50,7 @@ MonoBehaviour:
   ShakeObject: {fileID: 5735442988100528413}
   MaxLives: 15
   Color: -1
-  AWeapon: {fileID: 2100589900436074107}
+  Weapon: {fileID: 1250777180533562666}
   Lives: {fileID: 4958269972518785364}
 --- !u!1 &3151341482679590937
 GameObject:
@@ -195,7 +195,7 @@ Transform:
   m_Father: {fileID: 5424942796670743406}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &7026929301349295484
+--- !u!1001 &5220910267456708020
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -240,7 +240,7 @@ PrefabInstance:
     - target: {fileID: 2112357396707717551, guid: 613e745cf47705141bc5f319c04e36f6,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2112357396707717551, guid: 613e745cf47705141bc5f319c04e36f6,
         type: 3}
@@ -307,33 +307,44 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 6426567407701868702, guid: 613e745cf47705141bc5f319c04e36f6,
+        type: 3}
+      propertyPath: AttackInterval
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6426567407701868702, guid: 613e745cf47705141bc5f319c04e36f6,
+        type: 3}
+      propertyPath: Power
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6426567407701868702, guid: 613e745cf47705141bc5f319c04e36f6,
+        type: 3}
+      propertyPath: MaxPower
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6426567407701868702, guid: 613e745cf47705141bc5f319c04e36f6,
+        type: 3}
+      propertyPath: AttackPrefab
+      value: 
+      objectReference: {fileID: 7573903373894574146, guid: 9299c5e11dfcb904f954f1a4e1998df3,
+        type: 3}
     - target: {fileID: 6626976354762405209, guid: 613e745cf47705141bc5f319c04e36f6,
         type: 3}
       propertyPath: m_Name
-      value: Weapon
-      objectReference: {fileID: 0}
-    - target: {fileID: 8980847924052658951, guid: 613e745cf47705141bc5f319c04e36f6,
-        type: 3}
-      propertyPath: Power
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 8980847924052658951, guid: 613e745cf47705141bc5f319c04e36f6,
-        type: 3}
-      propertyPath: MaxPower
-      value: 7
+      value: WeaponSimple
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 613e745cf47705141bc5f319c04e36f6, type: 3}
---- !u!114 &2100589900436074107 stripped
+--- !u!114 &1250777180533562666 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8980847924052658951, guid: 613e745cf47705141bc5f319c04e36f6,
+  m_CorrespondingSourceObject: {fileID: 6426567407701868702, guid: 613e745cf47705141bc5f319c04e36f6,
     type: 3}
-  m_PrefabInstance: {fileID: 7026929301349295484}
+  m_PrefabInstance: {fileID: 5220910267456708020}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4300300fbbb59c4ca36410cc537d764, type: 3}
+  m_Script: {fileID: 11500000, guid: 0043b386b1de9e749a0780348d90abe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &7638003046298250516
@@ -456,7 +467,7 @@ PrefabInstance:
     - target: {fileID: 7485963203516289971, guid: 312b63f9e30e1cf479b3660e1aee1899,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 312b63f9e30e1cf479b3660e1aee1899, type: 3}
