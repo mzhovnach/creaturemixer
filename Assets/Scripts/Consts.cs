@@ -136,6 +136,8 @@ public class Consts
 
     public static bool FILLER_VARIATION = false;
 
+    public static bool ENEMIES_ATTACKED_COLORED_PIPES = true;
+
     public static Color GET_COLOR_BY_ID(int colorId)
     {
         if (colorId >= 0)

@@ -104,4 +104,36 @@ public class WeaponBaseEnemy : WeaponBase
         }
         return slots;
     }
+
+    protected List<List<SSlot>> GetNotEmptySlotsInFront(GameBoard board, Enemy enemy, bool justFirst)
+    {
+        List<List<SSlot>> slots = new List<List<SSlot>>();
+        List<int> columsToAttack = board.AEnemies.GetSlotsIdsWithEnemy(enemy);
+        for (int i = 0; i < columsToAttack.Count; ++i)
+        {
+            List<SSlot> slotsInColumn = new List<SSlot>();
+            int col = columsToAttack[i];
+            bool pipeFound = false;
+            for (int j = GameBoard.HEIGHT - 1; j >= 0; --j)
+            {
+                SSlot slot = board.GetSlot(col, j);
+                if (!slot.IsEmpty())
+                {
+                    pipeFound = true;
+                    slotsInColumn.Add(slot);
+                    if (justFirst)
+                    {
+                        break;
+                    }
+                }
+            }
+            if (!pipeFound)
+            {
+                slotsInColumn.Add(null);
+                slotsInColumn.Add(board.GetSlot(col, 0));
+            }
+            slots.Add(slotsInColumn);
+        }
+        return slots;
+    }
 }
