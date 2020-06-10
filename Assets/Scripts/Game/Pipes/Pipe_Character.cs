@@ -180,6 +180,15 @@ public class Pipe_Character : SPipe
         return _dead;
     }
 
+    public void AddLives(int livesToAdd)
+    {
+        if (!Lives.IsFull())
+        {
+            int lives = Lives.GetAmount() + livesToAdd;
+            Lives.SetAmount(lives);
+        }
+    }
+
     protected virtual float PlayGainDamageAnimation()
     {
         _animState = ECharacterAnimState.GainDamage;

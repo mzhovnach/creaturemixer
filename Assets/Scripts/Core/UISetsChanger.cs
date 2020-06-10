@@ -225,5 +225,10 @@ public class UISetsChanger : MonoBehaviour
 				_rectTransform.anchoredPosition3D = _visiblePosition;
 			}
         }
-    }   
+    }
+
+    public void HideForce()
+    {
+        HideElement(false);
+    }
 }

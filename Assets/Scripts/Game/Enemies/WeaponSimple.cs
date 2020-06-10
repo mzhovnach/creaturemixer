@@ -136,7 +136,10 @@ public class WeaponSimple : WeaponBaseEnemy
 
     private void ApplyAttackOnLivesPanel(int acolor, int power)
     {
-        GameManager.Instance.Game.ALivesPanel.RemoveLives(power);
+        if (Consts.LIVES_PANEL)
+        {
+            GameManager.Instance.Game.ALivesPanel.RemoveLives(power);
+        }
     }
 
     private void ApplyAttackOnCharacter(SSlot slot, Pipe_Character character, int acolor, int power)

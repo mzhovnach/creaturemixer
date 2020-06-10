@@ -181,4 +181,39 @@ public class Characters : MonoBehaviour
         }
         _characters.Remove(character);
     }
+
+    public void AddLivesToAll(int lives)
+    {
+        for (int i = 0; i < _characters.Count; ++i)
+        {
+            if (!_characters[i].IsDead())
+            {
+                _characters[i].AddLives(lives);
+            }
+        }
+    }
+
+    public bool IsSomebodyWounded()
+    {
+        for (int i = 0; i < _characters.Count; ++i)
+        {
+            if (!_characters[i].IsDead() && !_characters[i].Lives.IsFull())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool IsSomebodyCanApplyPowerup()
+    {
+        for (int i = 0; i < _characters.Count; ++i)
+        {
+            if (!_characters[i].IsDead() && _characters[i].IsCanApply())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

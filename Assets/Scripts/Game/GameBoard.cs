@@ -504,13 +504,26 @@ public class GameBoard : MonoBehaviour
         //
         AQueuePanel.LoadPanel(levelData.QueueState);
         //AAimPanel.InitPanel(levelData);
-        ALivesPanel.InitPanel(100, 100);
+        if (!Consts.LIVES_PANEL)
+        {
+            ALivesPanel.GetComponent<UISetsChanger>().HideForce();
+        } else
+        {
+            ALivesPanel.InitPanel(100, 100);
+        }
+        
+        if (!Consts.POWERUPS_PANEL)
+        {
+            APowerupsPanel.GetComponent<UISetsChanger>().HideForce();
+        } else
+        {
+            List<PowerupData> powerupsData = new List<PowerupData>(); //TODO select before level
+            powerupsData.Add(new PowerupData(EPowerupType.AddLives, 0));
+            powerupsData.Add(new PowerupData(EPowerupType.Reshaffle, 0));
+            powerupsData.Add(new PowerupData(EPowerupType.DestroyPiece, 0));
+            APowerupsPanel.InitPanel(powerupsData);
+        }
 
-        List<PowerupData> powerupsData = new List<PowerupData>(); //TODO select before level
-        powerupsData.Add(new PowerupData(EPowerupType.AddLives, 0));
-        powerupsData.Add(new PowerupData(EPowerupType.Reshaffle, 0));
-        powerupsData.Add(new PowerupData(EPowerupType.DestroyPiece, 0));
-        APowerupsPanel.InitPanel(powerupsData);
         for (int i = 0; i < WIDTH; ++i)
 		{
 			for (int j = 0; j < HEIGHT; ++j)
@@ -1423,7 +1436,15 @@ public class GameBoard : MonoBehaviour
             }
         }
         // check powerups
-        if (APowerupsPanel.IsCanApply())
+        if (ACharacters.IsSomebodyCanApplyPowerup())
+        {
+            // show notification
+            EventData eventData = new EventData("OnShowNotificationEvent");
+            eventData.Data["type"] = GameNotification.NotifyType.UsePowerup;
+            GameManager.Instance.EventManager.CallOnShowNotificationEvent(eventData);
+            return true;
+        }
+        if (Consts.POWERUPS_PANEL && APowerupsPanel.IsCanApply())
         {
             // show notification
             EventData eventData = new EventData("OnShowNotificationEvent");
@@ -2374,7 +2395,7 @@ public class GameBoard : MonoBehaviour
 			SPipe pipe = slot.Pipe;
 			if (pipe)
 			{
-                if (APowerupsPanel.OnSlotTouched(slot))
+                if (Consts.POWERUPS_PANEL && APowerupsPanel.OnSlotTouched(slot))
                 {
                     // used powerup from panel
                 } else
@@ -2710,16 +2731,22 @@ public class GameBoard : MonoBehaviour
             }
             if (_addNewPipes && pipeneeded) // && (!allAimsCompleted)) поки все одно додаємо пайп
             {
-                if (pipeneeded && AddRandomPipe(pipeType))
+                for (int i = 0; i < Consts.NEW_PIPES_AMOUNT; ++i)
                 {
-                    ++_pipesAdded;
-                }
-                else
-                {
-                    if (pipeType == EPipeType.Blocker)
+                    if (IsLoose())
                     {
-                        // add blocker on next turn
-                        _pipesToNextBlocker = 0;
+                        break;
+                    }
+                    if (pipeneeded && AddRandomPipe(pipeType))
+                    {
+                        ++_pipesAdded;
+                    } else
+                    {
+                        if (pipeType == EPipeType.Blocker)
+                        {
+                            // add blocker on next turn
+                            _pipesToNextBlocker = 0;
+                        }
                     }
                 }
             }
@@ -2865,12 +2892,19 @@ public class GameBoard : MonoBehaviour
 
     public bool CheckLooseConditions()
     {
-        if (ALivesPanel.IsDead()) // && ACharacters.IsAllDead())
+        bool loose = false;
+        if (Consts.LIVES_PANEL)
+        {
+            loose = ALivesPanel.IsDead(); // && ACharacters.IsAllDead())
+        } else
+        {
+            loose = ACharacters.IsAllDead();
+        }
+        if (loose)
         {
             OnLoose();
-            return true;
         }
-        return false;
+        return loose;
     }
 
     private bool CheckWinConditions()
@@ -2936,7 +2970,7 @@ public class GameBoard : MonoBehaviour
         int aparam = pipe.Param;
         int mana = distance * (aparam + 1); // more distance - more mana
         mana = ACharacters.AddManaForBump(slot, pipe, mana, color);
-        if (mana > 0)
+        if (Consts.POWERUPS_PANEL && mana > 0)
         {
             mana = APowerupsPanel.AddManaForBump(slot, pipe, mana, color);
         }
