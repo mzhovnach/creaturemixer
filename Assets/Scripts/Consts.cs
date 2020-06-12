@@ -138,7 +138,7 @@ public class Consts
 
     public static bool ENEMIES_ATTACKED_COLORED_PIPES = false; //TODO use as weapon of some enemies, not all
     public static int NEW_PIPES_AMOUNT = 2;
-    public static bool LIVES_PANEL = false;
+    public static bool LIVES_PANEL = true;
     public static bool POWERUPS_PANEL = false;
 
     public static Color GET_COLOR_BY_ID(int colorId)
