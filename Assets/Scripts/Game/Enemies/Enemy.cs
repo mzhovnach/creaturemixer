@@ -11,6 +11,7 @@ public struct EnemyParams
     public int Damage;
     public int Color;
     public int AttackInterval;
+    public int Weight;
 
     public void Init(string name, Enemy enemy)
     {
@@ -20,6 +21,7 @@ public struct EnemyParams
         Damage = enemy.Weapon.MaxPower;
         Color = enemy.Color;
         AttackInterval = enemy.Weapon.AttackInterval;
+        Weight = enemy.Weight;
     }
 }
 
@@ -42,6 +44,8 @@ public class Enemy : MonoBehaviour
     public int              MaxLives = 1;
     [Range(-1, 4)]
     public int              Color = -1; // default color
+    [Range(1, 5)]
+    public int              Weight = 1; // weight of monster. if enemy too hevy - player cant move him (only with some powerup)
 
     public WeaponBaseEnemy  Weapon;
     public ProgressView     Lives;

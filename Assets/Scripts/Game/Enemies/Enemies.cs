@@ -115,13 +115,14 @@ public class Enemies : MonoBehaviour
     private List<EnemySlot> FindSlotsForEnemy(QueueElement enemyData)
     {
         List<EnemySlot> slots = new List<EnemySlot>();
+        int enemySize = GetEnemySize(enemyData.Name);
         if (enemyData.Slot > 0)
         {
             // prioritized slot selected
-            int slotReal = enemyData.Slot - 1; // from 0
-            if (slotReal + GetEnemySize(enemyData.Name) > SLOTS_COUNT)
+            int slotReal = enemyData.Slot; // from 0
+            if (slotReal + enemySize < SLOTS_COUNT)
             {
-                for (int i = 0; i < SLOTS_COUNT; ++i)
+                for (int i = slotReal; i < slotReal + enemySize; ++i)
                 {
                     if (Slots[i].IsEmpty())
                     {
@@ -146,7 +147,6 @@ public class Enemies : MonoBehaviour
         }
         // find random awailable
         List<int> awailableStartSlots = new List<int>();
-        int enemySize = GetEnemySize(enemyData.Name);
         for (int i = 0; i <= SLOTS_COUNT - enemySize; ++i)
         {
             bool free = true;
@@ -233,6 +233,11 @@ public class Enemies : MonoBehaviour
 
     public bool TryToMoveEnemyBySlide(Enemy enemy, Vector2 startPos, Vector2 endPos, bool mouseUp)
     {
+        if (enemy.Weight > GameManager.Instance.Player.PlayersPower)
+        {
+            return false;
+        }
+        //TODO move more that 1 enemy (limited to PlayersPower parameter)
         bool wasSlide = false;
         if (Mathf.Abs(endPos.x - startPos.x) >= MIN_DISTANCE_TO_MOVE_ENEMY)
         {

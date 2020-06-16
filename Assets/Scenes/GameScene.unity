@@ -1622,6 +1622,7 @@ MonoBehaviour:
   - {fileID: 335622117932292198, guid: aa4e2413aec37354b81226d939e69037, type: 3}
   - {fileID: 2647464557405894701, guid: 9239b217a3b963e48b4b627a18462d3a, type: 3}
   - {fileID: 5761272079667929437, guid: 16d8118acca1ad94d9c8e8be82693e9f, type: 3}
+  - {fileID: 7883168656266517252, guid: f3fcd32ac76d6e040929c422e2d69862, type: 3}
   - {fileID: 7932023756892534733, guid: 04cf938100609bf4e8bb4a84e9ce55d1, type: 3}
   - {fileID: 149557151473835303, guid: ff3a338f661ee3e4daa27876abbf0c7f, type: 3}
   - {fileID: 636733208917892765, guid: e8565c3064ea06a45a78511c3c065a42, type: 3}
@@ -3191,24 +3192,34 @@ MonoBehaviour:
   - {fileID: 1610961248}
   - {fileID: 1942735493}
   EnemiesDefaultParams:
-  - Name: enemy_1
-    Size: 1
-    Lives: 10
-    Damage: 5
-    Color: -1
-    AttackInterval: 0
-  - Name: enemy_2
-    Size: 1
-    Lives: 15
+  - Name: boss_0
+    Size: 4
+    Lives: 100
     Damage: 7
     Color: -1
-    AttackInterval: 0
-  - Name: enemy_3
-    Size: 2
-    Lives: 20
+    AttackInterval: 4
+    Weight: 4
+  - Name: enemy_1
+    Size: 1
+    Lives: 15
     Damage: 10
     Color: -1
-    AttackInterval: 0
+    AttackInterval: 2
+    Weight: 1
+  - Name: enemy_2
+    Size: 1
+    Lives: 25
+    Damage: 15
+    Color: -1
+    AttackInterval: 3
+    Weight: 1
+  - Name: enemy_3
+    Size: 2
+    Lives: 30
+    Damage: 15
+    Color: -1
+    AttackInterval: 4
+    Weight: 1
   ObjectsContainer: {fileID: 1986463815}
 --- !u!4 &1986463815
 Transform:

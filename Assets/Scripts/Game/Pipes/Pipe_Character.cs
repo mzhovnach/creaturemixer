@@ -35,6 +35,7 @@ public class Pipe_Character : SPipe
     public virtual void InitCharacter(int level)
     {
         _animState = ECharacterAnimState.Normal;
+        ScaleObject.transform.localScale = Vector3.one;
         UI.gameObject.SetActive(true);
         _powerup.InitPowerup(level);
         Lives.InitCounter(30, 30);  // TODO according to level

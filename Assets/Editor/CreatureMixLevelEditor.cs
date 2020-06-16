@@ -113,6 +113,7 @@ public class CreatureMixLevelEditor : Editor
         elementsNamesList.Add("enemy_1");
         elementsNamesList.Add("enemy_2");
         elementsNamesList.Add("enemy_3");
+        elementsNamesList.Add("boss_0");
         _elementsNames = new Dictionary<string, int>();
         _awailableElements = new List<string>();
         _queueTextures = new List<Texture>();

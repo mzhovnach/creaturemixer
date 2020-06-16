@@ -188,10 +188,10 @@ public class GameData
 
     private static void LoadDelaysAfetrQueueElements()
     {
-        if (DelaysAfterQueueElement != null)
-        {
-            return;
-        }
+        //if (DelaysAfterQueueElement != null)
+        //{
+        //    return;
+        //}
         DelaysAfterQueueElement = new Dictionary<string, int>();
         TextAsset aXml = Resources.Load<TextAsset>("Data/delays_after_queue_elements");
         XmlDocument xmlDoc = new XmlDocument(); // xmlDoc is the new xml document.
@@ -216,6 +216,10 @@ public class GameData
         if (DelaysAfterQueueElement.Count == 0)
         {
             return 0;
+        }
+        if (!DelaysAfterQueueElement.ContainsKey(aname))
+        {
+            LoadDelaysAfetrQueueElements();
         }
         return DelaysAfterQueueElement[aname];
     }

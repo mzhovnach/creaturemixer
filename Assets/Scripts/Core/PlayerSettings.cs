@@ -68,6 +68,7 @@ public class UserData
     public int                              RestartCounter;
     public int                              CreatureMixLevel;
 	//
+    public int                              PlayersPower; // weight of enemy that player can move
 
     public UserData()
     {
@@ -116,8 +117,9 @@ public class UserData
 		CurrentSkin.PipeStructureType = EPipeStructureType.BackFront;
 		//
 		BestScore = 0;
-		// levels states
-		CurrentLevel = 0;
+        PlayersPower = 1;
+        // levels states
+        CurrentLevel = 0;
 		LevelsStates = new List<LevelState>();
 		LevelState firstLevel;
 		firstLevel.BestMoves = -1;

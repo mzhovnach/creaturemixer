@@ -20,7 +20,7 @@ public class EnemiesEditor : Editor
     {
         Enemies myTarget = (Enemies)target;
         // find all Enemies
-        string path = "Assets/Prefabs/Enemies";
+        string path = "Assets/Prefabs/ForPool/Enemies";
         var guids2 = AssetDatabase.FindAssets("t:gameobject", new string[] { path });
         myTarget.EnemiesDefaultParams = new List<EnemyParams>();
         foreach (var guid in guids2)

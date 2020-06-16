@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <enemies>
-	<p name="enemy_1" delay="3"/>
-	<p name="enemy_2" delay="5"/>
-	<p name="enemy_3" delay="7"/>
+	<p name="enemy_1" delay="2"/>
+	<p name="enemy_2" delay="4"/>
+	<p name="enemy_3" delay="5"/>
+	<p name="boss_0" delay="7"/>
 </enemies>
