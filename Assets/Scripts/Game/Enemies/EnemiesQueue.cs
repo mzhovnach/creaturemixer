@@ -75,7 +75,7 @@ public class EnemiesQueue : MonoBehaviour
         bool added = false;
         bool continueAdding = true;
         // TODO можливо якщо жодного ворога немає - пришвидшуєм чергу, щоб не втикати довго
-        if (_enemies.NoEnemiesLeft())
+        if (Consts.ADD_ENAMY_ON_NO_ENEMIES_LEFT && _enemies.NoEnemiesLeft())
         {
             QueueElement element = _queue[0];
             element.Delay = 0;

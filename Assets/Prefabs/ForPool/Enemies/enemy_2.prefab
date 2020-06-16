@@ -48,7 +48,7 @@ MonoBehaviour:
   Size: 1
   ScaleObject: {fileID: 4415576515834982855}
   ShakeObject: {fileID: 5735442988100528413}
-  MaxLives: 15
+  MaxLives: 25
   Color: -1
   Weapon: {fileID: 1250777180533562666}
   Lives: {fileID: 4958269972518785364}
@@ -310,17 +310,17 @@ PrefabInstance:
     - target: {fileID: 6426567407701868702, guid: 613e745cf47705141bc5f319c04e36f6,
         type: 3}
       propertyPath: AttackInterval
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6426567407701868702, guid: 613e745cf47705141bc5f319c04e36f6,
         type: 3}
       propertyPath: Power
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6426567407701868702, guid: 613e745cf47705141bc5f319c04e36f6,
         type: 3}
       propertyPath: MaxPower
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 6426567407701868702, guid: 613e745cf47705141bc5f319c04e36f6,
         type: 3}

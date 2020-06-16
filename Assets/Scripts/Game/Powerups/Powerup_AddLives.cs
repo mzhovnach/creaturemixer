@@ -4,7 +4,7 @@
 
     protected override void ApplyLevel()
     {
-        _power = 10 + _powerupLevel * 3;
+        _power = 20 + _powerupLevel * 3;
     }
     
 	public override void ApplyPowerup()

@@ -626,7 +626,7 @@ public class CreatureMixLevelEditor : Editor
         }
         if (_myLevel.Aims.Count == 0)
         {
-            Debug.LogError("ADD AIMS!!!");
+            //Debug.LogError("ADD AIMS!!!");
         } else
         {
             bool higherThan1 = false;

@@ -582,7 +582,7 @@ public class GameBoard : MonoBehaviour
 		//if (levelData == null || levelData.Slots.Count == 0)
 		//{
             //levelData = GameManager.Instance.GameData.StartLevelData;
-            int level = 0; //TODO uncomment GameManager.Instance.Player.CreatureMixLevel;
+            int level = GameManager.Instance.Player.CreatureMixLevel;
             string path = "CreatureMixLevels/cmlevel_" + level.ToString();
             CreatureMixLevelData cmlevelData = (CreatureMixLevelData)Resources.Load<CreatureMixLevelData>(path);
             if (cmlevelData)
@@ -2111,9 +2111,13 @@ public class GameBoard : MonoBehaviour
     private IEnumerator OnCreatureMixGameCompleted()
     {
         SetGameState(EGameState.Loose, "Loose");
-        int nextLevel = GameManager.Instance.Player.CreatureMixLevel + 1;
-        _upgradesManager.SetLevel(nextLevel, false);
-        GameManager.Instance.Player.CreatureMixLevel = nextLevel;
+        int nextLevel = GameManager.Instance.Player.CreatureMixLevel;
+        if (nextLevel < Consts.LEVELS_COUNT - 1)
+        {
+            ++nextLevel;
+            _upgradesManager.SetLevel(nextLevel, false);
+            GameManager.Instance.Player.CreatureMixLevel = nextLevel;
+        }
         yield return new WaitForSeconds(Consts.ADD_POINTS_EFFECT_TIME);
         // teleport
         MusicManager.playSound("Teleport");

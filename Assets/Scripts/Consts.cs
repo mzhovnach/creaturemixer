@@ -107,7 +107,7 @@ public class Consts
     public static float ADD_MANA_EFFECT_TIME = 0.5f;
     public static float POINTS_RASE_TIME = 0.5f;
 
-    public static int LEVELS_COUNT = 99;
+    public static int LEVELS_COUNT = 2;
 
     public static float PIPE_SIZE = 180;
 
@@ -133,6 +133,7 @@ public class Consts
     public static bool ENEMIES_TURN_ON_EVERY_MATCH = false; // if false moves only on no match from player
 
     public static bool MOVE_ENEMIES_WITH_SLIDE = true;
+    public static bool ADD_ENAMY_ON_NO_ENEMIES_LEFT = false;
 
     public static bool FILLER_VARIATION = false;
 
