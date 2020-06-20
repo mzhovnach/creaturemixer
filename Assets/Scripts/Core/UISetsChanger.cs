@@ -12,8 +12,8 @@ public enum UISetType
 {
 	Global = 0,
 	MainMenu = 1,
-	ClassicGame = 2,
-	LeveledGame = 3
+    LevelBattle = 2,
+    LevelCollect = 3
 }
 
 public class UISetsChanger : MonoBehaviour

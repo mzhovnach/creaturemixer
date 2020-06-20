@@ -36,6 +36,7 @@ public class SSlotData
 [System.Serializable]
 public class LevelData
 {
+    public ELevelType       Type;
     public List<long>      	Resources;
 	public List<SSlotData>  Slots;
     public List<Vector3Int> Aims; // x - chip type, y - level of chip, z - completed or not(0 or 1)
@@ -45,6 +46,8 @@ public class LevelData
     public bool             AddNewPipes;
     // statistic
     public float			timePlayed;
+    public int              Moves = 0;
+    public int              CollectAim = 0;
 
     public List<QueueElement> EnemiesQueue;
     //TODO  List<EnemyData> Enemies; збереження стану ворогів на полі (життя, мана, ходів до атаки,...) Доробити якщо треба зберігати гру
@@ -72,6 +75,9 @@ public class LevelData
     public static LevelData ConvertToLevelData(CreatureMixLevelData cmLevelData, int level)
     {
         LevelData res = new LevelData();
+        res.Type = cmLevelData.Type;
+        res.Moves = cmLevelData.Moves;
+        res.CollectAim = cmLevelData.CollectAim;
         res.Colors = new List<int>();
         for (int i = 0; i < cmLevelData.Colors.Count; ++i)
         {
@@ -142,8 +148,11 @@ public class LevelData
     {
         UnityEngine.Random.InitState(level);
         LevelData res = new LevelData();
+        res.Type = ELevelType.Battle;
         res.AddNewPipes = true;
         res.Colors = new List<int>();
+        res.Moves = 0;
+        res.CollectAim = 0;
         // aims
         res.Aims = new List<Vector3Int>();
         res.Aims.Add(new Vector3Int(0, UnityEngine.Random.Range(2, 5), 0));
@@ -182,5 +191,29 @@ public class LevelData
         }
         //
         return res;
+    }
+
+    public UISetType GetUiSetType()
+    {
+        switch (Type)
+        {
+            case ELevelType.None:
+                {
+                    Debug.LogError("WRONG LEVEL TYPE");
+                    return UISetType.LevelBattle;
+                }
+            case ELevelType.Battle:
+                {
+                    return UISetType.LevelBattle;
+                }
+            case ELevelType.Collect:
+                {
+                    return UISetType.LevelCollect;
+                }
+            default:
+                {
+                    return UISetType.LevelBattle;
+                }
+        }
     }
 }

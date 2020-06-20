@@ -22,6 +22,14 @@ public enum EGameState
     MoveEnemy = 7
 }
 
+public enum ELevelType
+{
+    None = 0,
+    Battle = 1,
+    Collect = 2 // collect X resources at least with limited moves
+    //,CollectTimed = 3 // collect X resources at least with limited time
+}
+
 public enum ESlideType
 {
 	None = 0,
@@ -99,7 +107,9 @@ public class GameBoard : MonoBehaviour
     public QueuePanel                           AQueuePanel;
 	public SequencePanel                        ASequencePanel;
 	public MovesPanel							AMovesPanel;
-	public StarsPanel							AStarsPanel;
+    public CollectPanel                         ACollectPanel;
+
+    public StarsPanel							AStarsPanel;
 	public LevelPanel							ALevelPanel;
     public LivesPanel                           ALivesPanel;
     public PowerupsPanel                        APowerupsPanel;
@@ -185,6 +195,7 @@ public class GameBoard : MonoBehaviour
     private List<long> _resources;
     private long _pointsForSequences;
     private EGameState _gameState = EGameState.Pause;
+    private ELevelType _levelType = ELevelType.None;
     public float TimePlayed;
     public SSlot DragSlot;
     public Enemy DragEnemy = null;
@@ -193,8 +204,6 @@ public class GameBoard : MonoBehaviour
     public int _allTurns;                   // for all game types
     private int _pipesAdded;
     private int _pipesToNextBlocker;
-    // leveled
-    public int MovesLeft;
     // slots to check aims
     List<BoardPos> _slotsToCheckAims = new List<BoardPos>();
     BoardPos _lastSlotWithMatch = new BoardPos(-1, -1);
@@ -274,10 +283,15 @@ public class GameBoard : MonoBehaviour
     //	PlayGame();
     //}
 
+    public static bool IsInGame()
+    {
+        return GameManager.Instance.CurrentMenu == UISetType.LevelBattle || GameManager.Instance.CurrentMenu == UISetType.LevelCollect;
+    }
+
     // Update is called once per frame
     void Update () 
 	{
-        if (GameManager.Instance.CurrentMenu != UISetType.ClassicGame && GameManager.Instance.CurrentMenu != UISetType.LeveledGame)
+        if (!IsInGame())
 		{
 			return;
 		}
@@ -464,6 +478,14 @@ public class GameBoard : MonoBehaviour
     protected IEnumerator ClearBoard()
     {
         if (Slots == null) yield return null;
+
+        for (int i = 0; i < WIDTH; ++i)
+        {
+            for (int j = 0; j < HEIGHT; ++j)
+            {
+                Slots[i, j].SetAsNotHole();
+            }
+        }
         float waitTime = AEnemies.ClearEnemies();
         float waitedTime = 0;
         float waitOnEachPipe = 0.05f;
@@ -488,59 +510,8 @@ public class GameBoard : MonoBehaviour
         ACharacters.ClearCharacters();
     }
 
-    protected IEnumerator CreateLevel(LevelData levelData) 
-	{
-        _currentTouchId = -1;
-        DragSlot = null;
-        DragEnemy = null;
-        HideSelection();
-        _addNewPipes = levelData.AddNewPipes;
-        //
-        _possibleColors.Clear();
-        for (int i = 0; i < levelData.Colors.Count; ++i)
-        {
-            _possibleColors.Add(levelData.Colors[i]);
-        }
-        //
-        AQueuePanel.LoadPanel(levelData.QueueState);
-        //AAimPanel.InitPanel(levelData);
-        if (!Consts.LIVES_PANEL)
-        {
-            ALivesPanel.GetComponent<UISetsChanger>().HideForce();
-        } else
-        {
-            ALivesPanel.InitPanel(100, 100);
-        }
-        
-        if (!Consts.POWERUPS_PANEL)
-        {
-            APowerupsPanel.GetComponent<UISetsChanger>().HideForce();
-        } else
-        {
-            List<PowerupData> powerupsData = new List<PowerupData>(); //TODO select before level
-            powerupsData.Add(new PowerupData(EPowerupType.AddLives, 0));
-            powerupsData.Add(new PowerupData(EPowerupType.Reshaffle, 0));
-            powerupsData.Add(new PowerupData(EPowerupType.DestroyPiece, 0));
-            APowerupsPanel.InitPanel(powerupsData);
-        }
-
-        for (int i = 0; i < WIDTH; ++i)
-		{
-			for (int j = 0; j < HEIGHT; ++j)
-			{
-				Slots[i, j].SetAsNotHole();
-			}
-		}
-
-		TimePlayed = levelData.timePlayed;
-		for (int i = 0; i < levelData.Resources.Count; ++i)
-		{
-			SetResourceForce(levelData.Resources[i], i);
-		}
-
-        yield return new WaitForSeconds(Consts.DARK_SCREEN_SHOW_HIDE_TIME);
-        yield return StartCoroutine(ClearBoard());
-        AEnemiesQueue.InitQueue(levelData.EnemiesQueue);
+    protected IEnumerator CreateBoard(LevelData levelData)
+    {
         // create pipes force
         for (int i = 0; i < levelData.Slots.Count; ++i)
         {
@@ -558,12 +529,50 @@ public class GameBoard : MonoBehaviour
                 yield return new WaitForSeconds(0.025f);
             }
         }
+    }
+
+    protected IEnumerator CreateBattleLevel(LevelData levelData) 
+	{
+        if (!Consts.LIVES_PANEL)
+        {
+            ALivesPanel.GetComponent<UISetsChanger>().HideForce();
+        } else
+        {
+            ALivesPanel.InitPanel(100, 100);
+        }
+        if (!Consts.POWERUPS_PANEL)
+        {
+            APowerupsPanel.GetComponent<UISetsChanger>().HideForce();
+        } else
+        {
+            List<PowerupData> powerupsData = new List<PowerupData>(); //TODO select before level
+            powerupsData.Add(new PowerupData(EPowerupType.AddLives, 0));
+            powerupsData.Add(new PowerupData(EPowerupType.Reshaffle, 0));
+            powerupsData.Add(new PowerupData(EPowerupType.DestroyPiece, 0));
+            APowerupsPanel.InitPanel(powerupsData);
+        }
+        yield return new WaitForSeconds(Consts.DARK_SCREEN_SHOW_HIDE_TIME);
+        yield return StartCoroutine(ClearBoard());
+        AEnemiesQueue.InitQueue(levelData.EnemiesQueue);
+        yield return StartCoroutine(CreateBoard(levelData));
         yield return new WaitForSeconds(0.15f);
         ACharacters.AddCharacters(this, GetEmptySSlots());
         StartPlayersTurn();
     }
-		
-	public void PlayGame()
+
+    protected IEnumerator CreateCollectLevel(LevelData levelData)
+    {
+        AMovesPanel.InitPanel(levelData.Moves);
+        ACollectPanel.InitCounter(0, levelData.CollectAim);
+        yield return new WaitForSeconds(Consts.DARK_SCREEN_SHOW_HIDE_TIME);
+        yield return StartCoroutine(ClearBoard());
+        yield return StartCoroutine(CreateBoard(levelData));
+        yield return new WaitForSeconds(0.15f);
+        //ACharacters.AddCharacters(this, GetEmptySSlots());
+        StartPlayersTurn();
+    }
+
+    public void PlayGame()
     {
 		_maxColoredLevels = GetMaxColoredLevels();
 		ResetHint();
@@ -593,10 +602,20 @@ public class GameBoard : MonoBehaviour
                 levelData = LevelData.GenerateCreatureMixLevel(level);
             }
         //} else
-		//{
-		//	GameManager.Instance.Player.SavedGame = null;
-		//	GameManager.Instance.Settings.Save();
-		//}
+        //{
+        //	GameManager.Instance.Player.SavedGame = null;
+        //	GameManager.Instance.Settings.Save();
+        //}
+
+        _levelType = levelData.Type;
+        // change ui
+        UISetType uiSetType = levelData.GetUiSetType();
+        GameManager.Instance.CurrentMenu = uiSetType;
+        EventData eventData = new EventData("OnUISwitchNeededEvent");
+        eventData.Data["setid"] = uiSetType;
+        GameManager.Instance.EventManager.CallOnUISwitchNeededEvent(eventData);
+        //
+
         // complete aims with level 1
         for (int i = 0; i < levelData.Aims.Count; ++i)
         {
@@ -607,8 +626,34 @@ public class GameBoard : MonoBehaviour
                 levelData.Aims[i] = aim;
             }
         }
+        // common part
+        _currentTouchId = -1;
+        DragSlot = null;
+        DragEnemy = null;
+        HideSelection();
+        _addNewPipes = levelData.AddNewPipes;
         //
-        StartCoroutine(CreateLevel(levelData));
+        _possibleColors.Clear();
+        for (int i = 0; i < levelData.Colors.Count; ++i)
+        {
+            _possibleColors.Add(levelData.Colors[i]);
+        }
+        //
+        AQueuePanel.LoadPanel(levelData.QueueState);
+        //AAimPanel.InitPanel(levelData);
+        TimePlayed = levelData.timePlayed;
+        for (int i = 0; i < levelData.Resources.Count; ++i)
+        {
+            SetResourceForce(levelData.Resources[i], i);
+        }
+        //
+        if (_levelType == ELevelType.Battle)
+        {
+            StartCoroutine(CreateBattleLevel(levelData));
+        } else
+        {
+            StartCoroutine(CreateCollectLevel(levelData));
+        }
     }
 
     //protected LevelData GetLevelToSave()
@@ -1436,21 +1481,24 @@ public class GameBoard : MonoBehaviour
             }
         }
         // check powerups
-        if (ACharacters.IsSomebodyCanApplyPowerup())
+        if (_levelType == ELevelType.Battle)
         {
-            // show notification
-            EventData eventData = new EventData("OnShowNotificationEvent");
-            eventData.Data["type"] = GameNotification.NotifyType.UsePowerup;
-            GameManager.Instance.EventManager.CallOnShowNotificationEvent(eventData);
-            return true;
-        }
-        if (Consts.POWERUPS_PANEL && APowerupsPanel.IsCanApply())
-        {
-            // show notification
-            EventData eventData = new EventData("OnShowNotificationEvent");
-            eventData.Data["type"] = GameNotification.NotifyType.UsePowerup;
-            GameManager.Instance.EventManager.CallOnShowNotificationEvent(eventData);
-            return true;
+            if (ACharacters.IsSomebodyCanApplyPowerup())
+            {
+                // show notification
+                EventData eventData = new EventData("OnShowNotificationEvent");
+                eventData.Data["type"] = GameNotification.NotifyType.UsePowerup;
+                GameManager.Instance.EventManager.CallOnShowNotificationEvent(eventData);
+                return true;
+            }
+            if (Consts.POWERUPS_PANEL && APowerupsPanel.IsCanApply())
+            {
+                // show notification
+                EventData eventData = new EventData("OnShowNotificationEvent");
+                eventData.Data["type"] = GameNotification.NotifyType.UsePowerup;
+                GameManager.Instance.EventManager.CallOnShowNotificationEvent(eventData);
+                return true;
+            }
         }
         return false;
     }
@@ -2357,8 +2405,7 @@ public class GameBoard : MonoBehaviour
 
 	protected virtual void LeftMouseDownByPosition(Vector2 downGamePos)
 	{
-		if (GameManager.Instance.CurrentMenu != UISetType.ClassicGame && GameManager.Instance.CurrentMenu != UISetType.LeveledGame)
-		{
+		if (!IsInGame()){
 			return;
 		}
 		if (_gameState != EGameState.PlayersTurn)
@@ -2430,8 +2477,7 @@ public class GameBoard : MonoBehaviour
 
 	protected virtual void LeftMouseUpByPosition(Vector2 downGamePos)
 	{
-		if (GameManager.Instance.CurrentMenu != UISetType.ClassicGame && GameManager.Instance.CurrentMenu != UISetType.LeveledGame)
-		{
+		if (!IsInGame()){
 			return;
 		}
 		if (DragSlot != null)
@@ -2755,11 +2801,6 @@ public class GameBoard : MonoBehaviour
                 }
             }
         }
-        EventData eventData = new EventData("OnTurnWasMadeEvent");
-        eventData.Data["tonextpipe"] = _movesToNextPipe;
-        eventData.Data["turnsmade"] = _allTurns;
-        eventData.Data["pipesadded"] = _pipesAdded;
-        GameManager.Instance.EventManager.CallOnTurnWasMadeEvent(eventData);
 
         // Можливо панель сіквенсів теж можна заюзати, поки виграєм лише перемігши ворогів
         //if (allAimsCompleted)
@@ -2770,23 +2811,52 @@ public class GameBoard : MonoBehaviour
 
     public void OnTurnWasMade(bool wasMatch, bool justAddPipe)
     {
-        if (_gameState == EGameState.MoveEnemy)
+        if (_levelType == ELevelType.Collect)
         {
-            SetGameState(EGameState.PlayersAttack, "OnTurnWasMadeAfterMovedEnemy");
-        } else
-        {
-            SetGameState(EGameState.PlayersAttack, "OnTurnWasMade");
-            AddPipesAfterTurn(wasMatch, justAddPipe);
-        }
-        if (_gameState != EGameState.Loose && _gameState != EGameState.Win)
-        {
-            if (!justAddPipe)
+            if (ACollectPanel.IsFull())
             {
-                StartCoroutine(OnTurnWasMadeCoroutine(wasMatch));
-            } else
+                OnLevelCompleted();
+                return;
+            }
+            if (!justAddPipe && !wasMatch)
+            {
+                AMovesPanel.OnTurnWasMade();
+                if (AMovesPanel.GetMovesLeft() <= 0)
+                {
+                    OnLoose();
+                    return;
+                }
+            }
+            SetGameState(EGameState.Pause, "BeforeAddingPipes");
+            AddPipesAfterTurn(wasMatch, justAddPipe);
+            if (_gameState == EGameState.Pause)
             {
                 StartPlayersTurn();
             }
+        } else
+        if (_levelType == ELevelType.Battle)
+        {
+            if (_gameState == EGameState.MoveEnemy)
+            {
+                SetGameState(EGameState.PlayersAttack, "OnTurnWasMadeAfterMovedEnemy");
+            } else
+            {
+                SetGameState(EGameState.PlayersAttack, "OnTurnWasMade");
+                AddPipesAfterTurn(wasMatch, justAddPipe);
+            }
+            if (_gameState != EGameState.Loose && _gameState != EGameState.Win)
+            {
+                if (!justAddPipe)
+                {
+                    StartCoroutine(OnTurnWasMadeCoroutine(wasMatch));
+                } else
+                {
+                    StartPlayersTurn();
+                }
+            }
+        } else
+        {
+            Debug.LogError("Unknown Level Type " + _levelType);
         }
     }
 
@@ -2930,20 +3000,36 @@ public class GameBoard : MonoBehaviour
 
     public void CreateSimpleAttack(SSlot slot, int pipeColor, int pipeParam)
     {
-        int attackPower = pipeParam * 3;
-        if (Consts.FILLER_VARIATION)
+        if (_levelType == ELevelType.Battle)
         {
-            attackPower = pipeParam + 1;
+            int attackPower = pipeParam * 3;
+            if (Consts.FILLER_VARIATION)
+            {
+                attackPower = pipeParam + 1;
+            }
+            StartCoroutine(SimpleWeapon.AttackCoroutine(this, slot, slot.Pipe.AColor, attackPower)); // TODO correct power of strike according to upgrades and balance
+        } else
+        if (_levelType == ELevelType.Collect)
+        {
+            int toCollect = pipeParam * 3;
+            ACollectPanel.Collect(slot, pipeColor, toCollect);
         }
-        StartCoroutine(SimpleWeapon.AttackCoroutine(this, slot, slot.Pipe.AColor, attackPower)); // TODO correct power of strike according to upgrades and balance
     }
 
     public void TryCreateFinalAttack(SSlot slot)
     {
         if (slot.Pipe.Param == _maxColoredLevels - 1)
         {
-            int attackPower = slot.Pipe.Param * 3;
-            StartCoroutine(FinalWeapon.AttackCoroutine(this, slot, slot.Pipe.AColor, attackPower)); // TODO correct power of strike according to upgrades and balance
+            if (_levelType == ELevelType.Battle)
+            {
+                int attackPower = slot.Pipe.Param * 3;
+                StartCoroutine(FinalWeapon.AttackCoroutine(this, slot, slot.Pipe.AColor, attackPower)); // TODO correct power of strike according to upgrades and balance
+            } else
+            if (_levelType == ELevelType.Collect)
+            {
+                int toCollect = slot.Pipe.Param * 3;
+                ACollectPanel.Collect(slot, slot.Pipe.AColor, toCollect);
+            }
         }
     }
 
@@ -2955,8 +3041,18 @@ public class GameBoard : MonoBehaviour
         }
         if (slot.Pipe.Param == _maxColoredLevels)
         {
-            StartCoroutine(FinalWeapon.AttackCoroutine(this, slot, slot.Pipe.AColor, slot.Pipe.Param * 3)); // TODO correct power of strike according to upgrades and balance
-            SetGameState(EGameState.EnemiesAttack, "attacking by touch final");
+            if (_levelType == ELevelType.Battle)
+            {
+                StartCoroutine(FinalWeapon.AttackCoroutine(this, slot, slot.Pipe.AColor, slot.Pipe.Param * 3)); // TODO correct power of strike according to upgrades and balance
+                SetGameState(EGameState.EnemiesAttack, "attacking by touch final");
+            } else
+            if (_levelType == ELevelType.Collect)
+            {
+                SetGameState(EGameState.Pause, "collect by final attack");
+                int toCollect = slot.Pipe.Param * 3;
+                ACollectPanel.Collect(slot, slot.Pipe.AColor, toCollect);
+                BreakePipeInSlot(slot, (slot.Pipe as Pipe_Colored).GetExplodeEffectPrefab());
+            }
             OnTurnWasMade(true, false);
             return true;
         }

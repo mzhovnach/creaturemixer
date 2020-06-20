@@ -19,25 +19,17 @@ public class MovesPanel : MonoBehaviour
 		AmountCurrent = 0;
 		Amount = 0;
 		AmountText.text = "0";
-		EventManager.OnTurnWasMadeEvent += OnTurnWasMade;
 	}
 
-	void OnDestroy()
-	{
-		EventManager.OnTurnWasMadeEvent -= OnTurnWasMade;
-	}
+    public void InitPanel(int moves)
+    {
+        SetAmountForce(moves);
+    }
 		
-	void OnTurnWasMade(EventData e)
+	public void OnTurnWasMade()
 	{		
-		long amount = GameManager.Instance.Game.MovesLeft;
-		//bool isforce = (bool)e.Data["isforce"];
-		//if (isforce)
-		//{
-			SetAmountForce(amount);
-		//} else
-		//{
-		//	SetAmount(amount);
-		//}
+		long amount = Amount - 1;
+        SetAmountForce(amount);
 	}
 
 	public void SetAmountForce(long amount)
@@ -74,4 +66,9 @@ public class MovesPanel : MonoBehaviour
 				}
 			);
 	}
+
+    public long GetMovesLeft()
+    {
+        return Amount;
+    }
 }

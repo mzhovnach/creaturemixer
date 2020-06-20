@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c024d6a35db2b1243883e5181ac9cf80, type: 3}
   m_Name: cmlevel_2
   m_EditorClassIdentifier: 
-  Id: 2
+  Id: 0
+  Type: 2
   Colors: 000000000100000002000000
   Aims: []
   NeededStates:
@@ -29,8 +30,8 @@ MonoBehaviour:
   - x: 2
     y: 6
     pt: 1
-    p: 1
-    c: 2
+    p: 0
+    c: 1
   - x: 3
     y: 6
     pt: 0
@@ -45,7 +46,7 @@ MonoBehaviour:
     y: 6
     pt: 1
     p: 0
-    c: 1
+    c: 2
   - x: 6
     y: 6
     pt: 0
@@ -58,9 +59,9 @@ MonoBehaviour:
     c: -1
   - x: 1
     y: 5
-    pt: 0
-    p: -1
-    c: -1
+    pt: 1
+    p: 0
+    c: 0
   - x: 2
     y: 5
     pt: 0
@@ -83,14 +84,14 @@ MonoBehaviour:
     c: -1
   - x: 6
     y: 5
-    pt: 1
-    p: 0
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   - x: 0
     y: 4
     pt: 1
-    p: 1
-    c: 0
+    p: 0
+    c: 1
   - x: 1
     y: 4
     pt: 0
@@ -100,27 +101,27 @@ MonoBehaviour:
     y: 4
     pt: 1
     p: 0
-    c: 1
+    c: 0
   - x: 3
+    y: 4
+    pt: 0
+    p: -1
+    c: -1
+  - x: 4
+    y: 4
+    pt: 1
+    p: 0
+    c: 1
+  - x: 5
     y: 4
     pt: 1
     p: 0
     c: 2
-  - x: 4
-    y: 4
-    pt: 0
-    p: -1
-    c: -1
-  - x: 5
-    y: 4
-    pt: 1
-    p: 1
-    c: 1
   - x: 6
     y: 4
-    pt: 0
-    p: -1
-    c: -1
+    pt: 1
+    p: 0
+    c: 2
   - x: 0
     y: 3
     pt: 0
@@ -128,9 +129,9 @@ MonoBehaviour:
     c: -1
   - x: 1
     y: 3
-    pt: 1
-    p: 0
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   - x: 2
     y: 3
     pt: 0
@@ -138,9 +139,9 @@ MonoBehaviour:
     c: -1
   - x: 3
     y: 3
-    pt: 0
-    p: -1
-    c: -1
+    pt: 1
+    p: 0
+    c: 0
   - x: 4
     y: 3
     pt: 0
@@ -163,14 +164,14 @@ MonoBehaviour:
     c: 2
   - x: 1
     y: 2
-    pt: 0
-    p: -1
-    c: -1
+    pt: 1
+    p: 0
+    c: 2
   - x: 2
     y: 2
-    pt: 0
-    p: -1
-    c: -1
+    pt: 1
+    p: 0
+    c: 1
   - x: 3
     y: 2
     pt: 0
@@ -180,17 +181,17 @@ MonoBehaviour:
     y: 2
     pt: 1
     p: 0
-    c: 1
+    c: 0
   - x: 5
     y: 2
-    pt: 1
-    p: 0
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   - x: 6
     y: 2
     pt: 1
     p: 0
-    c: 2
+    c: 1
   - x: 0
     y: 1
     pt: 0
@@ -208,9 +209,9 @@ MonoBehaviour:
     c: -1
   - x: 3
     y: 1
-    pt: 1
-    p: 1
-    c: 1
+    pt: 0
+    p: -1
+    c: -1
   - x: 4
     y: 1
     pt: 0
@@ -218,9 +219,9 @@ MonoBehaviour:
     c: -1
   - x: 5
     y: 1
-    pt: 0
-    p: -1
-    c: -1
+    pt: 1
+    p: 0
+    c: 0
   - x: 6
     y: 1
     pt: 0
@@ -235,12 +236,12 @@ MonoBehaviour:
     y: 0
     pt: 1
     p: 0
-    c: 1
+    c: 2
   - x: 2
     y: 0
-    pt: 1
-    p: 0
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   - x: 3
     y: 0
     pt: 0
@@ -249,38 +250,20 @@ MonoBehaviour:
   - x: 4
     y: 0
     pt: 1
-    p: 1
-    c: 2
+    p: 0
+    c: 1
   - x: 5
     y: 0
-    pt: 1
-    p: 0
-    c: 2
+    pt: 0
+    p: -1
+    c: -1
   - x: 6
     y: 0
-    pt: 1
-    p: 1
-    c: 0
+    pt: 0
+    p: -1
+    c: -1
   AddNewPipes: 1
   CreatureId: 0
-  Queue:
-  - Name: boss_0
-    Delay: 7
-    Slot: 1
-    Parameters: 
-  - Name: enemy_1
-    Delay: 7
-    Slot: 0
-    Parameters: 
-  - Name: enemy_1
-    Delay: 2
-    Slot: 0
-    Parameters: 
-  - Name: enemy_1
-    Delay: 2
-    Slot: 0
-    Parameters: 
-  - Name: enemy_1
-    Delay: 2
-    Slot: 0
-    Parameters: 
+  Moves: 20
+  CollectAim: 250
+  Queue: []

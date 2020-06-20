@@ -51,7 +51,7 @@ public class GameMenuUIController : BaseUIController
                 GameManager.Instance.GameFlow.ExitGame();
             }
             else
-            if (GameManager.Instance.CurrentMenu == UISetType.ClassicGame || GameManager.Instance.CurrentMenu == UISetType.LeveledGame)
+            if (GameBoard.IsInGame())
             {
                 if (!GameManager.Instance.Game.IsLoose() && !GameManager.Instance.Game.IsPause())
                 {
@@ -183,11 +183,6 @@ public class GameMenuUIController : BaseUIController
         //MusicManager.PlayGameTracks();
 
         //GameManager.Instance.Game.RestartGame(); no need for restart course this clears saved game!
-        GameManager.Instance.CurrentMenu = UISetType.ClassicGame;
-        EventData eventData = new EventData("OnUISwitchNeededEvent");
-        eventData.Data["setid"] = UISetType.ClassicGame;
-        GameManager.Instance.EventManager.CallOnUISwitchNeededEvent(eventData);
-
         GameBoard.AddingType = EAddingType.OnNoMatch;
         GameManager.Instance.Game.ClearBoardForce();
         GameManager.Instance.Game.PlayGame();

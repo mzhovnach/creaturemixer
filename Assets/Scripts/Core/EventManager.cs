@@ -72,9 +72,6 @@ public class EventManager
     public static event EventController.MethodContainer OnShowAddResourceEffect;
     public void CallOnShowAddResourceEffect(EventData ob = null) { if (OnShowAddResourceEffect != null) OnShowAddResourceEffect(ob); }
 
-    public static event EventController.MethodContainer OnTurnWasMadeEvent;
-	public void CallOnTurnWasMadeEvent(EventData ob = null) { if (OnTurnWasMadeEvent != null) OnTurnWasMadeEvent(ob); }
-
     public static event EventController.MethodContainer OnCombineWasMadeEvent;
     public void CallOnCombineWasMadeEvent(EventData ob = null) { if (OnCombineWasMadeEvent != null) OnCombineWasMadeEvent(ob); }
 

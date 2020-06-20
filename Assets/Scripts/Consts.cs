@@ -107,7 +107,7 @@ public class Consts
     public static float ADD_MANA_EFFECT_TIME = 0.5f;
     public static float POINTS_RASE_TIME = 0.5f;
 
-    public static int LEVELS_COUNT = 3;
+    public static int LEVELS_COUNT = 4;
 
     public static float PIPE_SIZE = 180;
 

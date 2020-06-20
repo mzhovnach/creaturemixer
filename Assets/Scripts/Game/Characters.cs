@@ -108,7 +108,10 @@ public class Characters : MonoBehaviour
 
     void Update()
     {
-        _worker.UpdateActions(Time.deltaTime);
+        if (_worker != null)
+        {
+            _worker.UpdateActions(Time.deltaTime);
+        }
     }
 
     public EPowerupType GetSelectedPowerupType()

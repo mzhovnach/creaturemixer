@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: cmlevel_0
   m_EditorClassIdentifier: 
   Id: 0
+  Type: 1
   Colors: 
   Aims:
   - {x: 0, y: 2}
