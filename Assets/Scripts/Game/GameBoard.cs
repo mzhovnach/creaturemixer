@@ -210,6 +210,7 @@ public class GameBoard : MonoBehaviour
     private List<int> _possibleColors = new List<int>();
     bool _addNewPipes = false;
 
+    bool _levelPinned = false;
     void Awake()
     {
         // limiting FPS
@@ -2159,12 +2160,15 @@ public class GameBoard : MonoBehaviour
     private IEnumerator OnCreatureMixGameCompleted()
     {
         SetGameState(EGameState.Loose, "Loose");
-        int nextLevel = GameManager.Instance.Player.CreatureMixLevel;
-        if (nextLevel < Consts.LEVELS_COUNT - 1)
+        if (!_levelPinned)
         {
-            ++nextLevel;
-            _upgradesManager.SetLevel(nextLevel, false);
-            GameManager.Instance.Player.CreatureMixLevel = nextLevel;
+            int nextLevel = GameManager.Instance.Player.CreatureMixLevel;
+            if (nextLevel < Consts.LEVELS_COUNT - 1)
+            {
+                ++nextLevel;
+                _upgradesManager.SetLevel(nextLevel, false);
+                GameManager.Instance.Player.CreatureMixLevel = nextLevel;
+            }
         }
         yield return new WaitForSeconds(Consts.ADD_POINTS_EFFECT_TIME);
         // teleport
@@ -2645,6 +2649,11 @@ public class GameBoard : MonoBehaviour
         return _gameState == EGameState.Pause;
     }
 
+    public bool IsPlayersTurn()
+    {
+        return _gameState == EGameState.PlayersTurn;
+    }
+
     public int GetRandomColor()
     {
         //if (GameBoard.GameType == EGameType.Classic)
@@ -2991,7 +3000,7 @@ public class GameBoard : MonoBehaviour
         return false;
     }
 
-    private void OnLevelCompleted()
+    public void OnLevelCompleted()
     {
         SetGameState(EGameState.Win, "Win");
         ClearBoardQuick();
@@ -3074,6 +3083,34 @@ public class GameBoard : MonoBehaviour
         {
             mana = APowerupsPanel.AddManaForBump(slot, pipe, mana, color);
         }
+    }
+
+    public void RefillMana()
+    {
+        for (int i = 0; i < _possibleColors.Count; ++i)
+        {
+            int color = _possibleColors[i];
+            int mana = 100000;
+            mana = ACharacters.AddMana(mana, color);
+            if (Consts.POWERUPS_PANEL && mana > 0)
+            {
+                mana = APowerupsPanel.AddMana(mana, color);
+            }
+        }
+    }
+
+    public void RemoveMana()
+    {
+        ACharacters.RemoveAllMana();
+        if (Consts.POWERUPS_PANEL)
+        {
+            APowerupsPanel.RemoveAllMana();
+        }
+    }
+
+    public void PinLevel(bool pinLevel)
+    {
+        bool _levelPinned = pinLevel;
     }
 }
 

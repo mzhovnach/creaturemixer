@@ -73,6 +73,31 @@ public class PowerupsPanel : MonoBehaviour
         return mana;
     }
 
+    public int AddMana(int mana, int color)
+    {
+        for (int i = 0; i < _buttons.Count; ++i)
+        {
+            int addedMana = _buttons[i].AddMana(mana, color);
+            if (addedMana > 0)
+            {
+                mana -= addedMana;
+            }
+            if (mana <= 0)
+            {
+                break;
+            }
+        }
+        return mana;
+    }
+
+    public void RemoveAllMana()
+    {
+        for (int i = 0; i < _buttons.Count; ++i)
+        {
+            _buttons[i].RemoveMana(_buttons[i].GetAmount());
+        }
+    }
+
     void Update()
     {
         _worker.UpdateActions(Time.deltaTime);

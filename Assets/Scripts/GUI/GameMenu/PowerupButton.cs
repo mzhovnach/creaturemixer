@@ -90,6 +90,11 @@ public class PowerupButton : MonoBehaviour
                 });
     }
 
+    public int GetAmount()
+    {
+        return _amount;
+    }
+
     public bool RemoveMana(int manaToRemove)
     {
         int mana = _amount - manaToRemove;

@@ -106,6 +106,31 @@ public class Characters : MonoBehaviour
         return mana;
     }
 
+    public int AddMana(int mana, int color)
+    {
+        for (int i = 0; i < _characters.Count; ++i)
+        {
+            int addedMana = _characters[i].AddMana(mana, color);
+            if (addedMana > 0)
+            {
+                mana -= addedMana;
+            }
+            if (mana <= 0)
+            {
+                break;
+            }
+        }
+        return mana;
+    }
+
+    public void RemoveAllMana()
+    {
+        for (int i = 0; i < _characters.Count; ++i)
+        {
+            _characters[i].RemoveMana(_characters[i].Mana.GetAmount());
+        }
+    }
+
     void Update()
     {
         if (_worker != null)
