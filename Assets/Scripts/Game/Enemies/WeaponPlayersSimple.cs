@@ -15,6 +15,12 @@ public class WeaponPlayersSimple : WeaponBase
     {
         // find enemies slot in front of slot
         EnemySlot enemySlot = board.AEnemies.Slots[slot.X];
+        Enemy enemy = enemySlot.GetEnemy();
+        if (!enemy)
+        {
+            OnEndAttack();
+            return 0;
+        }
         // instantiate attack beam
         Vector3 pos = slot.transform.position;
         pos.z = -7;
@@ -25,7 +31,6 @@ public class WeaponPlayersSimple : WeaponBase
         float distance = Mathf.Abs(finalPos.y - pos.y);
         float speed = 0.02f; // per unit
         float flyTime = distance * speed;
-        Enemy enemy = enemySlot.GetEnemy();
         LeanTween.move(attackObject, finalPos, flyTime)
             .setEaseOutSine()
             .setOnComplete(() => {

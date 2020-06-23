@@ -14,6 +14,13 @@ public class WeaponPlayersFinal : WeaponBase
     private float CreateAttack(GameBoard board, SSlot slot, int pipeColor, int attackPower)
     {
         EnemySlot enemySlot = board.AEnemies.Slots[slot.X]; // find enemies slot in front of slot
+        Enemy enemy = enemySlot.GetEnemy();
+        if (!enemy)
+        {
+            board.BreakePipeInSlot(slot, (slot.Pipe as Pipe_Colored).GetExplodeEffectPrefab());
+            OnEndAttack();
+            return 0;
+        }
         SPipe pipe = slot.TakePipe();
 
         //Time.timeScale = 0.1f;
@@ -59,7 +66,6 @@ public class WeaponPlayersFinal : WeaponBase
         ////LeanTween.scale(trailEffect, Vector3.one, Consts.FINAL_ATTACK_TIME / 2.0f)
         ////    .setEase(LeanTweenType.easeInOutSine)
         ////    .setLoopPingPong(1)
-        Enemy enemy = enemySlot.GetEnemy();
         Vector3 startAngle = pipe.transform.eulerAngles;
         LeanTween.value(pipe.gameObject, 0.0f, 1.0f, flyTime)
             .setOnUpdate((float norm) =>
