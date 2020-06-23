@@ -18,9 +18,6 @@ public class CheatsBase : MonoBehaviour
 
     private bool _active = false;
 
-    public GUIStyle guiStyleBlackText = new GUIStyle();
-    public GUIStyle guiStyleRedText = new GUIStyle();
-
     Rect windowRect = new Rect(5, 5, 500, 1000);
 
     void Start()
@@ -29,15 +26,15 @@ public class CheatsBase : MonoBehaviour
         _clickTimes = new float[ClicksCount];
         ResetClicks();
 
-        guiStyleBlackText.fontSize = 20;
-        guiStyleBlackText.fontStyle = FontStyle.Bold;
-        guiStyleBlackText.alignment = TextAnchor.MiddleLeft;
-        guiStyleBlackText.normal.textColor = Color.black;
+        //guiStyleBlackText.fontSize = 20;
+        //guiStyleBlackText.fontStyle = FontStyle.Bold;
+        //guiStyleBlackText.alignment = TextAnchor.MiddleLeft;
+        //guiStyleBlackText.normal.textColor = Color.black;
 
-        guiStyleRedText.fontSize = 20;
-        guiStyleRedText.fontStyle = FontStyle.Bold;
-        guiStyleRedText.alignment = TextAnchor.MiddleLeft;
-        guiStyleRedText.normal.textColor = Color.red;
+        //guiStyleRedText.fontSize = 20;
+        //guiStyleRedText.fontStyle = FontStyle.Bold;
+        //guiStyleRedText.alignment = TextAnchor.MiddleLeft;
+        //guiStyleRedText.normal.textColor = Color.red;
 
         windowRect.width = Screen.width - windowRect.x * 2;
         windowRect.height = Screen.height - windowRect.y * 2;
@@ -141,15 +138,30 @@ public class CheatsBase : MonoBehaviour
 
     void DoMyWindow(int windowID)
     {
+        //
+        GUI.skin.button.fontSize = 30;
+        GUI.skin.button.fontStyle = FontStyle.Bold;
+
+        GUI.skin.label.fontSize = 30;
+        GUI.skin.label.fontStyle = FontStyle.Bold;
+
+        GUI.skin.horizontalSlider.fixedHeight = 30;
+        GUI.skin.horizontalSliderThumb.fixedHeight = 40;
+        GUI.skin.horizontalSliderThumb.fixedWidth = 40;
+
+        //GUI.skin.toggle.fixedHeight = 40;
+        //GUI.skin.toggle.fontSize = 30;
+        //GUI.skin.toggle.fontStyle = FontStyle.Bold;
+        //
         DisplayButtonCheat("Hide", () => _active = false);
-        GUILayout.Label("TimeScale : " + Time.timeScale.ToString(), guiStyleBlackText);
+        GUILayout.Label("TimeScale : " + Time.timeScale.ToString());
         Time.timeScale = GUILayout.HorizontalSlider(Time.timeScale, 0.0f, 5.0f);
         DisplayCheats();
     }
 
     protected void DisplayButtonCheat(string cheatName, Action clickedCallback)
     {
-        if (GUILayout.Button(cheatName))
+        if (GUILayout.Button(cheatName, GUI.skin.button))
         {
             clickedCallback();
         }

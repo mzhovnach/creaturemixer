@@ -12,11 +12,20 @@ public class CheatsCustom : CheatsBase
         GUILayout.Label("--------------------------------------------------------------");
         GUILayout.BeginHorizontal("pin level");
         {
-            bool wasPinned = pinLevel;
-            pinLevel = GUILayout.Toggle(pinLevel, "pin current level");
-            if (wasPinned != pinLevel)
+            if (pinLevel)
             {
-                GameManager.Instance.Game.PinLevel(pinLevel);
+                DisplayButtonCheat("UNPIN LEVEL", () =>
+                {
+                    pinLevel = false;
+                    GameManager.Instance.Game.PinLevel(pinLevel);
+                });
+            } else
+            {
+                DisplayButtonCheat("PIN LEVEL", () => 
+                {
+                    pinLevel = true;
+                    GameManager.Instance.Game.PinLevel(pinLevel);
+                });
             }
         }
         GUILayout.EndHorizontal();
@@ -49,7 +58,7 @@ public class CheatsCustom : CheatsBase
             {
                 float flevel = GUILayout.HorizontalSlider(level, 0, Consts.LEVELS_COUNT - 1);
                 level = (int)flevel;
-                GUILayout.Label("Level : " + level.ToString(), guiStyleBlackText);
+                GUILayout.Label("Level : " + level.ToString());
                 DisplayButtonCheat("ApplyLevel", () => { GameManager.Instance.Player.CreatureMixLevel = level; });
             }
             GUILayout.EndVertical();
