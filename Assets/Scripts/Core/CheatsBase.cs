@@ -21,6 +21,8 @@ public class CheatsBase : MonoBehaviour
     public GUIStyle guiStyleBlackText = new GUIStyle();
     public GUIStyle guiStyleRedText = new GUIStyle();
 
+    Rect windowRect = new Rect(5, 5, 500, 1000);
+
     void Start()
     {
         // create clicks array and reset it with float.MinValue
@@ -36,6 +38,9 @@ public class CheatsBase : MonoBehaviour
         guiStyleRedText.fontStyle = FontStyle.Bold;
         guiStyleRedText.alignment = TextAnchor.MiddleLeft;
         guiStyleRedText.normal.textColor = Color.red;
+
+        windowRect.width = Screen.width - windowRect.x * 2;
+        windowRect.height = Screen.height - windowRect.y * 2;
     }
 
     private void ResetClicks()
@@ -130,11 +135,16 @@ public class CheatsBase : MonoBehaviour
     {
         if (_active)
         {
-            DisplayButtonCheat("Hide", () => _active = false);
-            GUILayout.Label("TimeScale : " + Time.timeScale.ToString(), guiStyleBlackText);
-            Time.timeScale = GUILayout.HorizontalSlider(Time.timeScale, 0.0f, 5.0f);
-            DisplayCheats();
+            windowRect = GUILayout.Window(0, windowRect, DoMyWindow, "Cheats");
         }
+    }
+
+    void DoMyWindow(int windowID)
+    {
+        DisplayButtonCheat("Hide", () => _active = false);
+        GUILayout.Label("TimeScale : " + Time.timeScale.ToString(), guiStyleBlackText);
+        Time.timeScale = GUILayout.HorizontalSlider(Time.timeScale, 0.0f, 5.0f);
+        DisplayCheats();
     }
 
     protected void DisplayButtonCheat(string cheatName, Action clickedCallback)
