@@ -26,7 +26,8 @@ public enum ELevelType
 {
     None = 0,
     Battle = 1,
-    Collect = 2 // collect X resources at least with limited moves
+    Collect = 2, // collect X resources at least with limited moves
+    Endless = 3
     //,CollectTimed = 3 // collect X resources at least with limited time
 }
 
@@ -114,14 +115,11 @@ public class GameBoard : MonoBehaviour
     public LivesPanel                           ALivesPanel;
     public PowerupsPanel                        APowerupsPanel;
     public Characters                           ACharacters;
+    public ScorePanel                           AScorePanel;
 
     public Enemies                              AEnemies;
     public EnemiesQueue                         AEnemiesQueue;
     public Attacks                              AAttacks;
-
-    // sprites
-    private Dictionary<string, Sprite>          _sprites = new Dictionary<string, Sprite>();
-    public List<Sprite>                         Sprites;
     
     public List<Color>                          Colors; // colors of pipes and enemiesб use GetPipeColor() to get!
 
@@ -129,8 +127,8 @@ public class GameBoard : MonoBehaviour
 	public List<GameObject>						ColoredPipesPrefabs;
 	// pool
     public GameObject               			SSlotPrefab;
-    private SuperSimplePool                     _pool;
-	//
+    public Pools                                Pools;
+    //
     public GameObject               			Selection;                                                			// selection for pipe that we move
 
 	public Transform							SlotsContainer;
@@ -190,6 +188,7 @@ public class GameBoard : MonoBehaviour
     public Material[] ColoredMaterialsFill_2;
     public Material[] ColoredMaterialsFill_3;
     public Material[] ColoredMaterialsFill_4;
+    public Material[] ColoredMaterialsSolid; // no symbols, just color
 
     // GameData
     private List<long> _resources;
@@ -218,8 +217,6 @@ public class GameBoard : MonoBehaviour
         //Application.targetFrameRate = Consts.MAX_FPS;
         //
         _camera = Camera.main;
-        _pool = GetComponent<SuperSimplePool>();
-        _pool.InitPool();
         //Game Board Data
         _movesToNextPipe = 0;
         if (GameBoard.AddingType != EAddingType.OnNoMatch)
@@ -250,13 +247,6 @@ public class GameBoard : MonoBehaviour
         DXDY.x += transform.localPosition.x;
         DXDY.y += transform.localPosition.y;
 
-		CreateSlots();
-        // 
-        for (int i = 0; i < Sprites.Count; ++i)
-        {
-            _sprites.Add(Sprites[i].name, Sprites[i]);
-        }
-        //
         _slotsToCheckAims.Add(new BoardPos(1, 4));
         _slotsToCheckAims.Add(new BoardPos(2, 4));
         _slotsToCheckAims.Add(new BoardPos(3, 4));
@@ -274,9 +264,10 @@ public class GameBoard : MonoBehaviour
     // Use this for initialization
     void Start () 
 	{
-		//_camera.transform.position = new Vector3(0, 0.2f, _camera.transform.position.z);
+        CreateSlots();
+        //_camera.transform.position = new Vector3(0, 0.2f, _camera.transform.position.z);
         //Invoke("PlayGame", 0.15f);
-		//PlayGame();
+        //PlayGame();
     }
 
     //void CallOnStartPlayPressed(EventData e)
@@ -286,7 +277,7 @@ public class GameBoard : MonoBehaviour
 
     public static bool IsInGame()
     {
-        return GameManager.Instance.CurrentMenu == UISetType.LevelBattle || GameManager.Instance.CurrentMenu == UISetType.LevelCollect;
+        return GameManager.Instance.CurrentMenu == UISetType.LevelEndless || GameManager.Instance.CurrentMenu == UISetType.LevelBattle || GameManager.Instance.CurrentMenu == UISetType.LevelCollect;
     }
 
     // Update is called once per frame
@@ -400,7 +391,7 @@ public class GameBoard : MonoBehaviour
 		{
 			for (int j = 0; j < HEIGHT; ++j)
 			{
-                GameObject slotObj = _pool.InstantiateObject("SSlot", SlotsContainer, Vector3.zero);
+                GameObject slotObj = Pools.InstantiateObject("SSlot", SlotsContainer, Vector3.zero);
                 SSlot slot = slotObj.GetComponent<SSlot>();
 				slotObj.transform.position = SlotPos(i, j);
 				slot.InitSlot(i, j);
@@ -573,9 +564,20 @@ public class GameBoard : MonoBehaviour
         StartPlayersTurn();
     }
 
+    protected IEnumerator CreateEndlessLevel(LevelData levelData)
+    {
+        AMovesPanel.InitPanel(levelData.Moves);
+        AScorePanel.InitPanel();
+        yield return new WaitForSeconds(Consts.DARK_SCREEN_SHOW_HIDE_TIME);
+        yield return StartCoroutine(ClearBoard());
+        yield return StartCoroutine(CreateBoard(levelData));
+        yield return new WaitForSeconds(0.15f);
+        //ACharacters.AddCharacters(this, GetEmptySSlots());
+        StartPlayersTurn();
+    }
+
     public void PlayGame()
     {
-		_maxColoredLevels = GetMaxColoredLevels();
 		ResetHint();
         Reset();
         _cameraPos = _camera.transform.position;
@@ -587,11 +589,26 @@ public class GameBoard : MonoBehaviour
 		Selection.SetActive(false);
 
         SetGameState(EGameState.Pause, "PlayGame");
-
-        LevelData levelData = null; //GameManager.Instance.Player.SavedGame; поки без сейва, бо треба сейвити інфу про ворогів на полі і чергу ворогів
-		//if (levelData == null || levelData.Slots.Count == 0)
-		//{
+        LevelData levelData = null;
+        if (Consts.ENDLESS_LEVEL)
+        {
+            _maxColoredLevels = Consts.MAX_COLORED_LEVELS_ENDLESS;
+            levelData = GameManager.Instance.Player.SavedGame;
+            if (levelData == null || levelData.Slots.Count == 0)
+            {
+                levelData = LevelData.GenerateEndlessLevel();
+            } else
+            {
+                GameManager.Instance.Player.SavedGame = null;
+                GameManager.Instance.Settings.Save();
+            }
+        } else
+        {
+            //GameManager.Instance.Player.SavedGame; поки без сейва, бо треба сейвити інфу про ворогів на полі і чергу ворогів
+            //if (levelData == null || levelData.Slots.Count == 0)
+            //{
             //levelData = GameManager.Instance.GameData.StartLevelData;
+            _maxColoredLevels = Consts.MAX_COLORED_LEVELS;
             int level = GameManager.Instance.Player.CreatureMixLevel;
             string path = "CreatureMixLevels/cmlevel_" + level.ToString();
             CreatureMixLevelData cmlevelData = (CreatureMixLevelData)Resources.Load<CreatureMixLevelData>(path);
@@ -602,11 +619,12 @@ public class GameBoard : MonoBehaviour
             {
                 levelData = LevelData.GenerateCreatureMixLevel(level);
             }
-        //} else
-        //{
-        //	GameManager.Instance.Player.SavedGame = null;
-        //	GameManager.Instance.Settings.Save();
-        //}
+            //} else
+            //{
+            //	GameManager.Instance.Player.SavedGame = null;
+            //	GameManager.Instance.Settings.Save();
+            //}
+        }
 
         _levelType = levelData.Type;
         // change ui
@@ -652,8 +670,13 @@ public class GameBoard : MonoBehaviour
         {
             StartCoroutine(CreateBattleLevel(levelData));
         } else
+        if (_levelType == ELevelType.Collect)
         {
             StartCoroutine(CreateCollectLevel(levelData));
+        } else
+        if (_levelType == ELevelType.Endless)
+        {
+            StartCoroutine(CreateEndlessLevel(levelData));
         }
     }
 
@@ -725,11 +748,11 @@ public class GameBoard : MonoBehaviour
         GameObject obj = null;
 		if (pType == EPipeType.Colored)
 		{
-            obj = _pool.GetObjectFromPool("PipeColored", SlotsContainer);
+            obj = Pools.GetObjectFromPool("PipeColored", SlotsContainer);
 		} else
 		{
-            obj = _pool.GetObjectFromPool("Pipe_" + sid, SlotsContainer);
-		}
+            obj = Pools.GetObjectFromPool("Pipe_" + sid, SlotsContainer);
+        }
 		return obj;
 	}
 
@@ -1197,7 +1220,7 @@ public class GameBoard : MonoBehaviour
 		eventData.Data["double"] = slideData.Slot2.IsDoubleSlot;
 		eventData.Data["param"] = slideData.Pipe.Param;
 		slideData.Slot2.SetPipe(slideData.Pipe);
-		if (slideData.Pipe.Param == _maxColoredLevels - 1 && Consts.MAX_COLORED_LEVEL_REMOVES)
+		if (slideData.Pipe.Param == _maxColoredLevels - 1 && (Consts.MAX_COLORED_LEVEL_REMOVES || Consts.ENDLESS_LEVEL))
 		{
             // reached max pipe             
             BreakePipeInSlot(slideData.Slot2, (slideData.Pipe as Pipe_Colored).GetExplodeEffectPrefab()); //BreakeEffectPrefab);
@@ -1902,8 +1925,20 @@ public class GameBoard : MonoBehaviour
         Debug.Log("You Loose!");
         MusicManager.playSound("level_lost");
         SetGameState(EGameState.Loose, "OnLoose");
+        //
+        float delay = 0.1f;
+        int newScore = AScorePanel.GetAmount();
+        if (newScore > GameManager.Instance.Player.BestScore)
+        {
+            GameManager.Instance.Player.BestScore = newScore;
+            GameManager.Instance.Settings.Save();
+            AScorePanel.UpdateBestText();
+            delay = 2;
+            ShowFlyingPopup(new Vector3(0, 0, 0), "NewBestScorePopup");
+        }
+        //
         GameManager.Instance.Player.SavedGame = null;
-        LeanTween.delayedCall(1.0f, () => {
+        LeanTween.delayedCall(delay, () => {
             //EventData eventData = new EventData("OnOpenFormNeededEvent");
             //eventData.Data["form"] = UIConsts.FORM_ID.STATISTIC_WINDOW;
             //GameManager.Instance.EventManager.CallOnOpenFormNeededEvent(eventData);
@@ -2133,19 +2168,6 @@ public class GameBoard : MonoBehaviour
         return screenPos;
     }
 
-	public Sprite GetSprite(string id)
-	{
-		Sprite res = null;
-		if (_sprites.TryGetValue(id, out res))
-		{
-			return res;
-		}
-        string path = "art\\Pipes\\" + id;
-        res = Resources.Load<Sprite>(path);
-		_sprites.Add(id, res);
-		return res;
-	}
-
     //public void OnLeveledGameCompleted()
     //{
     //	SetGameState(EGameState.Loose);
@@ -2262,12 +2284,7 @@ public class GameBoard : MonoBehaviour
 
 	protected void UpdateInput()
 	{
-		if (!Consts.IS_TOUCH_DEVICE && Input.touchCount > 0)
-		{
-			Consts.IS_TOUCH_DEVICE = true;
-		}
-
-		if (Consts.IS_TOUCH_DEVICE)
+		if (Input.touchSupported)
 		{
             //use touches
             if (Input.touchCount == 0 && _currentTouchId != -1)
@@ -2544,6 +2561,12 @@ public class GameBoard : MonoBehaviour
         return ColoredMaterialsFill_0[param];
     }
 
+    public Material GetSolidMaterialForPipeColored(int acolor)
+    {
+        // матеріал чисто кольору, без символів
+        return ColoredMaterialsSolid[acolor];
+    }
+
     public void SetResourceForce(long amount, int color)
     {
         _resources[color] = amount;
@@ -2689,11 +2712,6 @@ public class GameBoard : MonoBehaviour
     public void UpdateTimer(float deltaTime)
     {
         TimePlayed += deltaTime;
-    }
-
-    public int GetMaxColoredLevels()
-    {
-        return Consts.MAX_COLORED_LEVELS;
     }
 
     private void AddPipesAfterTurn(bool wasMatch, bool justAddPipe)
@@ -2864,6 +2882,16 @@ public class GameBoard : MonoBehaviour
                 }
             }
         } else
+        if (_levelType == ELevelType.Endless)
+        {
+            SetGameState(EGameState.Pause, "BeforeAddingPipes");
+            AddPipesAfterTurn(wasMatch, justAddPipe);
+            if (_gameState == EGameState.Pause)
+            {
+                StartPlayersTurn();
+            }
+        }
+        else
         {
             Debug.LogError("Unknown Level Type " + _levelType);
         }
@@ -3022,6 +3050,14 @@ public class GameBoard : MonoBehaviour
         {
             int toCollect = pipeParam * 3;
             ACollectPanel.Collect(slot, pipeColor, toCollect);
+        } else
+        if(_levelType == ELevelType.Endless)
+        {
+            int toCollect = pipeParam * 3;
+            Vector3 pos = slot.transform.position;
+            //pos.y = Mathf.Min(pos.y, 1.6f);
+            ShowFlyingPopup(pos, "PlusPointsPopup", "+" + toCollect.ToString());
+            AScorePanel.Collect(slot, 0, toCollect);
         }
     }
 
@@ -3034,10 +3070,18 @@ public class GameBoard : MonoBehaviour
                 int attackPower = slot.Pipe.Param * 3;
                 StartCoroutine(FinalWeapon.AttackCoroutine(this, slot, slot.Pipe.AColor, attackPower)); // TODO correct power of strike according to upgrades and balance
             } else
-            if (_levelType == ELevelType.Collect)
+            if (_levelType == ELevelType.Endless)
             {
                 int toCollect = slot.Pipe.Param * 3;
                 ACollectPanel.Collect(slot, slot.Pipe.AColor, toCollect);
+            } else
+            if (_levelType == ELevelType.Endless)
+            {
+                int toCollect = slot.Pipe.Param * 3;
+                Vector3 pos = slot.transform.position;
+                //pos.y = Mathf.Min(pos.y, 1.6f);
+                ShowFlyingPopup(pos, "PlusPointsPopup", "+" + toCollect.ToString());
+                AScorePanel.Collect(slot, slot.Pipe.AColor, toCollect);
             }
         }
     }
@@ -3061,16 +3105,21 @@ public class GameBoard : MonoBehaviour
                 int toCollect = slot.Pipe.Param * 3;
                 ACollectPanel.Collect(slot, slot.Pipe.AColor, toCollect);
                 BreakePipeInSlot(slot, (slot.Pipe as Pipe_Colored).GetExplodeEffectPrefab());
+            } else
+            if (_levelType == ELevelType.Endless)
+            {
+                SetGameState(EGameState.Pause, "collect points in endless by final attack");
+                int toCollect = slot.Pipe.Param * 3;
+                Vector3 pos = slot.transform.position;
+                //pos.y = Mathf.Min(pos.y, 1.6f);
+                ShowFlyingPopup(pos, "PlusPointsPopup", "+" + toCollect.ToString());
+                AScorePanel.Collect(slot, 0, toCollect);
+                BreakePipeInSlot(slot, (slot.Pipe as Pipe_Colored).GetExplodeEffectPrefab());
             }
             OnTurnWasMade(true, false);
             return true;
         }
         return false;
-    }
-
-    public SuperSimplePool GetPool()
-    {
-        return _pool;
     }
 
     public void AddManaForBump(SSlot slot, SPipe pipe, int distance)
@@ -3112,6 +3161,13 @@ public class GameBoard : MonoBehaviour
     {
         bool _levelPinned = pinLevel;
     }
+
+    public void ShowFlyingPopup(Vector3 pos, string prefabName, string text = "")
+    {
+        GameObject popupObject = Pools.InstantiateObject(prefabName, SlotsContainer, pos);
+        FlyingPopup popup = popupObject.GetComponent<FlyingPopup>();
+        popup.Init(text);
+    }
 }
 
 
@@ -3125,5 +3181,6 @@ public class GameBoard : MonoBehaviour
 
 //Фішку-блокери: 1. що розбивати матчами поряд, 2. розбивати бампами бампами, 3. дірка, в яку треба закинути певний пайп 
 
-
-    //TODO 1 super simple pool in game board with list of folders to scan!!!!!!!!
+// FOR ENDLESS:
+нові фішки не з нульовим символом, а рандом 0-2
+    Зробити достатньо гарним для презентації

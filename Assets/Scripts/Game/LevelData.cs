@@ -193,6 +193,42 @@ public class LevelData
         return res;
     }
 
+    public static LevelData GenerateEndlessLevel()
+    {
+        //UnityEngine.Random.InitState(level);
+        LevelData res = new LevelData();
+        res.Type = ELevelType.Endless;
+        res.AddNewPipes = true;
+        res.Colors = new List<int>();
+        res.Moves = 0;
+        res.CollectAim = 0;
+        // aims
+        res.Aims = new List<Vector3Int>();
+
+        // start pipes
+        res.Slots = new List<SSlotData>();
+        for (int i = 0; i < GameBoard.WIDTH; ++i)
+        {
+            for (int j = 0; j < GameBoard.HEIGHT; ++j)
+            {
+                if (UnityEngine.Random.Range(0, 100) <= 33)
+                {
+                    SSlotData sData = new SSlotData();
+                    sData.x = i;
+                    sData.y = j;
+                    sData.pt = EPipeType.Colored;
+                    sData.p = 0;
+                    sData.c = -1;
+                    res.Slots.Add(sData);
+                }
+            }
+        }
+        // enemies
+        res.EnemiesQueue = new List<QueueElement>();
+        //
+        return res;
+    }
+
     public UISetType GetUiSetType()
     {
         switch (Type)
@@ -209,6 +245,10 @@ public class LevelData
             case ELevelType.Collect:
                 {
                     return UISetType.LevelCollect;
+                }
+            case ELevelType.Endless:
+                {
+                    return UISetType.LevelEndless;
                 }
             default:
                 {

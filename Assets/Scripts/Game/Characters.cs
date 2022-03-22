@@ -37,7 +37,7 @@ public class Characters : MonoBehaviour
             Debug.LogError("NO SLOTS FOR CHARACTER");
             return;
         }
-        GameObject obj = board.GetPool().GetObjectFromPool(characterId, board.SlotsContainer);
+        GameObject obj = Pools.GetObjectFromPool(characterId, board.SlotsContainer);
         Pipe_Character character = obj.GetComponent<Pipe_Character>();
         SSlot slot = emptySlots[0];
         emptySlots.RemoveAt(0);

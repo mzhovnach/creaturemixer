@@ -83,7 +83,7 @@ public class Enemies : MonoBehaviour
         } else
         {
             // add enemy
-            GameObject enemyObj = GameManager.Instance.Game.GetPool().GetObjectFromPool(enemyData.Name, ObjectsContainer);
+            GameObject enemyObj = Pools.GetObjectFromPool(enemyData.Name, ObjectsContainer);
             Enemy enemy = enemyObj.GetComponent<Enemy>();
             _enemies.Add(enemy);
             SetEnemyToSlots(slotsForEnemy, enemy, true);

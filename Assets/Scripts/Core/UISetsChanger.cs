@@ -13,7 +13,8 @@ public enum UISetType
 	Global = 0,
 	MainMenu = 1,
     LevelBattle = 2,
-    LevelCollect = 3
+    LevelCollect = 3,
+	LevelEndless = 4
 }
 
 public class UISetsChanger : MonoBehaviour

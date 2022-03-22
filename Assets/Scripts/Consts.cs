@@ -63,6 +63,7 @@ public class Consts
 	};
 
     public static int MAX_COLORED_LEVELS = 2; // 5, on this level pipe will be destroyed if MAX_COLORED_LEVEL_REMOVES == true, for Fill variation - 9
+    public static int MAX_COLORED_LEVELS_ENDLESS = 5;
     public static int MAX_COLORED_LEVEL_IN_QUEUE = 1;
     public static bool BAD_PIXEL_MACHANIC_IN_CLASSIC_GAME = false;
     public static bool MAX_COLORED_LEVEL_REMOVES = false;
@@ -119,8 +120,6 @@ public class Consts
     public static float MUSIC_VOLUME_MAX = 0.15f;
     public static float SOUND_VOLUME_MAX = 0.6f;
 
-	public static bool IS_TOUCH_DEVICE = false;
-
     public static bool SLIDE_WITHOUT_MOUSE_UP = true;
 #if UNITY_ANDROID || UNITY_IOS
     public static bool START_SLIDE_ON_NO_MOUSE_DOWN = false;
@@ -129,6 +128,8 @@ public class Consts
 #endif
 
     public static int MAX_FPS = 60;
+    public static bool USE_POOL = true; // if true - пайпи зберігаються в пулах інакше кожен раз створюю і знищую
+
     public static bool CHECK_AIM_ON_COMBINE = true; // if false - will check only in _slotsToCheckAims slots
     public static bool ENEMIES_TURN_ON_EVERY_MATCH = false; // if false moves only on no match from player
 
@@ -150,4 +151,6 @@ public class Consts
         }
         return COLORS[5]; // neutral
     }
+
+    public static bool ENDLESS_LEVEL = true;
 }

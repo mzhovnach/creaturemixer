@@ -40,7 +40,7 @@ public class PowerupsPanel : MonoBehaviour
 	
 	private void AddPowerupButton(PowerupData powerupData)
 	{
-		GameObject obj = GameManager.Instance.Game.GetPool().InstantiateObject("Powerup_" + powerupData.Type.ToString(), Container);
+		GameObject obj = Pools.InstantiateObject("Powerup_" + powerupData.Type.ToString(), Container);
 		PowerupButton powerupButton = obj.GetComponent<PowerupButton>();
         _buttons.Add(powerupButton);
 		obj.transform.localPosition = Positions[_buttons.Count - 1].localPosition;

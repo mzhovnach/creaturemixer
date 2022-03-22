@@ -87,16 +87,16 @@ public class SequencePipe : MonoBehaviour
 		SkinData sd = GameManager.Instance.Player.CurrentSkin;
 		if (PipeType == EPipeType.Blocker) 
 		{
-			IconImage.sprite = GameManager.Instance.Game.GetSprite("blocker");
+			IconImage.sprite = Pools.GetSprite("blocker");
 			ValueImage.gameObject.SetActive (false);
 		} else
 		{
 			//if (sd.PipeStructureType == EPipeStructureType.BackFront) 
 			//{
 				ValueImage.gameObject.SetActive (true);
-				IconImage.sprite = GameManager.Instance.Game.GetSprite(sd.BackPrefix + AColor.ToString());
+				IconImage.sprite = Pools.GetSprite(sd.BackPrefix + AColor.ToString());
 				IconImage.SetNativeSize();
-				ValueImage.sprite = GameManager.Instance.Game.GetSprite(sd.FrontPrefix + Param.ToString());
+				ValueImage.sprite = Pools.GetSprite(sd.FrontPrefix + Param.ToString());
 				ValueImage.SetNativeSize();
 			//} 
 			//else

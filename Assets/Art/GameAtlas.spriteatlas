@@ -44,7 +44,6 @@ SpriteAtlas:
     packables:
     - {fileID: 102900000, guid: 5868d071e0f02704bb109f4570345ea7, type: 3}
     - {fileID: 102900000, guid: d13f8482f8b6741499f347efb5d2d0c5, type: 3}
-    totalSpriteSurfaceArea: 19358563
     bindAsDefault: 1
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
@@ -54,7 +53,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 73e4e8205e38948d6a86dbd56e17ede9, type: 3}
   - {fileID: 21300000, guid: 468df9304deaf447bb57e98b801d5ec6, type: 3}
   - {fileID: 21300000, guid: 581909400d8ff5c418f8912b4a3fb434, type: 3}
-  - {fileID: 21300000, guid: c18b3c404385fda49ae6b730b6e8da71, type: 3}
   - {fileID: 21300000, guid: d77c9d50ab7e1493288e7e87b387ea1d, type: 3}
   - {fileID: 21300000, guid: 446edf50c29a0477b9357053ed4eeaae, type: 3}
   - {fileID: 21300000, guid: ef06b5607cf4149549b297ef54a7b27a, type: 3}
@@ -103,9 +101,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: b7601c72bb819483d8b2bfb2de3d4350, type: 3}
   - {fileID: 21300000, guid: be562d7244bc94a9f8e882c0ab56dc4c, type: 3}
   - {fileID: 21300000, guid: 68a06482c5f2e46d0a4b2e807e8ea630, type: 3}
-  - {fileID: 21300000, guid: 13b9b98223557594a80b8a7c1bb2d13a, type: 3}
   - {fileID: 21300000, guid: bdc7d192f71d29d498bdc5de53b52fca, type: 3}
-  - {fileID: 21300000, guid: 3bf156c24e16dee4da581516f9b7a7c4, type: 3}
   - {fileID: 21300000, guid: c44b16d2a7ad14d19998bbed917dd6d1, type: 3}
   - {fileID: 21300000, guid: 06afdcd2d70ca4d299d78291c4966458, type: 3}
   - {fileID: 21300000, guid: dc104cf28cf1698469b6b75db8454359, type: 3}
@@ -121,7 +117,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 3944aa53cf3938d47947da5d15c8f67f, type: 3}
   - {fileID: 21300000, guid: 844eec53e78ea8e489f868cbabe1835b, type: 3}
   - {fileID: 21300000, guid: ec32d063054101d4b87511a05ca94018, type: 3}
-  - {fileID: 21300000, guid: 164ac7633c07a014985a5cc1b8c381dc, type: 3}
   - {fileID: 21300000, guid: 6de7be63cc4f845f4badb1d560bd8a0e, type: 3}
   - {fileID: 21300000, guid: 9f8372733e11f554d8616bf8e8163de6, type: 3}
   - {fileID: 21300000, guid: 3a65b38377d35634da0344bcf3718b26, type: 3}
@@ -144,7 +139,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: d13c3754a1ccba2439c9f59d74de8f52, type: 3}
   - {fileID: 21300000, guid: 8891916453ce34b64a69717da7180dac, type: 3}
   - {fileID: 21300000, guid: 81a6627497dbcc4429a1cb47b938ca06, type: 3}
-  - {fileID: 21300000, guid: 48165e74d16e07e4c9d835247b74ccd3, type: 3}
   - {fileID: 21300000, guid: f08592843154e4836866f2ba06ce487a, type: 3}
   - {fileID: 21300000, guid: 142fbe84af64b2e4fa64e106add08a28, type: 3}
   - {fileID: 21300000, guid: 195cf19461fc48c4fa66136d913e7ae1, type: 3}
@@ -164,7 +158,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 359d6535e3465c7419cde52c3450c49a, type: 3}
   - {fileID: 21300000, guid: d559ad35dbf00438fb1e12eaa94ed148, type: 3}
   - {fileID: 21300000, guid: 5c019045560d743899b695320c616ae8, type: 3}
-  - {fileID: 21300000, guid: 0ae65245b44c7d34ab7fc6777c8183c3, type: 3}
   - {fileID: 21300000, guid: eb5deb451669e4693bd5d8725baaaae9, type: 3}
   - {fileID: 21300000, guid: e3332c4565f31409db585da214c9408d, type: 3}
   - {fileID: 21300000, guid: e1d0ad4519f9344c9b479dde9340348c, type: 3}
@@ -183,11 +176,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 2bbbc7b5fc5120e44895c876f4c81a49, type: 3}
   - {fileID: 21300000, guid: 665feeb5715ec49e5ab75272e1df2286, type: 3}
   - {fileID: 21300000, guid: b4adf206482e24a43adea12076c5c24e, type: 3}
-  - {fileID: 21300000, guid: 5e00d90655fee9f40955d626fd22b98a, type: 3}
   - {fileID: 21300000, guid: ea9c53161821c483784ec199fde697af, type: 3}
   - {fileID: 21300000, guid: 830a4716c7ac74d1e9d509b732a45864, type: 3}
   - {fileID: 21300000, guid: 0acfaa16eed519f4c88dcb610acce9ae, type: 3}
-  - {fileID: 21300000, guid: ce2a9e160a6faa2438f7275a5034de92, type: 3}
   - {fileID: 21300000, guid: b3158026b48534e32b37ba5ef1cd7de9, type: 3}
   - {fileID: 21300000, guid: 4efcbd264b64d634c84f68665f1b2e42, type: 3}
   - {fileID: 21300000, guid: db576e2656e1b40e2ac07580b39ba4ff, type: 3}
@@ -206,11 +197,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 500fabb6772f9429a92f6944f7e11408, type: 3}
   - {fileID: 21300000, guid: b5261de6ceee0cd4bb9989e7bc5c2c53, type: 3}
   - {fileID: 21300000, guid: 2bee24f6f0f6f0c44b93e73a95adc14a, type: 3}
-  - {fileID: 21300000, guid: 758e27f6f86d1f54aa1f4a5f190f233f, type: 3}
   - {fileID: 21300000, guid: 7ef977f6529ce4d26b71fcfccb314d6e, type: 3}
   - {fileID: 21300000, guid: 6272640720dd84deba03dc11ee9ab37c, type: 3}
   - {fileID: 21300000, guid: 560c940761476024db1c51d960ba7a1d, type: 3}
-  - {fileID: 21300000, guid: a55c8b0724757154e83a1d11574c642f, type: 3}
   - {fileID: 21300000, guid: c3721417026a34b4aad55c7fd5b4ab8e, type: 3}
   - {fileID: 21300000, guid: 0a4d943788562435296e543ae330581e, type: 3}
   - {fileID: 21300000, guid: 77693a47a2b444626baa3f7f850e5771, type: 3}
@@ -353,7 +342,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 162f02dd808064cc88c17693ee009ddc, type: 3}
   - {fileID: 21300000, guid: 66fafcedbe290475c9de0a397f0c62d2, type: 3}
   - {fileID: 21300000, guid: e5c4beed35df58648b85df4cca210123, type: 3}
-  - {fileID: 21300000, guid: aa94e0fd5199d5f4fb8a17b0d559128c, type: 3}
   - {fileID: 21300000, guid: 4f4deafd2a8d91840aa45c53959f8f06, type: 3}
   - {fileID: 21300000, guid: 0cfda71e461904541a301fd3f274a235, type: 3}
   - {fileID: 21300000, guid: 695e9b1eb04f04be489dace6fb7f808a, type: 3}
@@ -415,7 +403,6 @@ SpriteAtlas:
   - LevelMap_volcano_bubble_03
   - LevelMap_plants_02
   - MainMenuBack
-  - Color_1
   - LevelMap_background
   - LevelMap_upgrade_08_wave_01
   - Monster_2_Layer 31
@@ -464,9 +451,7 @@ SpriteAtlas:
   - Monster_1_Layer 71
   - Monster_2_Layer 29
   - LevelMap_mustache_02
-  - Symbol_0
   - BTN_Options_Icon
-  - MovesPanel_star
   - Monster_3_Layer 101
   - LevelMap_fish_eye
   - resourcesEffect
@@ -482,7 +467,6 @@ SpriteAtlas:
   - GameBack
   - UpBack
   - MovesPanel_icon
-  - Symbol_1
   - 3_1
   - colored_3
   - filled_5
@@ -505,7 +489,6 @@ SpriteAtlas:
   - ButtonLeftOver
   - Monster_1_Layer 58
   - colored_4
-  - Color_0
   - Monster_3_Layer 85
   - colored_0_0
   - ScoresBack
@@ -525,7 +508,6 @@ SpriteAtlas:
   - colored_2_3
   - LevelMap_mush_01_cap
   - Monster_3_Layer 88
-  - Color_2
   - LevelMap_upgrade_06_splash_02
   - LevelMap_singer_01_body
   - Monster_2_Layer 35
@@ -544,11 +526,9 @@ SpriteAtlas:
   - colored_2_1
   - LevelMap_sm__06_cap
   - Monster_3_Layer 100
-  - Color_3
   - Monster_3_Layer 89
   - LevelMap_sing_02_left_eye
   - Trophy
-  - Symbol_4
   - LevelMap_l_claw_01
   - BTN_LevelsButtonBack
   - LevelMap_plants_01
@@ -567,11 +547,9 @@ SpriteAtlas:
   - LevelMap_mustache_01
   - BestScoreBack
   - colored_3_3
-  - Symbol_3
   - LevelMap_r_claw_02
   - LevelMap_volcano_anim_left_eye
   - BTN_LevelsNext_icon
-  - Color_4
   - 1_4
   - LevelMap_pyramid_right_eyebrow
   - 4_1
@@ -714,7 +692,6 @@ SpriteAtlas:
   - LevelMap_upgrade_05_left_pupil
   - LevelMap_mush_03_right_eye
   - BTN_OptionsHome_icon
-  - Symbol_2
   - ButtonReshuffleIcon
   - BTN_OptionsSound_on
   - LevelMap_mush_01_base

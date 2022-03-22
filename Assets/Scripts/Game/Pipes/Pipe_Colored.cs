@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Pipe_Colored : SPipe
 {
 	private int 					_currentSide = 0;
-	//public List<SpriteRenderer> 	SymbolSprites;
+	public List<SpriteRenderer> 	SymbolSprites;
     public GameObject[]             ExplodeEffects;
 	public Renderer 				ARenderer;
 
@@ -107,6 +107,16 @@ public class Pipe_Colored : SPipe
 		
 	public override void UpdateSkin()
 	{
+		if (Consts.ENDLESS_LEVEL)
+        {
+			ARenderer.material = GameManager.Instance.Game.GetSolidMaterialForPipeColored(AColor);
+			SymbolSprites[1].sprite = Pools.GetSprite("F_default_" + Param);
+			if (Param > 0)
+            {
+				SymbolSprites[0].sprite = Pools.GetSprite("F_default_" + (Param - 1));
+			}
+			return;
+		}
         if (Consts.FILLER_VARIATION)
         {
             ARenderer.material = GameManager.Instance.Game.GetMaterialForFillPipeVariation(AColor, Param);

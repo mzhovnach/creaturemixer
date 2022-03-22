@@ -24,7 +24,7 @@ public class WeaponPlayersSimple : WeaponBase
         // instantiate attack beam
         Vector3 pos = slot.transform.position;
         pos.z = -7;
-        GameObject attackObject = board.GetPool().InstantiateObject("simple_attack_" + pipeColor.ToString(), board.AAttacks.ObjectsContainer, pos);
+        GameObject attackObject = Pools.InstantiateObject("simple_attack_" + pipeColor.ToString(), board.AAttacks.ObjectsContainer, pos);
         // fly to slot
         Vector3 finalPos = enemySlot.transform.position;
         finalPos.z = -7;
