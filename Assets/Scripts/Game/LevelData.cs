@@ -217,8 +217,8 @@ public class LevelData
                     sData.x = i;
                     sData.y = j;
                     sData.pt = EPipeType.Colored;
-                    sData.p = 0;
-                    sData.c = -1;
+                    sData.p = UnityEngine.Random.Range(0, 3);
+                    sData.c = UnityEngine.Random.Range(0, Consts.ENDLESS_GAME_COLORS);
                     res.Slots.Add(sData);
                 }
             }

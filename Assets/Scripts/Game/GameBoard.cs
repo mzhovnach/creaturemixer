@@ -1432,7 +1432,14 @@ public class GameBoard : MonoBehaviour
             } else
             if (newPipeType == EPipeType.Colored)
             {
-                AQueuePanel.MoveQueue(newPipeType, GetRandomColor(), UnityEngine.Random.Range(0, Consts.MAX_COLORED_LEVEL_IN_QUEUE + 1));
+                if (Consts.ENDLESS_LEVEL)
+                {
+                    AQueuePanel.MoveQueue(newPipeType, GetRandomColor(), UnityEngine.Random.Range(0, Consts.MAX_COLORED_LEVEL_IN_QUEUE_ENDLESS + 1));
+                }
+                else
+                {
+                    AQueuePanel.MoveQueue(newPipeType, GetRandomColor(), UnityEngine.Random.Range(0, Consts.MAX_COLORED_LEVEL_IN_QUEUE + 1));
+                }
             }
             //
             SSlot slot = slots[UnityEngine.Random.Range(0, slots.Count)];
@@ -2679,6 +2686,10 @@ public class GameBoard : MonoBehaviour
 
     public int GetRandomColor()
     {
+        if (Consts.ENDLESS_LEVEL)
+        {
+            return UnityEngine.Random.Range(0, Consts.ENDLESS_GAME_COLORS);
+        }
         //if (GameBoard.GameType == EGameType.Classic)
         //{
         if (_possibleColors.Count <= 1)
@@ -3182,5 +3193,3 @@ public class GameBoard : MonoBehaviour
 //Фішку-блокери: 1. що розбивати матчами поряд, 2. розбивати бампами бампами, 3. дірка, в яку треба закинути певний пайп 
 
 // FOR ENDLESS:
-нові фішки не з нульовим символом, а рандом 0-2
-    Зробити достатньо гарним для презентації

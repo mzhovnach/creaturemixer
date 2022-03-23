@@ -65,12 +65,14 @@ public class Consts
     public static int MAX_COLORED_LEVELS = 2; // 5, on this level pipe will be destroyed if MAX_COLORED_LEVEL_REMOVES == true, for Fill variation - 9
     public static int MAX_COLORED_LEVELS_ENDLESS = 5;
     public static int MAX_COLORED_LEVEL_IN_QUEUE = 1;
+    public static int MAX_COLORED_LEVEL_IN_QUEUE_ENDLESS = 2;
     public static bool BAD_PIXEL_MACHANIC_IN_CLASSIC_GAME = false;
     public static bool MAX_COLORED_LEVEL_REMOVES = false;
     public static float DARK_SCREEN_SHOW_HIDE_TIME = 0.5f;
     public static int CLASSIC_GAME_COLORS = 5;
     public static int CREATURE_MIX_COLORS = 3;
-    public static float IMPULSE_DISTANCE = 0.3f;
+    public static int ENDLESS_GAME_COLORS = 3;
+    public static float IMPULSE_DISTANCE = 0.5f;//0.3f
     public static float IMPULSE_SPEED = 0.05f;              // speed of moving pipe when it slide after impulse (for each slot)
 	public static float MATCH_ROTATE_TIME = 0.4f;
 	public static float EXTRA_DX_DY_WHEN_MATCHING 	= 0.3f;
@@ -139,7 +141,7 @@ public class Consts
     public static bool FILLER_VARIATION = false;
 
     public static bool ENEMIES_ATTACKED_COLORED_PIPES = false; //TODO use as weapon of some enemies, not all
-    public static int NEW_PIPES_AMOUNT = 2;
+    public static int NEW_PIPES_AMOUNT = 3; //2
     public static bool LIVES_PANEL = true;
     public static bool POWERUPS_PANEL = false;
 
